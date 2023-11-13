@@ -1,15 +1,10 @@
 package fr.negosud.springapi.api.entity;
 
+import fr.negosud.springapi.api.model.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
-enum Gender {
-    MALE,
-    FEMALE,
-    OTHER
-};
 
 @Entity
 public class User {

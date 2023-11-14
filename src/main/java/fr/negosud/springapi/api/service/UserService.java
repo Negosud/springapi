@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+final public class UserService {
 
     private final UserRepository userRepository;
 

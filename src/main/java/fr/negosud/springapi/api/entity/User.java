@@ -1,21 +1,22 @@
 package fr.negosud.springapi.api.entity;
 
 import fr.negosud.springapi.api.model.Gender;
+import fr.negosud.springapi.api.model.UserType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class User {
+final public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
     private Long userId;
 
-    @Email
     @NotBlank
+    @Email
     @Column(nullable = false, unique = true, length = 320)
     private String email;
 
@@ -23,14 +24,19 @@ public class User {
     @Column(nullable = false, length = 60)
     private String password;
 
-    @NotBlank
     @NotNull
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
+
+    @NotNull
+    @NotBlank
     private String firstName;
 
-    @NotBlank
     @NotNull
+    @NotBlank
     private String lastName;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
@@ -84,6 +90,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 
     public String getFirstName() {

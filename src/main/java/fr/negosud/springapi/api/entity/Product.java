@@ -30,15 +30,20 @@ public class Product {
     @Column(nullable = false)
     private String name;
 
+    @NotBlank
+    @Column(nullable = false)
+    private Integer family;
+
     public Product() { }
 
-    public Product(Long productId, BigDecimal priceVAT, BigDecimal priceHT, Integer quantity, String name) {
+    public Product(Long productId, BigDecimal priceVAT, BigDecimal priceHT, Integer quantity, String name, Integer family) {
 
         this.productId = productId;
         this.priceVAT = priceVAT;
         this.priceHT = priceHT;
         this.quantity = quantity;
         this.name = name;
+        this.family = family;
     }
 
     public Long getProductId() {
@@ -89,5 +94,15 @@ public class Product {
     public void setName(String name) {
 
         this.name = name;
+    }
+
+    public Integer getFamily() {
+
+        return family;
+    }
+
+    public void setFamily(Integer family) {
+
+        this.family = family;
     }
 }

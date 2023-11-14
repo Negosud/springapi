@@ -24,20 +24,20 @@ public class ProductFamilyController {
     @GetMapping
     public ResponseEntity<List<ProductFamily>> getAllProductFamilies() {
 
-        List<ProductFamily> products = productFamilyService.getAllProductFamilies();
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        List<ProductFamily> productFamilies = productFamilyService.getAllProductFamilies();
+        return new ResponseEntity<>(productFamilies, HttpStatus.OK);
     }
 
     @GetMapping("/{productFamilyId}")
     public ResponseEntity<ProductFamily> getProductFamilyById(@PathVariable Long productFamilyId) {
 
         return productFamilyService.getProductFamilyById(productFamilyId)
-                .map(product -> new ResponseEntity<>(product, HttpStatus.OK))
+                .map(productFamily -> new ResponseEntity<>(productFamily, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
-    public ResponseEntity<ProductFamily> createProduct(@RequestBody ProductFamily productFamily) {
+    public ResponseEntity<ProductFamily> createProductFamily(@RequestBody ProductFamily productFamily) {
 
         ProductFamily createdProductFamily= productFamilyService.saveProductFamily(productFamily);
         return new ResponseEntity<>(createdProductFamily, HttpStatus.CREATED);

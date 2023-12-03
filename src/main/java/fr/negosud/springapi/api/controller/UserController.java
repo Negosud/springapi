@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody User user) {
+    public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody User user, @RequestHeader String action_user_id) {
         if (userService.getUserById(userId).isPresent()) {
             user.setUserId(userId);
             User updatedUser = userService.saveUser(user);

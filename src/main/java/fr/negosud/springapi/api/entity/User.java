@@ -1,14 +1,18 @@
 package fr.negosud.springapi.api.entity;
 
-import fr.negosud.springapi.api.model.Gender;
-import fr.negosud.springapi.api.model.UserType;
+import fr.negosud.springapi.api.audit.AuditListener;
+import fr.negosud.springapi.api.audit.ModificationAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.Date;
+
 @Entity
-final public class User {
+@EntityListeners(AuditListener.class)
+@Table(name="user")
+final public class User extends ModificationAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,16 +21,17 @@ final public class User {
 
     @NotBlank
     @Email
-    @Column(nullable = false, unique = true, length = 320)
-    private String email;
+    @Column(unique = true, length = 320)
+    private String login;
 
     @NotBlank
-    @Column(nullable = false, length = 60)
+    @Column(length = 60)
     private String password;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private UserType userType;
+    @NotBlank
+    @Email
+    @Column(nullable = false, unique = true, length = 320)
+    private String email;
 
     @NotNull
     @NotBlank
@@ -36,36 +41,29 @@ final public class User {
     @NotBlank
     private String lastName;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
-
     @Column(length = 14)
     private String phoneNumber;
 
-    private String address;
-
-    @Column(length = 10)
-    private String zipCode;
-
-    private String city;
-
-    private String country;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Date createdAt;
 
     public User() { }
 
-    public User(Long userId, String email, String password, String firstName, String lastName, Gender gender, String phoneNumber, String address, String zipCode, String city, String country) {
+    public User(Long userId, String login, String password, String email, String firstName, String lastName, String phoneNumber, Date createdAt) {
         this.userId = userId;
-        this.email = email;
+        this.login = login;
         this.password = password;
+        this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.gender = gender;
         this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.zipCode = zipCode;
-        this.city = city;
-        this.country = country;
+        this.createdAt = createdAt;
+    }
+
+    @Override
+    public void onCreate() {
+        this.createdAt = new Date();
     }
 
     public Long getUserId() {
@@ -76,12 +74,12 @@ final public class User {
         this.userId = userId;
     }
 
-    public String getEmail() {
-        return email;
+    public String getLogin() {
+        return login;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getPassword() {
@@ -92,12 +90,12 @@ final public class User {
         this.password = password;
     }
 
-    public UserType getUserType() {
-        return userType;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserType(UserType userType) {
-        this.userType = userType;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getFirstName() {
@@ -116,14 +114,6 @@ final public class User {
         this.lastName = lastName;
     }
 
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -132,35 +122,11 @@ final public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getAddress() {
-        return address;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getZipCode() {
-        return zipCode;
-    }
-
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

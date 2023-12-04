@@ -1,13 +1,13 @@
-package fr.negosud.springapi.api.entity;
+package fr.negosud.springapi.api.model.entity;
 
 import fr.negosud.springapi.api.audit.AuditListener;
 import fr.negosud.springapi.api.audit.ModificationAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @EntityListeners(AuditListener.class)
@@ -16,15 +16,12 @@ final public class User extends ModificationAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Long userId;
 
-    @NotBlank
     @Email
     @Column(unique = true, length = 320)
     private String login;
 
-    @NotBlank
     @Column(length = 60)
     private String password;
 
@@ -33,11 +30,9 @@ final public class User extends ModificationAuditableEntity {
     @Column(nullable = false, unique = true, length = 320)
     private String email;
 
-    @NotNull
     @NotBlank
     private String firstName;
 
-    @NotNull
     @NotBlank
     private String lastName;
 
@@ -48,9 +43,21 @@ final public class User extends ModificationAuditableEntity {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Date createdAt;
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_permission_node",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_node_id")
+    )
+    private List<PermissionNode> permissionNodeList;
+
+    @ManyToOne
+    @NotBlank
+    private UserGroup userGroup;
+
     public User() { }
 
-    public User(Long userId, String login, String password, String email, String firstName, String lastName, String phoneNumber, Date createdAt) {
+    public User(Long userId, String login, String password, String email, String firstName, String lastName, String phoneNumber, Date createdAt, List<PermissionNode> permissionNodeList) {
         this.userId = userId;
         this.login = login;
         this.password = password;
@@ -59,10 +66,12 @@ final public class User extends ModificationAuditableEntity {
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.createdAt = createdAt;
+        this.permissionNodeList = permissionNodeList;
     }
 
     @Override
     public void onCreate() {
+        super.onCreate();
         this.createdAt = new Date();
     }
 
@@ -128,5 +137,13 @@ final public class User extends ModificationAuditableEntity {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<PermissionNode> getPermissionNodeList() {
+        return permissionNodeList;
+    }
+
+    public void setPermissionNodeList(List<PermissionNode> permissionNodeList) {
+        this.permissionNodeList = permissionNodeList;
     }
 }

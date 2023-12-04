@@ -1,0 +1,10 @@
+permissions:
+  - name: test
+    children:
+      - name: subtest1
+        children:
+          - name: subsubtest1
+          - name: subsubtest2
+          - name: subsubtest3
+      - name: subtest2
+      - name: subtest3

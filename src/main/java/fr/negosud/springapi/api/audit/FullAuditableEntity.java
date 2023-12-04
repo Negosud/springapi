@@ -1,6 +1,6 @@
 package fr.negosud.springapi.api.audit;
 
-import fr.negosud.springapi.api.entity.User;
+import fr.negosud.springapi.api.model.entity.User;
 import jakarta.persistence.*;
 
 import java.util.Date;

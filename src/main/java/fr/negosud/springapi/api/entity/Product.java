@@ -22,15 +22,15 @@ public class Product {
 
     @NotBlank
     @Column(nullable = false)
-    private String description
+    private String description;
 
     @NotBlank
     @Column(nullable = false)
-    private Integer quantity
+    private Integer quantity;
 
     @NotBlank
     @Column(nullable = false)
-    private Integer vintage
+    private Integer vintage;
 
     @OneToOne(mappedBy = "ProductFamily", cascade = CascadeType.DETACH )
     private ProductFamily productFamily;
@@ -45,7 +45,22 @@ public class Product {
 
     @NotBlank
     @Column(nullable = false)
-    private Bool active;
+    private Boolean active;
+
+    public Product() {
+    }
+
+    public Product(Long productId, String name, String description, Integer quantity, Integer vintage, ProductFamily productFamily, String unitPrice, String unitPriceVAT, Boolean active) {
+        this.productId = productId;
+        this.name = name;
+        this.description = description;
+        this.quantity = quantity;
+        this.vintage = vintage;
+        this.productFamily = productFamily;
+        this.unitPrice = unitPrice;
+        this.unitPriceVAT = unitPriceVAT;
+        this.active = active;
+    }
 
     public Long getProductId() {
         return productId;
@@ -87,11 +102,11 @@ public class Product {
         this.vintage = vintage;
     }
 
-    public String getProductFamily() {
+    public ProductFamily getProductFamily() {
         return productFamily;
     }
 
-    public void setProductFamily(String productFamily) {
+    public void setProductFamily(ProductFamily productFamily) {
         this.productFamily = productFamily;
     }
 
@@ -111,11 +126,11 @@ public class Product {
         this.unitPriceVAT = unitPriceVAT;
     }
 
-    public Bool getActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    public void setActive(Bool active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 }

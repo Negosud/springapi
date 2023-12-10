@@ -17,20 +17,17 @@ public class ProductController {
 
     @Autowired
     public ProductController(ProductService productService) {
-
         this.productService = productService;
     }
 
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {
-
         List<Product> products = productService.getAllProducts();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @GetMapping("/{productId}")
     public ResponseEntity<Product> getProductById(@PathVariable Long productId) {
-
         return productService.getProductById(productId)
                 .map(product -> new ResponseEntity<>(product, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -38,7 +35,6 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-
         Product createdProduct= productService.saveProduct(product);
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }

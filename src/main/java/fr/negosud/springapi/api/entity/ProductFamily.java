@@ -16,32 +16,33 @@ public class ProductFamily {
     @Column(nullable = false)
     private String name;
 
+    @NotBlank
+    @Column(nullable = false)
+    private String description;
     public ProductFamily() {
     }
 
-    public ProductFamily(Long productFamilyId, String name) {
-
-        this.productFamilyId = productFamilyId;
-        this.name = name;
-    }
-
     public Long getProductFamilyId() {
-
         return productFamilyId;
     }
 
     public void setProductFamilyId(Long productFamilyId) {
-
         this.productFamilyId = productFamilyId;
     }
 
     public String getName() {
-
         return name;
     }
 
     public void setName(String name) {
-
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

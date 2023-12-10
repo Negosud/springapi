@@ -1,6 +1,6 @@
 package fr.negosud.springapi.api.service;
 
-import fr.negosud.springapi.api.entity.ShoppingCart;
+import fr.negosud.springapi.api.model.entity.ShoppingCart;
 import fr.negosud.springapi.api.repository.ShoppingCartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -35,6 +35,8 @@ final public class UserGroupService {
     }
 
     public boolean initUserGroups() {
+
+
         return true;
     }
 

@@ -44,9 +44,9 @@ final public class PermissionNodeService {
         PermissionNode currentNode = null;
         for (String namePart : nameParts) {
             if (currentNode == null) {
-                currentNode = permissionNodeRepository.findByNameAndParentPermissionNodeIsNull(namePart).orElse(null);
+                currentNode = permissionNodeRepository.findByParentPermissionNodeIsNullAndName(namePart).orElse(null);
             } else {
-                currentNode = permissionNodeRepository.findByNameAndParentPermissionNode(namePart, currentNode).orElse(null);
+                currentNode = permissionNodeRepository.findByParentPermissionNodeAndName(currentNode, namePart).orElse(null);
             }
 
             if (currentNode == null) {
@@ -78,7 +78,7 @@ final public class PermissionNodeService {
     private void buildPermissionTree(PermissionNode parentNode, Map<String, Object> permissionMap) {
         String permissionName = (String) permissionMap.get("name");
 
-        Optional<PermissionNode> permissionNodeOptional = permissionNodeRepository.findByNameAndParentPermissionNode(permissionName, parentNode);
+        Optional<PermissionNode> permissionNodeOptional = permissionNodeRepository.findByParentPermissionNodeAndName(parentNode, permissionName);
 
         PermissionNode permissionNode;
         permissionNode = permissionNodeOptional.orElseGet(() -> savePermissionNode(new PermissionNode(permissionName, parentNode)));

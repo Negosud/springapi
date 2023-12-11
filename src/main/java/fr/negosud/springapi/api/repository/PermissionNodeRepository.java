@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface PermissionNodeRepository extends JpaRepository<PermissionNode, Long> {
 
-    Optional<PermissionNode> findByNameAndParentPermissionNodeIsNull(String name);
-    Optional<PermissionNode> findByNameAndParentPermissionNode(String name, PermissionNode parentPermissionNode);
+    Optional<PermissionNode> findByParentPermissionNodeIsNullAndName(String name);
+    Optional<PermissionNode> findByParentPermissionNodeAndName(PermissionNode parentPermissionNode, String name);
 
 }

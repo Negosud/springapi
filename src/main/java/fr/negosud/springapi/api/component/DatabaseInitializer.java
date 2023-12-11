@@ -25,10 +25,6 @@ public class DatabaseInitializer implements ApplicationRunner {
         } else {
             if (!this.userGroupService.initUserGroups()) {
                 throw new RuntimeException("User groups initialization failed");
-            } else {
-                if (!this.userGroupService.fillUserGroupsPermissions()) {
-                    throw new RuntimeException("Permissions attribution failed");
-                }
             }
         }
     }

@@ -1,0 +1,26 @@
+userGroups:
+  - name: CUSTOMER
+    permissions:
+      - web
+  - name: SUPPLIER
+    inherit: CUSTOMER
+  - name: EMPLOYEE
+    inherit: CUSTOMER
+    permissions:
+      - desktop.connect
+      - desktop.profile
+      - desktop.arrival.view
+      - desktop.arrival.list
+      - desktop.issue.view
+      - desktop.issue.list
+  - name: MANAGER
+    inherit: EMPLOYEE
+    permissions:
+      - desktop.arrival
+      - desktop.issue
+      - desktop.scrud.scheme
+      - desktop.scrud.read
+  - name: ADMIN
+    inherit: MANAGER
+    permissions:
+      - desktop

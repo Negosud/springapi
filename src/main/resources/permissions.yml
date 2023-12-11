@@ -1,10 +1,48 @@
 permissions:
-  - name: test
+  - name: web
     children:
-      - name: subtest1
+      - name: profile
         children:
-          - name: subsubtest1
-          - name: subsubtest2
-          - name: subsubtest3
-      - name: subtest2
-      - name: subtest3
+          - name: view
+          - name: edit
+      - name: order
+        children:
+          - name: place
+          - name: view
+          - name: list
+          - name: cancel
+      - name: issue
+        children:
+          - name: view
+          - name: list
+      - name: invoice
+        children:
+          - name: preview # preview invoice (before order validation)
+          - name: view # view invoice (with a proper invoice number)
+          - name: list
+  - name: desktop
+    children:
+      - name: connect
+      - name: profile
+        children:
+          - name: view
+          - name: edit
+      - name: arrival
+        children:
+          - name: add
+          - name: view
+          - name: list
+          - name: cancel
+      - name: issue
+        children:
+          - name: create
+          - name: view
+          - name: list
+      - name: scrud
+        children:
+          - name: scheme
+          - name: create
+          - name: read
+          - name: update
+          - name: delete
+          ## To be continued...

@@ -1,7 +1,8 @@
 package fr.negosud.springapi.api.controller;
 
-import fr.negosud.springapi.api.entity.ShoppingCartProduct;
+import fr.negosud.springapi.api.model.entity.ShoppingCartProduct;
 import fr.negosud.springapi.api.service.ShoppingCartProductService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/shoppingCartProduct")
+@Tag(name = "ShoppingCartProduct")
 public class ShoppingCartProductController {
 
     private final ShoppingCartProductService shoppingCartProductService;

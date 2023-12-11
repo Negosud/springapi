@@ -9,6 +9,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -61,9 +62,9 @@ final public class PermissionNodeService {
         Yaml yaml = new Yaml();
 
         try (InputStream inputStream = new ClassPathResource("permissions.yml").getInputStream()) {
-            Map<String, Object> permissionsMap = yaml.load(inputStream);
+            Map<String, List<Map<String, Object>>> permissionsMap = yaml.load(inputStream);
             if (permissionsMap != null && permissionsMap.containsKey("permissions")) {
-                List<Map<String, Object>> permissionsList = (List<Map<String, Object>>) permissionsMap.get("permissions");
+                List<Map<String, Object>> permissionsList = permissionsMap.get("permissions");
                 for (Map<String, Object> permission : permissionsList) {
                     buildPermissionTree(null, permission);
                 }
@@ -89,5 +90,15 @@ final public class PermissionNodeService {
                 buildPermissionTree(permissionNode, childMap);
             }
         }
+    }
+
+    public Optional<List<PermissionNode>> getPermissionNodeListByFullName(List<String> permissionNodeListFullName) {
+        List<PermissionNode> permissionNodeList = new ArrayList<>();
+        if (permissionNodeListFullName != null) {
+            for (String fullName : permissionNodeListFullName) {
+                this.getPermissionNodeByFullName(fullName).ifPresent(permissionNodeList::add);
+            }
+        }
+        return permissionNodeList.isEmpty() ? Optional.empty() : Optional.of(permissionNodeList);
     }
 }

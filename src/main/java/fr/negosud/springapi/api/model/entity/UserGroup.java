@@ -16,13 +16,14 @@ public class UserGroup {
 
     @NotNull
     @NotBlank
+    @Column(unique = true)
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "child_user_group_id")
     private UserGroup childUserGroup;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_group_permission_node",
             joinColumns = @JoinColumn(name = "user_group_id"),
@@ -32,11 +33,32 @@ public class UserGroup {
 
     public UserGroup() { }
 
+    public UserGroup(String name, UserGroup childUserGroup, List<PermissionNode> permissionNodeList) {
+        this.name = name;
+        this.childUserGroup = childUserGroup;
+        this.permissionNodeList = permissionNodeList;
+    }
+
     public UserGroup(Long userGroupId, String name, UserGroup childUserGroup, List<PermissionNode> permissionNodeList) {
         this.userGroupId = userGroupId;
         this.name = name;
         this.childUserGroup = childUserGroup;
         this.permissionNodeList = permissionNodeList;
+    }
+
+    public void addPermissionNodeList(List<PermissionNode> permissionNodeList) {
+        if (permissionNodeList != null) {
+            if (this.permissionNodeList == null) {
+                this.setPermissionNodeList(permissionNodeList);
+            } else {
+                this.permissionNodeList.addAll(permissionNodeList);
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
     }
 
     public Long getUserGroupId() {

@@ -1,4 +1,4 @@
-package fr.negosud.springapi.api.entity;
+package fr.negosud.springapi.api.model.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -20,6 +20,12 @@ public class ProductFamily {
     @Column(nullable = false)
     private String description;
     public ProductFamily() {
+    }
+
+    public ProductFamily(Long productFamilyId, String name, String description) {
+        this.productFamilyId = productFamilyId;
+        this.name = name;
+        this.description = description;
     }
 
     public Long getProductFamilyId() {

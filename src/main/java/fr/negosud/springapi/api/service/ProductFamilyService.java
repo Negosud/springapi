@@ -1,6 +1,6 @@
 package fr.negosud.springapi.api.service;
 
-import fr.negosud.springapi.api.entity.ProductFamily;
+import fr.negosud.springapi.api.model.entity.ProductFamily;
 import fr.negosud.springapi.api.repository.ProductFamilyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

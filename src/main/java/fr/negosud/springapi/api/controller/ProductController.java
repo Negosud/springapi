@@ -1,6 +1,6 @@
 package fr.negosud.springapi.api.controller;
 
-import fr.negosud.springapi.api.entity.Product;
+import fr.negosud.springapi.api.model.entity.Product;
 import fr.negosud.springapi.api.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

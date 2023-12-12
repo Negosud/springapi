@@ -5,9 +5,7 @@ import fr.negosud.springapi.api.service.ProductTransactionTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,4 +30,27 @@ public class ProductTransactionTypeController {
                 .map(product -> new ResponseEntity<>(product, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
+    @PutMapping("/{productTransactionTypeId}")
+    public ResponseEntity<ProductTransactionType> updateTransactionType(@PathVariable Long productTransactionTypeId, @RequestBody ProductTransactionType productTransactionType) {
+        if(productTransactionTypeService.getProductTransactionTypeById(productTransactionTypeId).isPresent()) {
+            productTransactionType.setProductTransactionTypeId(productTransactionTypeId);
+            ProductTransactionType updatedProductTransactionType = productTransactionTypeService.saveProductTransactionType(productTransactionType);
+            return new ResponseEntity<>(updatedProductTransactionType, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/{productTransactionTypeId}")
+    public ResponseEntity<Void>  deleteProductransaction(@PathVariable Long productTransactionTypeId) {
+    if(productTransactionTypeService.getProductTransactionTypeById(productTransactionTypeId).isPresent()) {
+        productTransactionTypeService.deleteProductTransactionType(productTransactionTypeId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    } else {
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    }
 }
+
+

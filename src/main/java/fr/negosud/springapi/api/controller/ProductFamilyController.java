@@ -2,6 +2,7 @@ package fr.negosud.springapi.api.controller;
 
 import fr.negosud.springapi.api.model.entity.ProductFamily;
 import fr.negosud.springapi.api.service.ProductFamilyService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/productFamily")
+@Tag(name = "ProductFamily")
 public class ProductFamilyController {
 
     private final ProductFamilyService productFamilyService;

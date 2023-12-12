@@ -27,7 +27,7 @@ final public class User extends ModificationAuditableEntity {
 
     @NotBlank
     @Email
-    @Column(nullable = false, unique = true, length = 320)
+    @Column(nullable = false, length = 320)
     private String email;
 
     @NotBlank

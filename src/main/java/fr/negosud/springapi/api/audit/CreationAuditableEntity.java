@@ -1,5 +1,6 @@
 package fr.negosud.springapi.api.audit;
 
+import fr.negosud.springapi.api.component.ActionUserContextHolder;
 import fr.negosud.springapi.api.model.entity.User;
 import jakarta.persistence.*;
 
@@ -12,12 +13,13 @@ public abstract class CreationAuditableEntity implements AuditableEntity {
     protected Date createdAt;
 
     @ManyToOne
-    @Column(name = "created_by", nullable = true, updatable = false)
+    @Column(name = "created_by", updatable = false)
     protected User createdBy;
 
     @PrePersist
     public void onCreate() {
         this.createdAt = new Date();
+        this.createdBy = ActionUserContextHolder.getActionUser();
     }
 
     @PreUpdate

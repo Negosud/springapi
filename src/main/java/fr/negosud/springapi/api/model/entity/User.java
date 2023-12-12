@@ -1,7 +1,7 @@
 package fr.negosud.springapi.api.model.entity;
 
 import fr.negosud.springapi.api.audit.AuditListener;
-import fr.negosud.springapi.api.audit.ModificationAuditableEntity;
+import fr.negosud.springapi.api.audit.FullAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @EntityListeners(AuditListener.class)
 @Table(name="user")
-final public class User extends ModificationAuditableEntity {
+final public class User extends FullAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,12 +67,6 @@ final public class User extends ModificationAuditableEntity {
         this.phoneNumber = phoneNumber;
         this.createdAt = createdAt;
         this.permissionNodeList = permissionNodeList;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        this.createdAt = new Date();
     }
 
     public Long getUserId() {

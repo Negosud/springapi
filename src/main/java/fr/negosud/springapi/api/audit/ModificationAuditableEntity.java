@@ -1,5 +1,6 @@
 package fr.negosud.springapi.api.audit;
 
+import fr.negosud.springapi.api.component.ActionUserContextHolder;
 import fr.negosud.springapi.api.model.entity.User;
 import jakarta.persistence.*;
 
@@ -12,16 +13,18 @@ public abstract class ModificationAuditableEntity implements AuditableEntity {
     protected Date modifiedAt;
 
     @ManyToOne
-    @Column(name = "modified_by", nullable = true, updatable = false)
+    @Column(name = "modified_by", updatable = false)
     protected User modifiedBy;
 
     @PrePersist
     public void onCreate() {
         this.modifiedAt = new Date();
+        this.modifiedBy = ActionUserContextHolder.getActionUser() == null ? this.modifiedBy : ActionUserContextHolder.getActionUser();
     }
 
     @PreUpdate
     public void onUpdate() {
         this.modifiedAt = new Date();
+        this.modifiedBy = ActionUserContextHolder.getActionUser() == null ? this.modifiedBy : ActionUserContextHolder.getActionUser();
     }
 }

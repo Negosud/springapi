@@ -1,6 +1,7 @@
 package fr.negosud.springapi.api.controller;
 
 import fr.negosud.springapi.api.model.entity.Order;
+import fr.negosud.springapi.api.model.entity.ProductFamily;
 import fr.negosud.springapi.api.service.OrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +44,18 @@ public class OrderController {
 
         Order createdOrder= orderService.saveOrder(order);
         return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{orderId}/control")
+    public ResponseEntity<Order> updateOrder(@PathVariable Long orderId, @RequestBody Order order) {
+
+        if (orderService.getOrderById(orderId).isPresent()) {
+            order.setOrderId(orderId);
+            Order updatedOrder = orderService.saveOrder(order);
+            return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
+
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

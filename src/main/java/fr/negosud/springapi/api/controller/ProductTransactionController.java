@@ -2,6 +2,7 @@ package fr.negosud.springapi.api.controller;
 
 import fr.negosud.springapi.api.model.entity.ProductTransaction;
 import fr.negosud.springapi.api.service.ProductTransactionService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
+@RequestMapping("/product_transaction")
+@Tag(name = "ProductTransaction")
 public class ProductTransactionController {
 
     private ProductTransactionService productTransactionService;
@@ -24,7 +28,7 @@ public class ProductTransactionController {
         return new ResponseEntity<>(productTransactions, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/{productTransactionTypeId}")
     public ResponseEntity<ProductTransaction> getProductTransactionById(@PathVariable Long productTransactionId) {
         return productTransactionService.getProductTransactionById(productTransactionId)
                 .map(product -> new ResponseEntity<>(product, HttpStatus.OK))
@@ -41,6 +45,4 @@ public class ProductTransactionController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-
 }

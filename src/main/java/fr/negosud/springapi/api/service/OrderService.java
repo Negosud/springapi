@@ -1,7 +1,6 @@
 package fr.negosud.springapi.api.service;
 
 import fr.negosud.springapi.api.model.entity.Order;
-import fr.negosud.springapi.api.model.entity.ProductFamily;
 import fr.negosud.springapi.api.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

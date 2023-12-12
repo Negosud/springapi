@@ -15,22 +15,18 @@ public class OrderService {
 
     @Autowired
     public OrderService(OrderRepository orderRepository) {
-
         this.orderRepository = orderRepository;
     }
 
     public List<Order> getAllOrders() {
-
         return orderRepository.findAll();
     }
 
     public Optional<Order> getOrderById(Long orderId) {
-
         return orderRepository.findById(orderId);
     }
 
     public Order saveOrder(Order order) {
-
         return orderRepository.save(order);
     }
 }

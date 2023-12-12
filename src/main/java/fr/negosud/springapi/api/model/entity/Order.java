@@ -11,7 +11,6 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Long orderId;
 
     @NotBlank

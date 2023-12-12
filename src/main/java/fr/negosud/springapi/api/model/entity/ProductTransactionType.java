@@ -5,12 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class ProductFamily {
-
+public class ProductTransactionType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
-    private Long productFamilyId;
+    private Long productTransactionTypeId;
 
     @NotBlank
     @Column(nullable = false)
@@ -19,21 +18,27 @@ public class ProductFamily {
     @NotBlank
     @Column(nullable = false)
     private String description;
-    public ProductFamily() {
+
+    @NotBlank
+    @Column(nullable = false)
+    private Boolean isEntry;
+
+    public ProductTransactionType() {
     }
 
-    public ProductFamily(Long productFamilyId, String name, String description) {
-        this.productFamilyId = productFamilyId;
+    public ProductTransactionType(Long productTransactionTypeId, String name, String description, Boolean isEntry) {
+        this.productTransactionTypeId = productTransactionTypeId;
         this.name = name;
         this.description = description;
+        this.isEntry = isEntry;
     }
 
-    public Long getProductFamilyId() {
-        return productFamilyId;
+    public Long getProductTransactionTypeId() {
+        return productTransactionTypeId;
     }
 
-    public void setProductFamilyId(Long productFamilyId) {
-        this.productFamilyId = productFamilyId;
+    public void setProductTransactionTypeId(Long productTransactionTypeId) {
+        this.productTransactionTypeId = productTransactionTypeId;
     }
 
     public String getName() {
@@ -50,5 +55,13 @@ public class ProductFamily {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Boolean getEntry() {
+        return isEntry;
+    }
+
+    public void setEntry(Boolean entry) {
+        isEntry = entry;
     }
 }

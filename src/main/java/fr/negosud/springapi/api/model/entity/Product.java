@@ -3,10 +3,6 @@ package fr.negosud.springapi.api.model.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import fr.negosud.springapi.api.entity.ProductFamily;
-
-
-import java.math.BigDecimal;
 
 @Entity
 public class Product {
@@ -32,7 +28,7 @@ public class Product {
     @Column(nullable = false)
     private Integer vintage;
 
-    @OneToOne(mappedBy = "ProductFamily", cascade = CascadeType.DETACH )
+    @ManyToOne
     private ProductFamily productFamily;
 
     @NotBlank

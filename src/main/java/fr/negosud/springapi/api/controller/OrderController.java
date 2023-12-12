@@ -1,7 +1,6 @@
 package fr.negosud.springapi.api.controller;
 
 import fr.negosud.springapi.api.model.entity.Order;
-import fr.negosud.springapi.api.model.entity.ProductFamily;
 import fr.negosud.springapi.api.service.OrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

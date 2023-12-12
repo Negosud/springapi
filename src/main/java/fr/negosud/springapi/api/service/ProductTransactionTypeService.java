@@ -3,10 +3,12 @@ package fr.negosud.springapi.api.service;
 import fr.negosud.springapi.api.model.entity.ProductTransactionType;
 import fr.negosud.springapi.api.repository.ProductTransactionTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class ProductTransactionTypeService {
 
     private final ProductTransactionTypeRepository productTransactionTypeRepository;

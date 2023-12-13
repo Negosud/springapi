@@ -44,4 +44,17 @@ public class OrderController {
         Order createdOrder= orderService.saveOrder(order);
         return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }
+
+    @PutMapping("/{orderId}/control")
+    public ResponseEntity<Order> updateOrder(@PathVariable Long orderId, @RequestBody Order order) {
+
+        if (orderService.getOrderById(orderId).isPresent()) {
+            order.setOrderId(orderId);
+            Order updatedOrder = orderService.saveOrder(order);
+            return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
+
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

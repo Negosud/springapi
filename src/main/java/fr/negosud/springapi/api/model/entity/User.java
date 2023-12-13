@@ -1,7 +1,7 @@
 package fr.negosud.springapi.api.model.entity;
 
 import fr.negosud.springapi.api.audit.AuditListener;
-import fr.negosud.springapi.api.audit.ModificationAuditableEntity;
+import fr.negosud.springapi.api.audit.FullAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @EntityListeners(AuditListener.class)
 @Table(name="user")
-final public class User extends ModificationAuditableEntity {
+final public class User extends FullAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,9 +39,6 @@ final public class User extends ModificationAuditableEntity {
     @Column(length = 14)
     private String phoneNumber;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Date createdAt;
 
     @ManyToMany
     @JoinTable(
@@ -57,7 +54,7 @@ final public class User extends ModificationAuditableEntity {
 
     public User() { }
 
-    public User(Long userId, String login, String password, String email, String firstName, String lastName, String phoneNumber, Date createdAt, List<PermissionNode> permissionNodeList) {
+    public User(Long userId, String login, String password, String email, String firstName, String lastName, String phoneNumber, List<PermissionNode> permissionNodeList, UserGroup userGroup, Date createdAt, User createdBy, Date modifiedAt, User modifiedBy) {
         this.userId = userId;
         this.login = login;
         this.password = password;
@@ -65,14 +62,38 @@ final public class User extends ModificationAuditableEntity {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
+        this.permissionNodeList = permissionNodeList;
+        this.userGroup = userGroup;
         this.createdAt = createdAt;
+        this.createdBy = createdBy;
+        this.modifiedAt = modifiedAt;
+        this.modifiedBy = modifiedBy;
+    }
+
+    public User(String login, String password, String email, String firstName, String lastName, String phoneNumber, UserGroup userGroup, List<PermissionNode> permissionNodeList) {
+        this.login = login;
+        this.password = password;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.userGroup = userGroup;
         this.permissionNodeList = permissionNodeList;
     }
 
+    public void addPermissionNodeList(List<PermissionNode> permissionNodeList) {
+        if (permissionNodeList != null) {
+            if (this.permissionNodeList == null) {
+                this.setPermissionNodeList(permissionNodeList);
+            } else {
+                this.permissionNodeList.addAll(permissionNodeList);
+            }
+        }
+    }
+
     @Override
-    public void onCreate() {
-        super.onCreate();
-        this.createdAt = new Date();
+    public String toString() {
+        return this.firstName + " " + this.lastName;
     }
 
     public Long getUserId() {
@@ -129,14 +150,6 @@ final public class User extends ModificationAuditableEntity {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
     }
 
     public List<PermissionNode> getPermissionNodeList() {

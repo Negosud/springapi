@@ -1,0 +1,37 @@
+users:
+  - pseudouniquekey: customer@gmail.com
+    password: customer
+    firstname: Customer
+    lastname: CUSTOMER
+    phonenumber: 0123456789
+    usergroup: CUSTOMER
+
+  - pseudouniquekey: supplier@gmail.com
+    password: supplier
+    firstname: Supplier
+    lastname: SUPPLIER
+    phonenumber: 0123456789
+    usergroup: SUPPLIER
+
+  - pseudouniquekey: employee@negosud.fr
+    password: employee
+    firstname: Employee
+    lastname: EMPLOYEE
+    phonenumber: 0123456789
+    usergroup: EMPLOYEE
+
+  - pseudouniquekey: manager@negosud.fr
+    password: manager
+    firstname: Manager
+    lastname: MANAGER
+    phonenumber: 0123456789
+    usergroup: MANAGER
+    permissions:
+      - desktop
+
+  - pseudouniquekey: admin@negosud.fr
+    password: admin
+    firstname: Admin
+    lastname: ADMIN
+    phonenumber: 0123456789
+    usergroup: ADMIN

@@ -5,5 +5,4 @@ interface AuditableEntity {
     void onCreate();
 
     void onUpdate();
-
 }

@@ -1,12 +1,12 @@
 package fr.negosud.springapi.api.audit;
 
+import fr.negosud.springapi.api.component.ActionUserContextHolder;
 import fr.negosud.springapi.api.model.entity.User;
 import jakarta.persistence.*;
 
 import java.util.Date;
 
-// TODO: Implement user auditing (created_by + modified_by)
-
+@MappedSuperclass
 public abstract class FullAuditableEntity implements AuditableEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -14,26 +14,60 @@ public abstract class FullAuditableEntity implements AuditableEntity {
     protected Date createdAt;
 
     @ManyToOne
-    @Column(name = "created_by", nullable = true, updatable = false)
+    @JoinColumn(name = "created_by")
     protected User createdBy;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "modified_at", nullable = false, updatable = false)
+    @Column(name = "modified_at", nullable = false)
     protected Date modifiedAt;
 
     @ManyToOne
-    @Column(name = "modified_by", nullable = true, updatable = false)
+    @JoinColumn(name = "modified_by")
     protected User modifiedBy;
 
     @PrePersist
     public void onCreate() {
         this.createdAt = new Date();
         this.modifiedAt = new Date();
+        this.createdBy = ActionUserContextHolder.getActionUser();
+        this.modifiedBy = ActionUserContextHolder.getActionUser() == null ? this.modifiedBy : ActionUserContextHolder.getActionUser();
     }
 
     @PreUpdate
     public void onUpdate() {
         this.modifiedAt = new Date();
+        this.modifiedBy = ActionUserContextHolder.getActionUser() == null ? this.modifiedBy : ActionUserContextHolder.getActionUser();
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getModifiedAt() {
+        return modifiedAt;
+    }
+
+    public void setModifiedAt(Date modifiedAt) {
+        this.modifiedAt = modifiedAt;
+    }
+
+    public User getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(User modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
 }

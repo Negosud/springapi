@@ -2,7 +2,6 @@ package fr.negosud.springapi.api.model.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -11,10 +10,8 @@ public class UserGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Long userGroupId;
 
-    @NotNull
     @NotBlank
     @Column(unique = true)
     private String name;

@@ -21,7 +21,13 @@ final public class ActionUserContextHolder {
     }
 
     public void setActionUserId(Long userId) {
-        userIdHolder.set(this.userService.getUserById(userId).orElse(null));
+        this.userService.getUserById(userId).ifPresent(userIdHolder::set);
+    }
+
+    public static void setActionUser(User user) {
+        if (user != null) {
+            userIdHolder.set(user);
+        }
     }
 
     public static void clear() {

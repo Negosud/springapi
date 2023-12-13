@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 
 import java.util.Date;
 
+@MappedSuperclass
 public abstract class ModificationAuditableEntity implements AuditableEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -13,7 +14,7 @@ public abstract class ModificationAuditableEntity implements AuditableEntity {
     protected Date modifiedAt;
 
     @ManyToOne
-    @Column(name = "modified_by", updatable = false)
+    @JoinColumn(name = "modified_by", updatable = false)
     protected User modifiedBy;
 
     @PrePersist
@@ -26,5 +27,21 @@ public abstract class ModificationAuditableEntity implements AuditableEntity {
     public void onUpdate() {
         this.modifiedAt = new Date();
         this.modifiedBy = ActionUserContextHolder.getActionUser() == null ? this.modifiedBy : ActionUserContextHolder.getActionUser();
+    }
+
+    public Date getModifiedAt() {
+        return modifiedAt;
+    }
+
+    public void setModifiedAt(Date modifiedAt) {
+        this.modifiedAt = modifiedAt;
+    }
+
+    public User getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(User modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 }

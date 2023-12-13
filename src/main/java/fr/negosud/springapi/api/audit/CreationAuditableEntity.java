@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 
 import java.util.Date;
 
+@MappedSuperclass
 public abstract class CreationAuditableEntity implements AuditableEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -13,7 +14,7 @@ public abstract class CreationAuditableEntity implements AuditableEntity {
     protected Date createdAt;
 
     @ManyToOne
-    @Column(name = "created_by", updatable = false)
+    @JoinColumn(name = "created_by", updatable = false)
     protected User createdBy;
 
     @PrePersist
@@ -27,4 +28,19 @@ public abstract class CreationAuditableEntity implements AuditableEntity {
 
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
 }

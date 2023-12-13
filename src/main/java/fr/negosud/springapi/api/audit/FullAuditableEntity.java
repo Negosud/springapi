@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 
 import java.util.Date;
 
+@MappedSuperclass
 public abstract class FullAuditableEntity implements AuditableEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -13,15 +14,15 @@ public abstract class FullAuditableEntity implements AuditableEntity {
     protected Date createdAt;
 
     @ManyToOne
-    @Column(name = "created_by", updatable = false)
+    @JoinColumn(name = "created_by")
     protected User createdBy;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "modified_at", nullable = false, updatable = false)
+    @Column(name = "modified_at", nullable = false)
     protected Date modifiedAt;
 
     @ManyToOne
-    @Column(name = "modified_by", updatable = false)
+    @JoinColumn(name = "modified_by")
     protected User modifiedBy;
 
     @PrePersist
@@ -38,4 +39,35 @@ public abstract class FullAuditableEntity implements AuditableEntity {
         this.modifiedBy = ActionUserContextHolder.getActionUser() == null ? this.modifiedBy : ActionUserContextHolder.getActionUser();
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getModifiedAt() {
+        return modifiedAt;
+    }
+
+    public void setModifiedAt(Date modifiedAt) {
+        this.modifiedAt = modifiedAt;
+    }
+
+    public User getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(User modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
 }

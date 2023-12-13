@@ -34,6 +34,10 @@ public class UserGroupService {
         return userGroupRepository.findById(userGroupId);
     }
 
+    public Optional<UserGroup> getUserGroupByName(String name) {
+        return userGroupRepository.findByName(name);
+    }
+
     public void saveUserGroup(UserGroup userGroup) {
         userGroupRepository.save(userGroup);
     }

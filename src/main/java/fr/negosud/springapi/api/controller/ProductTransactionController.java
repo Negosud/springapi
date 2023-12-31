@@ -15,7 +15,7 @@ import java.util.List;
 @Tag(name = "ProductTransaction")
 public class ProductTransactionController {
 
-    private ProductTransactionService productTransactionService;
+    final private ProductTransactionService productTransactionService;
 
     @Autowired
     public ProductTransactionController(ProductTransactionService productTransactionService) {
@@ -28,14 +28,14 @@ public class ProductTransactionController {
         return new ResponseEntity<>(productTransactions, HttpStatus.OK);
     }
 
-    @GetMapping("/{productTransactionTypeId}")
+    @GetMapping("/{productTransactionId}")
     public ResponseEntity<ProductTransaction> getProductTransactionById(@PathVariable long productTransactionId) {
         return productTransactionService.getProductTransactionById(productTransactionId)
                 .map(product -> new ResponseEntity<>(product, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PutMapping("/{productTransactionTypeId}")
+    @PutMapping("/{productTransactionId}")
     public ResponseEntity<ProductTransaction> updateTransaction(@PathVariable long productTransactionId, @RequestBody ProductTransaction productTransaction) {
         if(productTransactionService.getProductTransactionById(productTransactionId).isPresent()) {
             productTransaction.setId(productTransactionId);

@@ -15,7 +15,7 @@ import java.util.List;
 @Tag(name = "ProductTransactionType")
 public class ProductTransactionTypeController {
 
-    private ProductTransactionTypeService productTransactionTypeService;
+    final private ProductTransactionTypeService productTransactionTypeService;
 
     @Autowired
     public ProductTransactionTypeController(ProductTransactionTypeService productTransactionTypeService) {

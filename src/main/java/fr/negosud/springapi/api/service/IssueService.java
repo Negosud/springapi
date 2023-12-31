@@ -24,7 +24,7 @@ public class IssueService {
         return issueRepository.findAll();
     }
 
-    public Optional<Issue> getIssueById(Long issueId) {
+    public Optional<Issue> getIssueById(long issueId) {
 
         return issueRepository.findById(issueId);
     }
@@ -34,7 +34,7 @@ public class IssueService {
         return issueRepository.save(issue);
     }
 
-    public void deleteIssue(Long issueId) {
+    public void deleteIssue(long issueId) {
 
         issueRepository.deleteById(issueId);
     }

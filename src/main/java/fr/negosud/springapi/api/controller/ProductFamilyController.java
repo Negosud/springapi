@@ -31,7 +31,7 @@ public class ProductFamilyController {
     }
 
     @GetMapping("/{productFamilyId}")
-    public ResponseEntity<ProductFamily> getProductFamilyById(@PathVariable Long productFamilyId) {
+    public ResponseEntity<ProductFamily> getProductFamilyById(@PathVariable long productFamilyId) {
 
         return productFamilyService.getProductFamilyById(productFamilyId)
                 .map(productFamily -> new ResponseEntity<>(productFamily, HttpStatus.OK))
@@ -46,10 +46,10 @@ public class ProductFamilyController {
     }
 
     @PutMapping("/{productFamilyId}")
-    public ResponseEntity<ProductFamily> updateProductFamily(@PathVariable Long productFamilyId, @RequestBody ProductFamily productFamily) {
+    public ResponseEntity<ProductFamily> updateProductFamily(@PathVariable long productFamilyId, @RequestBody ProductFamily productFamily) {
 
         if (productFamilyService.getProductFamilyById(productFamilyId).isPresent()) {
-            productFamily.setProductFamilyId(productFamilyId);
+            productFamily.setId(productFamilyId);
             ProductFamily updatedProductFamily = productFamilyService.saveProductFamily(productFamily);
             return new ResponseEntity<>(updatedProductFamily, HttpStatus.OK);
 
@@ -59,7 +59,7 @@ public class ProductFamilyController {
     }
 
     @DeleteMapping("/{productFamilyId}")
-    public ResponseEntity<Void> deleteProductFamily(@PathVariable Long productFamilyId) {
+    public ResponseEntity<Void> deleteProductFamily(@PathVariable long productFamilyId) {
 
         if (productFamilyService.getProductFamilyById(productFamilyId).isPresent()) {
             productFamilyService.deleteProductFamily(productFamilyId);

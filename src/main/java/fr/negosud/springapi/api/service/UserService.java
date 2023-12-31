@@ -31,7 +31,7 @@ final public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUserById(Long userId) {
+    public Optional<User> getUserById(long userId) {
         return userRepository.findById(userId);
     }
 
@@ -43,7 +43,7 @@ final public class UserService {
         return userRepository.save(user);
     }
 
-    public void deleteUser(Long userId) {
+    public void deleteUser(long userId) {
         userRepository.deleteById(userId);
     }
 

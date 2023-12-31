@@ -30,7 +30,7 @@ public class UserGroupService {
         return userGroupRepository.findAll();
     }
 
-    public Optional<UserGroup> getUserGroupById(Long userGroupId) {
+    public Optional<UserGroup> getUserGroupById(long userGroupId) {
         return userGroupRepository.findById(userGroupId);
     }
 
@@ -42,7 +42,7 @@ public class UserGroupService {
         userGroupRepository.save(userGroup);
     }
 
-    public void deleteUserGroup(Long userGroupId) {
+    public void deleteUserGroup(long userGroupId) {
         userGroupRepository.deleteById(userGroupId);
     }
 

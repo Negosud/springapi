@@ -20,7 +20,7 @@ final public class ActionUserContextHolder {
         return userIdHolder.get();
     }
 
-    public void setActionUserId(Long userId) {
+    public void setActionUserId(long userId) {
         this.userService.getUserById(userId).ifPresent(userIdHolder::set);
     }
 

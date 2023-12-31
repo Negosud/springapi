@@ -31,7 +31,7 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Order> getOrderById(@PathVariable Long orderId) {
+    public ResponseEntity<Order> getOrderById(@PathVariable long orderId) {
 
         return orderService.getOrderById(orderId)
                 .map(order -> new ResponseEntity<>(order, HttpStatus.OK))
@@ -46,10 +46,10 @@ public class OrderController {
     }
 
     @PutMapping("/{orderId}/control")
-    public ResponseEntity<Order> updateOrder(@PathVariable Long orderId, @RequestBody Order order) {
+    public ResponseEntity<Order> updateOrder(@PathVariable long orderId, @RequestBody Order order) {
 
         if (orderService.getOrderById(orderId).isPresent()) {
-            order.setOrderId(orderId);
+            order.setId(orderId);
             Order updatedOrder = orderService.saveOrder(order);
             return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
 

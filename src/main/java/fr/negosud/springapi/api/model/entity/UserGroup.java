@@ -1,16 +1,21 @@
 package fr.negosud.springapi.api.model.entity;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "\"user_group\"")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "name")
 public class UserGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userGroupId;
+    @JsonIgnore
+    private long id;
 
     @NotBlank
     @Column(unique = true)
@@ -18,6 +23,7 @@ public class UserGroup {
 
     @ManyToOne
     @JoinColumn(name = "child_user_group_id")
+    @JsonIgnore
     private UserGroup childUserGroup;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -26,6 +32,7 @@ public class UserGroup {
             joinColumns = @JoinColumn(name = "user_group_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_node_id")
     )
+    @JsonIgnore
     private List<PermissionNode> permissionNodeList;
 
     public UserGroup() { }
@@ -36,8 +43,8 @@ public class UserGroup {
         this.permissionNodeList = permissionNodeList;
     }
 
-    public UserGroup(Long userGroupId, String name, UserGroup childUserGroup, List<PermissionNode> permissionNodeList) {
-        this.userGroupId = userGroupId;
+    public UserGroup(long id, String name, UserGroup childUserGroup, List<PermissionNode> permissionNodeList) {
+        this.id = id;
         this.name = name;
         this.childUserGroup = childUserGroup;
         this.permissionNodeList = permissionNodeList;
@@ -58,12 +65,12 @@ public class UserGroup {
         return this.name;
     }
 
-    public Long getUserGroupId() {
-        return userGroupId;
+    public long getId() {
+        return id;
     }
 
-    public void setUserGroupId(Long userGroupId) {
-        this.userGroupId = userGroupId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -88,5 +95,34 @@ public class UserGroup {
 
     public void setPermissionNodeList(List<PermissionNode> permissionNodeList) {
         this.permissionNodeList = permissionNodeList;
+    }
+
+    @JsonIdentityReference(alwaysAsId = true)
+    @JsonGetter("permissionList")
+    public List<PermissionNode> getFullPermissionNodeList() {
+        List<PermissionNode> fullPermissionNodeList = new ArrayList<>(this.permissionNodeList);
+        if (this.childUserGroup != null)
+            fullPermissionNodeList.addAll(this.childUserGroup.getFullPermissionNodeList());
+        return this.clearPermissionNodeList(fullPermissionNodeList);
+    }
+
+    /**
+     * Don't look at this method : it's just a piece of french engineering right here
+     * It does the job still...
+     */
+    private List<PermissionNode> clearPermissionNodeList(List<PermissionNode> permissionNodeList) {
+        List<PermissionNode> clearPermissionNodeList = new ArrayList<>(permissionNodeList);
+        for (PermissionNode clearedPermissionNode : permissionNodeList) {
+            PermissionNode checkedPermissionNode = clearedPermissionNode;
+            while (checkedPermissionNode.getParentPermissionNode() != null) {
+                if (permissionNodeList.contains(checkedPermissionNode.getParentPermissionNode())) {
+                    clearPermissionNodeList.remove(clearedPermissionNode);
+                    break;
+                } else {
+                    checkedPermissionNode = checkedPermissionNode.getParentPermissionNode();
+                }
+            }
+        }
+        return clearPermissionNodeList;
     }
 }

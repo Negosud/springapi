@@ -24,7 +24,7 @@ public class ProductFamilyService {
         return productFamilyRepository.findAll();
     }
 
-    public Optional<ProductFamily> getProductFamilyById(Long productFamilyId) {
+    public Optional<ProductFamily> getProductFamilyById(long productFamilyId) {
 
         return productFamilyRepository.findById(productFamilyId);
     }
@@ -34,7 +34,7 @@ public class ProductFamilyService {
         return productFamilyRepository.save(productFamily);
     }
 
-    public void deleteProductFamily(Long productFamilyId) {
+    public void deleteProductFamily(long productFamilyId) {
 
         productFamilyRepository.deleteById(productFamilyId);
     }

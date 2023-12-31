@@ -1,6 +1,6 @@
 package fr.negosud.springapi.api.controller;
 
-import fr.negosud.springapi.api.model.dto.CreateUserRequest;
+import fr.negosud.springapi.api.model.dto.SetUserRequest;
 import fr.negosud.springapi.api.model.entity.User;
 import fr.negosud.springapi.api.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
-@Tag(name = "User")
+@Tag(name = "User", description = "Endpoints related to User crud and actions.")
 public class UserController {
 
     private final UserService userService;
@@ -35,22 +35,22 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/{id}")
     @ApiResponses(value = {
             @ApiResponse(description = "User found", responseCode = "200"),
             @ApiResponse(description = "User not found", responseCode = "404", content = {
                     @Content(schema = @Schema())
             })
     })
-    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
-        return userService.getUserById(userId)
+    public ResponseEntity<User> getUserById(@PathVariable long id) {
+        return userService.getUserById(id)
                 .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
     @ApiResponse(description = "User created", responseCode = "201")
-    public ResponseEntity<Object> createUser(@RequestBody CreateUserRequest createUserRequest) {
+    public ResponseEntity<Object> createUser(@RequestBody SetUserRequest createUserRequest) {
         User user = new User();
         user.setEmail(createUserRequest.getEmail());
         user.setFirstName(createUserRequest.getFirstName());
@@ -59,7 +59,7 @@ public class UserController {
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{userId}")
+    @PutMapping("/{id}")
     @Operation(description = "Update a user by ID.")
     @ApiResponses(value = {
             @ApiResponse(description = "User updated successfully", responseCode = "200"),
@@ -67,9 +67,9 @@ public class UserController {
                     @Content(schema = @Schema())
             })
     })
-    public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody User user) {
-        if (userService.getUserById(userId).isPresent()) {
-            user.setUserId(userId);
+    public ResponseEntity<User> updateUser(@PathVariable long id, @RequestBody User user) {
+        if (userService.getUserById(id).isPresent()) {
+            user.setId(id);
             User updatedUser = userService.saveUser(user);
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         } else {
@@ -77,14 +77,14 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/{id}")
     @ApiResponses(value = {
             @ApiResponse(description = "User deleted", responseCode = "204"),
             @ApiResponse(description = "User not found", responseCode = "404")
     })
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
-        if (userService.getUserById(userId).isPresent()) {
-            userService.deleteUser(userId);
+    public ResponseEntity<Void> deleteUser(@PathVariable long id) {
+        if (userService.getUserById(id).isPresent()) {
+            userService.deleteUser(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

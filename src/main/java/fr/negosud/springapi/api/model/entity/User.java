@@ -1,5 +1,6 @@
 package fr.negosud.springapi.api.model.entity;
 
+import com.fasterxml.jackson.annotation.*;
 import fr.negosud.springapi.api.audit.AuditListener;
 import fr.negosud.springapi.api.audit.FullAuditableEntity;
 import jakarta.persistence.*;
@@ -11,12 +12,13 @@ import java.util.List;
 
 @Entity
 @EntityListeners(AuditListener.class)
-@Table(name="user")
+@Table(name="\"user\"")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 final public class User extends FullAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private long id;
 
     @Email
     @Column(unique = true, length = 320)
@@ -25,9 +27,12 @@ final public class User extends FullAuditableEntity {
     @Column(length = 60)
     private String password;
 
+    @Column(length = 60)
+    private String salt;
+
     @NotBlank
     @Email
-    @Column(nullable = false, length = 320)
+    @Column(length = 320)
     private String email;
 
     @NotBlank
@@ -39,23 +44,35 @@ final public class User extends FullAuditableEntity {
     @Column(length = 14)
     private String phoneNumber;
 
-
     @ManyToMany
     @JoinTable(
             name = "user_permission_node",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_node_id")
     )
+    @JsonIdentityReference(alwaysAsId = true)
     private List<PermissionNode> permissionNodeList;
 
     @ManyToOne
     @NotBlank
+    @JsonIdentityReference(alwaysAsId = true)
     private UserGroup userGroup;
+
+    @OneToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private Address mailingAddress;
+
+    @OneToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private Address billingAddress;
+
+    @OneToMany(mappedBy = "supplier")
+    private List<SupplierProduct> productList;
 
     public User() { }
 
-    public User(Long userId, String login, String password, String email, String firstName, String lastName, String phoneNumber, List<PermissionNode> permissionNodeList, UserGroup userGroup, Date createdAt, User createdBy, Date modifiedAt, User modifiedBy) {
-        this.userId = userId;
+    public User(long id, String login, String password, String email, String firstName, String lastName, String phoneNumber, List<PermissionNode> permissionNodeList, UserGroup userGroup, Date createdAt, User createdBy, Date modifiedAt, User modifiedBy) {
+        this.id = id;
         this.login = login;
         this.password = password;
         this.email = email;
@@ -96,12 +113,12 @@ final public class User extends FullAuditableEntity {
         return this.firstName + " " + this.lastName;
     }
 
-    public Long getUserId() {
-        return userId;
+    public long getId() {
+        return this.id;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getLogin() {
@@ -158,5 +175,29 @@ final public class User extends FullAuditableEntity {
 
     public void setPermissionNodeList(List<PermissionNode> permissionNodeList) {
         this.permissionNodeList = permissionNodeList;
+    }
+
+    public UserGroup getUserGroup() {
+        return userGroup;
+    }
+
+    public void setUserGroup(UserGroup userGroup) {
+        this.userGroup = userGroup;
+    }
+
+    public Address getMailingAddress() {
+        return mailingAddress;
+    }
+
+    public void setMailingAddress(Address mailingAddress) {
+        this.mailingAddress = mailingAddress;
+    }
+
+    public Address getBillingAdress() {
+        return billingAddress;
+    }
+
+    public void setBillingAdress(Address billingAddress) {
+        this.billingAddress = billingAddress;
     }
 }

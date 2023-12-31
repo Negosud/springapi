@@ -29,16 +29,16 @@ public class ProductTransactionController {
     }
 
     @GetMapping("/{productTransactionTypeId}")
-    public ResponseEntity<ProductTransaction> getProductTransactionById(@PathVariable Long productTransactionId) {
+    public ResponseEntity<ProductTransaction> getProductTransactionById(@PathVariable long productTransactionId) {
         return productTransactionService.getProductTransactionById(productTransactionId)
                 .map(product -> new ResponseEntity<>(product, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PutMapping("/{productTransactionTypeId}")
-    public ResponseEntity<ProductTransaction> updateTransaction(@PathVariable Long productTransactionId, @RequestBody ProductTransaction productTransaction) {
+    public ResponseEntity<ProductTransaction> updateTransaction(@PathVariable long productTransactionId, @RequestBody ProductTransaction productTransaction) {
         if(productTransactionService.getProductTransactionById(productTransactionId).isPresent()) {
-            productTransaction.setProductTransactionId(productTransactionId);
+            productTransaction.setId(productTransactionId);
             ProductTransaction updatedProductTransaction = productTransactionService.saveProductTransaction(productTransaction);
             return new ResponseEntity<>(updatedProductTransaction, HttpStatus.OK);
         } else {

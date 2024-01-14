@@ -6,8 +6,8 @@ import fr.negosud.springapi.api.audit.FullAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -24,11 +24,7 @@ final public class User extends FullAuditableEntity {
     @Column(unique = true, length = 320)
     private String login;
 
-    @Column(length = 60)
     private String password;
-
-    @Column(length = 60)
-    private String salt;
 
     @NotBlank
     @Email
@@ -44,6 +40,9 @@ final public class User extends FullAuditableEntity {
     @Column(length = 14)
     private String phoneNumber;
 
+    @NotNull
+    private boolean active;
+
     @ManyToMany
     @JoinTable(
             name = "user_permission_node",
@@ -56,6 +55,7 @@ final public class User extends FullAuditableEntity {
     @ManyToOne
     @NotBlank
     @JsonIdentityReference(alwaysAsId = true)
+    @JoinColumn(referencedColumnName = "name")
     private UserGroup userGroup;
 
     @OneToOne
@@ -67,26 +67,16 @@ final public class User extends FullAuditableEntity {
     private Address billingAddress;
 
     @OneToMany(mappedBy = "supplier")
-    private List<SupplierProduct> productList;
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<SupplierProduct> suppliedProductList;
 
-    public User() { }
-
-    public User(long id, String login, String password, String email, String firstName, String lastName, String phoneNumber, List<PermissionNode> permissionNodeList, UserGroup userGroup, Date createdAt, User createdBy, Date modifiedAt, User modifiedBy) {
-        this.id = id;
-        this.login = login;
-        this.password = password;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.permissionNodeList = permissionNodeList;
-        this.userGroup = userGroup;
-        this.createdAt = createdAt;
-        this.createdBy = createdBy;
-        this.modifiedAt = modifiedAt;
-        this.modifiedBy = modifiedBy;
+    public User() {
+        this.active = true;
     }
 
+    /**
+     * Constructor used by User init method
+     */
     public User(String login, String password, String email, String firstName, String lastName, String phoneNumber, UserGroup userGroup, List<PermissionNode> permissionNodeList) {
         this.login = login;
         this.password = password;
@@ -96,6 +86,7 @@ final public class User extends FullAuditableEntity {
         this.phoneNumber = phoneNumber;
         this.userGroup = userGroup;
         this.permissionNodeList = permissionNodeList;
+        this.active = true;
     }
 
     public void addPermissionNodeList(List<PermissionNode> permissionNodeList) {
@@ -129,6 +120,7 @@ final public class User extends FullAuditableEntity {
         this.login = login;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -193,11 +185,27 @@ final public class User extends FullAuditableEntity {
         this.mailingAddress = mailingAddress;
     }
 
-    public Address getBillingAdress() {
+    public Address getBillingAddress() {
         return billingAddress;
     }
 
-    public void setBillingAdress(Address billingAddress) {
+    public void setBillingAddress(Address billingAddress) {
         this.billingAddress = billingAddress;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public List<SupplierProduct> getSuppliedProductList() {
+        return suppliedProductList;
+    }
+
+    public void setSuppliedProductList(List<SupplierProduct> suppliedProductList) {
+        this.suppliedProductList = suppliedProductList;
     }
 }

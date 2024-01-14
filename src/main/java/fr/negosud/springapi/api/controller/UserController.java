@@ -30,8 +30,12 @@ public class UserController {
 
     @GetMapping
     @ApiResponse(description = "List of all users", responseCode = "200")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers(
+            @RequestParam(required = false)
+            String userGroupName,
+            @RequestParam(required = false, defaultValue = "true")
+            boolean active) {
+        List<User> users = userService.getAllUsers(active, userGroupName);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
@@ -42,7 +46,9 @@ public class UserController {
                     @Content(schema = @Schema())
             })
     })
-    public ResponseEntity<User> getUserById(@PathVariable long id) {
+    public ResponseEntity<User> getUserById(
+            @PathVariable
+            long id) {
         return userService.getUserById(id)
                 .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -50,13 +56,12 @@ public class UserController {
 
     @PostMapping
     @ApiResponse(description = "User created", responseCode = "201")
-    public ResponseEntity<Object> createUser(@RequestBody SetUserRequest createUserRequest) {
-        User user = new User();
-        user.setEmail(createUserRequest.getEmail());
-        user.setFirstName(createUserRequest.getFirstName());
-        user.setLastName(createUserRequest.getLastName());
-        User createdUser = userService.saveUser(user);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    public ResponseEntity<User> createUser(
+            @RequestBody
+            SetUserRequest createUserRequest) {
+        User user = userService.setUserFromRequest(createUserRequest, null);
+        user = userService.saveUser(user);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -67,13 +72,18 @@ public class UserController {
                     @Content(schema = @Schema())
             })
     })
-    public ResponseEntity<User> updateUser(@PathVariable long id, @RequestBody User user) {
-        if (userService.getUserById(id).isPresent()) {
-            user.setId(id);
-            User updatedUser = userService.saveUser(user);
-            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
-        } else {
+    public ResponseEntity<User> updateUser(
+            @PathVariable
+            long id,
+            @RequestBody
+            SetUserRequest updateUserRequest) {
+        User user = userService.getUserById(id).orElse(null);
+        if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            user = userService.setUserFromRequest(updateUserRequest, user);
+            user = userService.saveUser(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }
     }
 
@@ -82,7 +92,9 @@ public class UserController {
             @ApiResponse(description = "User deleted", responseCode = "204"),
             @ApiResponse(description = "User not found", responseCode = "404")
     })
-    public ResponseEntity<Void> deleteUser(@PathVariable long id) {
+    public ResponseEntity<Void> deleteUser(
+            @PathVariable
+            long id) {
         if (userService.getUserById(id).isPresent()) {
             userService.deleteUser(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

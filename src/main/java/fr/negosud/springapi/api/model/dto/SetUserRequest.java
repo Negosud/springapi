@@ -15,44 +15,47 @@ public class SetUserRequest {
     private String email;
 
     @NotBlank
+    @Schema(description = "User's first name")
     private String firstName;
 
     @NotBlank
+    @Schema(description = "User's last name")
     private String lastName;
 
     @NotBlank
+    @Schema(description = "User's userGroup name")
     private String userGroup;
+
+    @Schema(description = "Is user active")
+    private boolean active;
 
     @Email
     @Column(unique = true, length = 320)
+    @Schema(description = "User's login email")
     private String login;
 
     @Column(length = 60)
+    @Schema(description = "User's password hashed by a front app")
     private String password;
 
     @Column(length = 14)
+    @Schema(description = "User's international phone number")
     private String phoneNumber;
 
+    @Schema(description = "User's permission list as full permission names")
     private List<String> permissionList;
 
+    @Schema(description = "User's mailing address id")
     private long mailingAddress;
 
+    @Schema(description = "User's billing address id")
     private long billingAddress;
 
-    private List<Long> productList;
+    @Schema(description = "User's supplied product list as ids")
+    private List<Long> suppliedProductList;
 
-    public SetUserRequest(String email, String firstName, String lastName, String userGroup, String login, String password, String phoneNumber, List<String> permissionList, long mailingAddress, long billingAddress, List<Long> productList) {
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.userGroup = userGroup;
-        this.login = login;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.permissionList = permissionList;
-        this.mailingAddress = mailingAddress;
-        this.billingAddress = billingAddress;
-        this.productList = productList;
+    public SetUserRequest() {
+        this.active = true;
     }
 
     public String getEmail() {
@@ -85,6 +88,14 @@ public class SetUserRequest {
 
     public void setUserGroup(String userGroup) {
         this.userGroup = userGroup;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public String getLogin() {
@@ -135,11 +146,11 @@ public class SetUserRequest {
         this.billingAddress = billingAddress;
     }
 
-    public List<Long> getProductList() {
-        return productList;
+    public List<Long> getSuppliedProductList() {
+        return suppliedProductList;
     }
 
-    public void setProductList(List<Long> productList) {
-        this.productList = productList;
+    public void setSuppliedProductList(List<Long> suppliedProductList) {
+        this.suppliedProductList = suppliedProductList;
     }
 }

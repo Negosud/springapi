@@ -1,48 +1,30 @@
-package fr.negosud.springapi.api.model.entity;
+package fr.negosud.springapi.api.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import fr.negosud.springapi.api.audit.AuditListener;
-import fr.negosud.springapi.api.audit.FullAuditableEntity;
-import fr.negosud.springapi.api.model.dto.ArrivalStatus;
+import fr.negosud.springapi.api.model.entity.ArrivalProduct;
+import fr.negosud.springapi.api.model.entity.User;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 
-@Entity
-@EntityListeners(AuditListener.class)
-@Table(name = "\"arrival\"")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "reference")
-public class Arrival extends FullAuditableEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @NotBlank
-    @Column(length = 20)
+public class SetArrivalRequest {
+    @Schema(description = "Arrival reference")
     private String reference;
 
-    @NotBlank
+
     @Enumerated(value = EnumType.STRING)
+    @Schema(description = "Arrival status")
     private ArrivalStatus status;
 
-    @ManyToOne
-    @NotBlank
+    @Schema(description = "Arrival supplier")
     private User suppliedBy;
 
-    @OneToMany(mappedBy = "arrival")
+   @Schema(description = "Arrival's product list")
     private List<ArrivalProduct> productList;
 
-    public Arrival() { }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public SetArrivalRequest() {
+        this.status = ArrivalStatus.PENDING;
     }
 
     public String getReference() {

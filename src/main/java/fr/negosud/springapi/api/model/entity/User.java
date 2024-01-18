@@ -1,33 +1,34 @@
 package fr.negosud.springapi.api.model.entity;
 
+import com.fasterxml.jackson.annotation.*;
 import fr.negosud.springapi.api.audit.AuditListener;
 import fr.negosud.springapi.api.audit.FullAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-import java.util.Date;
 import java.util.List;
 
 @Entity
 @EntityListeners(AuditListener.class)
-@Table(name="user")
+@Table(name="\"user\"")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 final public class User extends FullAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private long id;
 
     @Email
     @Column(unique = true, length = 320)
     private String login;
 
-    @Column(length = 60)
     private String password;
 
     @NotBlank
     @Email
-    @Column(nullable = false, length = 320)
+    @Column(length = 320)
     private String email;
 
     @NotBlank
@@ -39,6 +40,8 @@ final public class User extends FullAuditableEntity {
     @Column(length = 14)
     private String phoneNumber;
 
+    @NotNull
+    private boolean active;
 
     @ManyToMany
     @JoinTable(
@@ -46,30 +49,34 @@ final public class User extends FullAuditableEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_node_id")
     )
+    @JsonIdentityReference(alwaysAsId = true)
     private List<PermissionNode> permissionNodeList;
 
     @ManyToOne
     @NotBlank
+    @JsonIdentityReference(alwaysAsId = true)
+    @JoinColumn(referencedColumnName = "name")
     private UserGroup userGroup;
 
-    public User() { }
+    @OneToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private Address mailingAddress;
 
-    public User(Long userId, String login, String password, String email, String firstName, String lastName, String phoneNumber, List<PermissionNode> permissionNodeList, UserGroup userGroup, Date createdAt, User createdBy, Date modifiedAt, User modifiedBy) {
-        this.userId = userId;
-        this.login = login;
-        this.password = password;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.permissionNodeList = permissionNodeList;
-        this.userGroup = userGroup;
-        this.createdAt = createdAt;
-        this.createdBy = createdBy;
-        this.modifiedAt = modifiedAt;
-        this.modifiedBy = modifiedBy;
+    @OneToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private Address billingAddress;
+
+    @OneToMany(mappedBy = "supplier")
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<SupplierProduct> suppliedProductList;
+
+    public User() {
+        this.active = true;
     }
 
+    /**
+     * Constructor used by User init method
+     */
     public User(String login, String password, String email, String firstName, String lastName, String phoneNumber, UserGroup userGroup, List<PermissionNode> permissionNodeList) {
         this.login = login;
         this.password = password;
@@ -79,6 +86,7 @@ final public class User extends FullAuditableEntity {
         this.phoneNumber = phoneNumber;
         this.userGroup = userGroup;
         this.permissionNodeList = permissionNodeList;
+        this.active = true;
     }
 
     public void addPermissionNodeList(List<PermissionNode> permissionNodeList) {
@@ -96,12 +104,12 @@ final public class User extends FullAuditableEntity {
         return this.firstName + " " + this.lastName;
     }
 
-    public Long getUserId() {
-        return userId;
+    public long getId() {
+        return this.id;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getLogin() {
@@ -112,6 +120,7 @@ final public class User extends FullAuditableEntity {
         this.login = login;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -158,5 +167,45 @@ final public class User extends FullAuditableEntity {
 
     public void setPermissionNodeList(List<PermissionNode> permissionNodeList) {
         this.permissionNodeList = permissionNodeList;
+    }
+
+    public UserGroup getUserGroup() {
+        return userGroup;
+    }
+
+    public void setUserGroup(UserGroup userGroup) {
+        this.userGroup = userGroup;
+    }
+
+    public Address getMailingAddress() {
+        return mailingAddress;
+    }
+
+    public void setMailingAddress(Address mailingAddress) {
+        this.mailingAddress = mailingAddress;
+    }
+
+    public Address getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(Address billingAddress) {
+        this.billingAddress = billingAddress;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public List<SupplierProduct> getSuppliedProductList() {
+        return suppliedProductList;
+    }
+
+    public void setSuppliedProductList(List<SupplierProduct> suppliedProductList) {
+        this.suppliedProductList = suppliedProductList;
     }
 }

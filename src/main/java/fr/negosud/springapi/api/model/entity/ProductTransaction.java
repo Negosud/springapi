@@ -1,41 +1,46 @@
 package fr.negosud.springapi.api.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import fr.negosud.springapi.api.audit.AuditListener;
+import fr.negosud.springapi.api.audit.CreationAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class ProductTransaction {
+@EntityListeners(AuditListener.class)
+@Table(name = "\"product_transaction\"")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class ProductTransaction extends CreationAuditableEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
-    private Long productTransactionId;
-    @OneToOne
+    private long id;
+
+    @ManyToOne
     private Product product;
 
     @NotBlank
-    @Column(nullable = false)
-    private Integer quantity;
+    private int quantity;
 
     @ManyToOne
-    private  ProductTransactionType produtTransactionType;
+    private ProductTransactionType produtTransactionType;
 
-    public ProductTransaction() {
-    }
+    public ProductTransaction() { }
 
-    public ProductTransaction(Long productTransactionId, Product product, Integer quantity, ProductTransactionType produtTransactionType) {
-        this.productTransactionId = productTransactionId;
+    public ProductTransaction(long id, Product product, int quantity, ProductTransactionType produtTransactionType) {
+        this.id = id;
         this.product = product;
         this.quantity = quantity;
         this.produtTransactionType = produtTransactionType;
     }
 
-    public Long getProductTransactionId() {
-        return productTransactionId;
+    public long getId() {
+        return id;
     }
 
-    public void setProductTransactionId(Long productTransactionId) {
-        this.productTransactionId = productTransactionId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Product getProduct() {
@@ -46,11 +51,11 @@ public class ProductTransaction {
         this.product = product;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

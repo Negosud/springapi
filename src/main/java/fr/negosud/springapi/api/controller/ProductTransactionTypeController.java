@@ -15,7 +15,7 @@ import java.util.List;
 @Tag(name = "ProductTransactionType")
 public class ProductTransactionTypeController {
 
-    private ProductTransactionTypeService productTransactionTypeService;
+    final private ProductTransactionTypeService productTransactionTypeService;
 
     @Autowired
     public ProductTransactionTypeController(ProductTransactionTypeService productTransactionTypeService) {
@@ -29,16 +29,16 @@ public class ProductTransactionTypeController {
     }
 
     @GetMapping("/{productTransactionTypeId}")
-    public ResponseEntity<ProductTransactionType> getProductTransactionTypeById(@PathVariable Long productTransactionTypeId) {
+    public ResponseEntity<ProductTransactionType> getProductTransactionTypeById(@PathVariable long productTransactionTypeId) {
         return productTransactionTypeService.getProductTransactionTypeById(productTransactionTypeId)
                 .map(product -> new ResponseEntity<>(product, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PutMapping("/{productTransactionTypeId}")
-    public ResponseEntity<ProductTransactionType> updateTransactionType(@PathVariable Long productTransactionTypeId, @RequestBody ProductTransactionType productTransactionType) {
+    public ResponseEntity<ProductTransactionType> updateTransactionType(@PathVariable long productTransactionTypeId, @RequestBody ProductTransactionType productTransactionType) {
         if(productTransactionTypeService.getProductTransactionTypeById(productTransactionTypeId).isPresent()) {
-            productTransactionType.setProductTransactionTypeId(productTransactionTypeId);
+            productTransactionType.setId(productTransactionTypeId);
             ProductTransactionType updatedProductTransactionType = productTransactionTypeService.saveProductTransactionType(productTransactionType);
             return new ResponseEntity<>(updatedProductTransactionType, HttpStatus.OK);
         } else {
@@ -47,7 +47,7 @@ public class ProductTransactionTypeController {
     }
 
     @DeleteMapping("/{productTransactionTypeId}")
-    public ResponseEntity<Void>  deleteProductransaction(@PathVariable Long productTransactionTypeId) {
+    public ResponseEntity<Void>  deleteProductransaction(@PathVariable long productTransactionTypeId) {
     if(productTransactionTypeService.getProductTransactionTypeById(productTransactionTypeId).isPresent()) {
         productTransactionTypeService.deleteProductTransactionType(productTransactionTypeId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

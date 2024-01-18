@@ -31,7 +31,7 @@ public class IssueController {
     }
 
     @GetMapping("/{issueId}")
-    public ResponseEntity<Issue> getIssueById(@PathVariable Long issueId) {
+    public ResponseEntity<Issue> getIssueById(@PathVariable long issueId) {
 
         return issueService.getIssueById(issueId)
                 .map(issue -> new ResponseEntity<>(issue, HttpStatus.OK))
@@ -46,10 +46,10 @@ public class IssueController {
     }
 
     @PutMapping("/{issueId}/control")
-    public ResponseEntity<Issue> updateIssue(@PathVariable Long issueId, @RequestBody Issue issue) {
+    public ResponseEntity<Issue> updateIssue(@PathVariable long issueId, @RequestBody Issue issue) {
 
         if (issueService.getIssueById(issueId).isPresent()) {
-            issue.setIssueId(issueId);
+            issue.setId(issueId);
             Issue updatedIssue = issueService.saveIssue(issue);
             return new ResponseEntity<>(updatedIssue, HttpStatus.OK);
 
@@ -59,7 +59,7 @@ public class IssueController {
     }
 
     @DeleteMapping("/{issueId}")
-    public ResponseEntity<Void> deleteIssue(@PathVariable Long issueId) {
+    public ResponseEntity<Void> deleteIssue(@PathVariable long issueId) {
 
         if (issueService.getIssueById(issueId).isPresent()) {
             issueService.deleteIssue(issueId);

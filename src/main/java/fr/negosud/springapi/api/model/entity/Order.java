@@ -1,50 +1,58 @@
 package fr.negosud.springapi.api.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import fr.negosud.springapi.api.audit.AuditListener;
+import fr.negosud.springapi.api.audit.FullAuditableEntity;
+import fr.negosud.springapi.api.model.dto.OrderStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
-public class Order {
+@EntityListeners(AuditListener.class)
+@Table(name="\"order\"")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "reference")
+public class Order extends FullAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderId;
+    private long id;
 
     @NotBlank
-    @Column(nullable = false, length = 20)
+    @Column(length = 20)
     private String reference;
 
     @NotBlank
-    @Column(nullable = false, length = 20)
-    private String status;
+    @Enumerated(value = EnumType.STRING)
+    private OrderStatus status;
 
-    @NotBlank
-    @Column(nullable = false)
-    private Date controlledAt;
+    @ManyToOne
+    private User preparedBy;
 
-    @NotBlank
-    @Column(nullable = false)
-    private Date closedAt;
-    public Order() {
-    }
+    private Date preparedAt;
 
-    public Order(Long orderId, String reference, String status, Date controlledAt, Date closedAt) {
-        this.orderId = orderId;
+    @OneToMany(mappedBy = "order")
+    private List<OrderProduct> productList;
+
+    public Order() { }
+
+    public Order(long id, String reference, OrderStatus status, User preparedBy, Date preparedAt) {
+        this.id = id;
         this.reference = reference;
         this.status = status;
-        this.controlledAt = controlledAt;
-        this.closedAt = closedAt;
+        this.preparedBy = preparedBy;
+        this.preparedAt = preparedAt;
     }
 
-    public Long getOrderId() {
-        return orderId;
+    public long getId() {
+        return id;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getReference() {
@@ -55,27 +63,27 @@ public class Order {
         this.reference = reference;
     }
 
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 
-    public Date getControlledAt() {
-        return controlledAt;
+    public User getPreparedBy() {
+        return preparedBy;
     }
 
-    public void setControlledAt(Date controlledAt) {
-        this.controlledAt = controlledAt;
+    public void setPreparedBy(User preparedBy) {
+        this.preparedBy = preparedBy;
     }
 
-    public Date getClosedAt() {
-        return closedAt;
+    public Date getPreparedAt() {
+        return preparedAt;
     }
 
-    public void setClosedAt(Date closedAt) {
-        this.closedAt = closedAt;
+    public void setPreparedAt(Date preparedAt) {
+        this.preparedAt = preparedAt;
     }
 }

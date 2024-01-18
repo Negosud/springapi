@@ -1,5 +1,7 @@
 package fr.negosud.springapi.api.service;
 
+import fr.negosud.springapi.api.component.UserPasswordEncoder;
+import fr.negosud.springapi.api.model.dto.SetUserRequest;
 import fr.negosud.springapi.api.model.entity.User;
 import fr.negosud.springapi.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,19 +21,24 @@ final public class UserService {
     private final UserRepository userRepository;
     private final PermissionNodeService permissionNodeService;
     private final UserGroupService userGroupService;
+    private final AddressService addressService;
+    private final SupplierProductService supplierProductService;
 
     @Autowired
-    public UserService(UserRepository userRepository, PermissionNodeService permissionNodeService, UserGroupService userGroupService) {
+    public UserService(UserRepository userRepository, PermissionNodeService permissionNodeService, UserGroupService userGroupService, AddressService addressService, SupplierProductService supplierProductService) {
         this.userRepository = userRepository;
         this.permissionNodeService = permissionNodeService;
         this.userGroupService = userGroupService;
+        this.addressService = addressService;
+        this.supplierProductService = supplierProductService;
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<User> getAllUsers(boolean active, String userGroupName) {
+        if (userGroupName == null) return userRepository.findAllByActive(active);
+        return userRepository.findAllByActiveAndUserGroupName(active, userGroupName);
     }
 
-    public Optional<User> getUserById(Long userId) {
+    public Optional<User> getUserById(long userId) {
         return userRepository.findById(userId);
     }
 
@@ -43,8 +50,31 @@ final public class UserService {
         return userRepository.save(user);
     }
 
-    public void deleteUser(Long userId) {
+    public void deleteUser(long userId) {
         userRepository.deleteById(userId);
+    }
+
+    public User setUserFromRequest(SetUserRequest setUserRequest, User user) {
+        if (user == null)
+            user = new User();
+        user.setEmail(setUserRequest.getEmail());
+        user.setFirstName(setUserRequest.getFirstName());
+        user.setLastName(setUserRequest.getLastName());
+        user.setUserGroup(userGroupService.getUserGroupByName(setUserRequest.getUserGroup()).orElse(null));
+        user.setActive(setUserRequest.isActive());
+        user.setLogin(setUserRequest.getLogin());
+        user.setPhoneNumber(setUserRequest.getPhoneNumber());
+        user.setPermissionNodeList(permissionNodeService.getPermissionNodeListByFullName(setUserRequest.getPermissionList()).orElse(null));
+        user.setMailingAddress(addressService.getAddressById(setUserRequest.getMailingAddress()).orElse(null));
+        user.setBillingAddress(addressService.getAddressById(setUserRequest.getBillingAddress()).orElse(null));
+        user.setSuppliedProductList(supplierProductService.getSupplierProductListByIdList(setUserRequest.getSuppliedProductList()));
+
+        UserPasswordEncoder userPasswordEncoder = new UserPasswordEncoder();
+        String userPassword = user.getPassword();
+        if (setUserRequest.getPassword() != null && !(userPassword != null && (userPasswordEncoder.matchUserPassword(setUserRequest.getPassword(), userPassword)))) {
+            user.setPassword(userPasswordEncoder.hashUserPassword(setUserRequest.getPassword()));
+        }
+        return user;
     }
 
     public boolean initUsers() {
@@ -59,9 +89,10 @@ final public class UserService {
                     System.out.println("Trying " + pseudoUniqueKey);
                     User existingUser = this.getUserByPseudoUniqueKey(pseudoUniqueKey).orElse(null);
                     if (existingUser == null) {
+                        UserPasswordEncoder userPasswordEncoder = new UserPasswordEncoder();
                         User user = new User(
                                 userInfo.containsKey("password") ? pseudoUniqueKey : null,
-                                (String) userInfo.get("password"),
+                                userPasswordEncoder.hashUserPassword((String) userInfo.get("password")),
                                 pseudoUniqueKey,
                                 (String) userInfo.get("firstname"),
                                 (String) userInfo.get("lastname"),

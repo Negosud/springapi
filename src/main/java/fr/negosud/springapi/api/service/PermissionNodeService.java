@@ -28,7 +28,7 @@ final public class PermissionNodeService {
         return permissionNodeRepository.findAll();
     }
 
-    public Optional<PermissionNode> getPermissionNodeById(Long permissionNodeId) {
+    public Optional<PermissionNode> getPermissionNodeById(long permissionNodeId) {
         return permissionNodeRepository.findById(permissionNodeId);
     }
 
@@ -36,7 +36,7 @@ final public class PermissionNodeService {
         return permissionNodeRepository.save(permissionNode);
     }
 
-    public void deletePermissionNode(Long permissionNodeId) {
+    public void deletePermissionNode(long permissionNodeId) {
         permissionNodeRepository.deleteById(permissionNodeId);
     }
 

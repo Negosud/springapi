@@ -22,7 +22,7 @@ public class ProductTransactionTypeService {
         return productTransactionTypeRepository.findAll();
     }
 
-    public Optional<ProductTransactionType> getProductTransactionTypeById(Long productTransactionTypeId) {
+    public Optional<ProductTransactionType> getProductTransactionTypeById(long productTransactionTypeId) {
         return productTransactionTypeRepository.findById(productTransactionTypeId);
     }
 
@@ -30,7 +30,7 @@ public class ProductTransactionTypeService {
         return productTransactionTypeRepository.save(productTransactionType);
     }
 
-    public void deleteProductTransactionType(Long productTransactionTypeId) {
+    public void deleteProductTransactionType(long productTransactionTypeId) {
         productTransactionTypeRepository.deleteById(productTransactionTypeId);
     }
 }

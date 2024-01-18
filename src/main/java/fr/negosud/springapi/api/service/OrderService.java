@@ -22,7 +22,7 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
-    public Optional<Order> getOrderById(Long orderId) {
+    public Optional<Order> getOrderById(long orderId) {
         return orderRepository.findById(orderId);
     }
 

@@ -31,7 +31,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/{invoiceId}")
-    public ResponseEntity<Invoice> getInvoiceById(@PathVariable Long invoiceId) {
+    public ResponseEntity<Invoice> getInvoiceById(@PathVariable long invoiceId) {
 
         return invoiceService.getInvoiceById(invoiceId)
                 .map(invoice -> new ResponseEntity<>(invoice, HttpStatus.OK))

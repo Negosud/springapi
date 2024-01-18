@@ -1,39 +1,40 @@
 package fr.negosud.springapi.api.model.entity;
 
+import fr.negosud.springapi.api.audit.AuditListener;
+import fr.negosud.springapi.api.audit.FullAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class ProductFamily {
+@EntityListeners(AuditListener.class)
+@Table(name = "\"product_family\"")
+public class ProductFamily extends FullAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
-    private Long productFamilyId;
+    private long id;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(length = 100)
     private String name;
 
-    @NotBlank
-    @Column(nullable = false)
+    @Column(length = 1000)
     private String description;
-    public ProductFamily() {
-    }
 
-    public ProductFamily(Long productFamilyId, String name, String description) {
-        this.productFamilyId = productFamilyId;
+    public ProductFamily() { }
+
+    public ProductFamily(long id, String name, String description) {
+        this.id = id;
         this.name = name;
         this.description = description;
     }
 
-    public Long getProductFamilyId() {
-        return productFamilyId;
+    public long getId() {
+        return id;
     }
 
-    public void setProductFamilyId(Long productFamilyId) {
-        this.productFamilyId = productFamilyId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -24,7 +24,7 @@ public class InvoiceService {
         return invoiceRepository.findAll();
     }
 
-    public Optional<Invoice> getInvoiceById(Long invoiceId) {
+    public Optional<Invoice> getInvoiceById(long invoiceId) {
 
         return invoiceRepository.findById(invoiceId);
     }

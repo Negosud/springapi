@@ -1,44 +1,54 @@
 package fr.negosud.springapi.api.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import fr.negosud.springapi.api.audit.AuditListener;
+import fr.negosud.springapi.api.audit.FullAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class Issue {
+@EntityListeners(AuditListener.class)
+@Table(name = "\"issue\"")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "reference")
+public class Issue extends FullAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long issueId;
+    private long id;
 
     @NotBlank
-    @Column(nullable = false, length = 20)
+    @Column(length = 20, unique = true)
     private String reference;
 
     @NotBlank
-    @Column(nullable = false)
-    private Boolean active;
+    private boolean active;
 
     @NotBlank
-    @Column(nullable = false, length = 1000)
+    @Column(length = 1000)
     private String description;
 
-    public Issue() {
-    }
+    @ManyToOne
+    private Arrival arrival;
 
-    public Issue(Long issueId, String reference, Boolean active, String description) {
-        this.issueId = issueId;
+    @ManyToOne
+    private Order order;
+
+    public Issue() { }
+
+    public Issue(long id, String reference, boolean active, String description) {
+        this.id = id;
         this.reference = reference;
         this.active = active;
         this.description = description;
     }
 
-    public Long getIssueId() {
-        return issueId;
+    public long getId() {
+        return id;
     }
 
-    public void setIssueId(Long issueId) {
-        this.issueId = issueId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getReference() {
@@ -49,11 +59,11 @@ public class Issue {
         this.reference = reference;
     }
 
-    public Boolean getActive() {
+    public boolean getActive() {
         return active;
     }
 
-    public void setActive(Boolean active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 

@@ -4,66 +4,63 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.math.BigDecimal;
+import java.time.Year;
+import java.util.List;
+
 @Entity
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
-    private Long productId;
+    private long id;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(length = 100)
     private String name;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(length = 1000)
     private String description;
 
     @NotBlank
-    @Column(nullable = false)
-    private Integer quantity;
+    private int quantity;
 
     @NotBlank
-    @Column(nullable = false)
-    private Integer vintage;
+    private Year vintage;
 
     @ManyToOne
     private ProductFamily productFamily;
 
     @NotBlank
-    @Column(nullable = false)
-    private String unitPrice;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal unitPrice;
 
     @NotBlank
-    @Column(nullable = false)
-    private String unitPriceVAT;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal unitPriceVAT;
 
     @NotBlank
-    @Column(nullable = false)
-    private Boolean active;
+    private boolean active;
 
-    public Product() {
+    @OneToMany(mappedBy = "product")
+    private List<SupplierProduct> supplierList;
+
+    @OneToMany(mappedBy = "product")
+    private List<ArrivalProduct> arrivalList;
+
+    @OneToMany(mappedBy = "product")
+    private List<OrderProduct> orderList;
+
+    public Product() { }
+
+    public long getId() {
+        return id;
     }
 
-    public Product(Long productId, String name, String description, Integer quantity, Integer vintage, ProductFamily productFamily, String unitPrice, String unitPriceVAT, Boolean active) {
-        this.productId = productId;
-        this.name = name;
-        this.description = description;
-        this.quantity = quantity;
-        this.vintage = vintage;
-        this.productFamily = productFamily;
-        this.unitPrice = unitPrice;
-        this.unitPriceVAT = unitPriceVAT;
-        this.active = active;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -82,19 +79,19 @@ public class Product {
         this.description = description;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
-    public Integer getVintage() {
+    public Year getVintage() {
         return vintage;
     }
 
-    public void setVintage(Integer vintage) {
+    public void setVintage(Year vintage) {
         this.vintage = vintage;
     }
 
@@ -106,27 +103,27 @@ public class Product {
         this.productFamily = productFamily;
     }
 
-    public String getUnitPrice() {
+    public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(String unitPrice) {
+    public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
 
-    public String getUnitPriceVAT() {
+    public BigDecimal getUnitPriceVAT() {
         return unitPriceVAT;
     }
 
-    public void setUnitPriceVAT(String unitPriceVAT) {
+    public void setUnitPriceVAT(BigDecimal unitPriceVAT) {
         this.unitPriceVAT = unitPriceVAT;
     }
 
-    public Boolean getActive() {
+    public boolean getActive() {
         return active;
     }
 
-    public void setActive(Boolean active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 }

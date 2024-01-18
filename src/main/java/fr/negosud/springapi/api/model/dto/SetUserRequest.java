@@ -42,7 +42,7 @@ public class SetUserRequest {
     @Schema(description = "User's international phone number")
     private String phoneNumber;
 
-    @Schema(description = "User's permission list as full permission names")
+    @Schema(description = "User's permission list as permission full names")
     private List<String> permissionList;
 
     @Schema(description = "User's mailing address id")

@@ -33,9 +33,14 @@ final public class UserService {
         this.supplierProductService = supplierProductService;
     }
 
-    public List<User> getAllUsers(boolean active, String userGroupName) {
-        if (userGroupName == null) return userRepository.findAllByActive(active);
-        return userRepository.findAllByActiveAndUserGroupName(active, userGroupName);
+    public List<User> getAllUsers(Optional<Boolean> active, String userGroupName) {
+        return (userGroupName == null) ?
+                (active.isEmpty() ?
+                        userRepository.findAll() :
+                        userRepository.findAllByActive(active.get())) :
+                (active.isEmpty() ?
+                        userRepository.findAllByUserGroupName(userGroupName) :
+                        userRepository.findAllByActiveAndUserGroupName(active.get(), userGroupName));
     }
 
     public Optional<User> getUserById(long userId) {

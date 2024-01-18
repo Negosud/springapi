@@ -20,13 +20,16 @@ public class ProductFamilyService {
     }
 
     public List<ProductFamily> getAllProductFamilies() {
-
         return productFamilyRepository.findAll();
     }
 
     public Optional<ProductFamily> getProductFamilyById(long productFamilyId) {
-
         return productFamilyRepository.findById(productFamilyId);
+    }
+
+
+    public Optional<ProductFamily> getProductFamilyByCode(String code) {
+        return productFamilyRepository.findByCode(code);
     }
 
     public ProductFamily saveProductFamily(ProductFamily productFamily) {

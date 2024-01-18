@@ -1,5 +1,7 @@
 package fr.negosud.springapi.api.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fr.negosud.springapi.api.audit.AuditListener;
 import fr.negosud.springapi.api.audit.FullAuditableEntity;
 import jakarta.persistence.*;
@@ -8,6 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 @Entity
 @EntityListeners(AuditListener.class)
 @Table(name = "\"product_family\"")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "code")
 public class ProductFamily extends FullAuditableEntity {
 
     @Id
@@ -15,7 +18,11 @@ public class ProductFamily extends FullAuditableEntity {
     private long id;
 
     @NotBlank
-    @Column(length = 100)
+    @Column(length = 100, unique = true)
+    private String code;
+
+    @NotBlank
+    @Column(length = 100, unique = true)
     private String name;
 
     @Column(length = 1000)

@@ -1,5 +1,6 @@
 package fr.negosud.springapi.api.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,6 +32,8 @@ public class Product {
     private Year vintage;
 
     @ManyToOne
+    @NotBlank
+    @JsonIdentityReference(alwaysAsId = true)
     private ProductFamily productFamily;
 
     @NotBlank

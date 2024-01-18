@@ -55,18 +55,6 @@ public class Product {
 
     public Product() { }
 
-    public Product(long id, String name, String description, int quantity, Year vintage, ProductFamily productFamily, BigDecimal unitPrice, BigDecimal unitPriceVAT, boolean active) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.quantity = quantity;
-        this.vintage = vintage;
-        this.productFamily = productFamily;
-        this.unitPrice = unitPrice;
-        this.unitPriceVAT = unitPriceVAT;
-        this.active = active;
-    }
-
     public long getId() {
         return id;
     }

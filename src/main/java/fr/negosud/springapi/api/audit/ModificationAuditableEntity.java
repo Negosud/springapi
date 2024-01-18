@@ -1,5 +1,6 @@
 package fr.negosud.springapi.api.audit;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import fr.negosud.springapi.api.component.ActionUserContextHolder;
 import fr.negosud.springapi.api.model.entity.User;
 import jakarta.persistence.*;
@@ -15,6 +16,7 @@ public abstract class ModificationAuditableEntity implements AuditableEntity {
 
     @ManyToOne
     @JoinColumn(name = "modified_by", updatable = false)
+    @JsonIdentityReference(alwaysAsId = true)
     protected User modifiedBy;
 
     @PrePersist

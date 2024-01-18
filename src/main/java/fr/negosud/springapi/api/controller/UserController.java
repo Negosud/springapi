@@ -1,5 +1,6 @@
 package fr.negosud.springapi.api.controller;
 
+import fr.negosud.springapi.api.component.ActionUserContextHolder;
 import fr.negosud.springapi.api.model.dto.SetUserRequest;
 import fr.negosud.springapi.api.model.entity.User;
 import fr.negosud.springapi.api.service.UserService;
@@ -22,10 +23,12 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final ActionUserContextHolder actionUserContextHolder;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ActionUserContextHolder actionUserContextHolder) {
         this.userService = userService;
+        this.actionUserContextHolder = actionUserContextHolder;
     }
 
     @GetMapping
@@ -58,7 +61,10 @@ public class UserController {
     @ApiResponse(description = "User created", responseCode = "201")
     public ResponseEntity<User> createUser(
             @RequestBody
-            SetUserRequest createUserRequest) {
+            SetUserRequest createUserRequest,
+            @RequestParam(required = false)
+            long actionUserId) {
+        this.actionUserContextHolder.setActionUserId(actionUserId);
         User user = userService.setUserFromRequest(createUserRequest, null);
         user = userService.saveUser(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
@@ -76,7 +82,10 @@ public class UserController {
             @PathVariable
             long id,
             @RequestBody
-            SetUserRequest updateUserRequest) {
+            SetUserRequest updateUserRequest,
+            @RequestParam(required = false)
+            long actionUserId) {
+        this.actionUserContextHolder.setActionUserId(actionUserId);
         User user = userService.getUserById(id).orElse(null);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

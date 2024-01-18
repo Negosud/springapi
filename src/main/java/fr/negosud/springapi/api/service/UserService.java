@@ -71,7 +71,7 @@ final public class UserService {
 
         UserPasswordEncoder userPasswordEncoder = new UserPasswordEncoder();
         String userPassword = user.getPassword();
-        if (!(userPassword != null && (userPasswordEncoder.matchUserPassword(setUserRequest.getPassword(), userPassword)))) {
+        if (setUserRequest.getPassword() != null && !(userPassword != null && (userPasswordEncoder.matchUserPassword(setUserRequest.getPassword(), userPassword)))) {
             user.setPassword(userPasswordEncoder.hashUserPassword(setUserRequest.getPassword()));
         }
         return user;

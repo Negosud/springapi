@@ -33,7 +33,7 @@ public class ArrivalController {
     @GetMapping
     @ApiResponse(description = "List of all arrivals", responseCode = "200")
     public ResponseEntity<List<Arrival>> getAllArrivals() {
-        List<Arrival> arrivals = arrivalService.getALlArrivals();
+        List<Arrival> arrivals = arrivalService.getAllArrivals();
         return new ResponseEntity<>(arrivals, HttpStatus.OK);
     }
 
@@ -51,6 +51,7 @@ public class ArrivalController {
     }
 
     @PutMapping("/{id}")
+    @ApiResponse(description = "Arrival updated", responseCode = "200")
     public ResponseEntity<Arrival> updateArrival(@PathVariable Long id, @RequestBody SetArrivalRequest updateArrivalRequest, @RequestParam(required = false)
     long actionUserId) {
         this.actionUserContextHolder.setActionUserId(actionUserId);

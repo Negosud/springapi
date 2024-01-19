@@ -20,7 +20,7 @@ public class ArrivalService {
         this.arrivalRepository = arrivalRepository;
     }
 
-    public List<Arrival> getALlArrivals() {
+    public List<Arrival> getAllArrivals() {
         return arrivalRepository.findAll();
     }
 

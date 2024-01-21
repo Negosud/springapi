@@ -122,7 +122,7 @@ public class Product {
         this.unitPriceVAT = unitPriceVAT;
     }
 
-    public boolean getActive() {
+    public boolean isActive() {
         return active;
     }
 

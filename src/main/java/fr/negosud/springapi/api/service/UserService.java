@@ -62,6 +62,7 @@ final public class UserService {
     public User setUserFromRequest(SetUserRequest setUserRequest, User user) {
         if (user == null)
             user = new User();
+
         user.setEmail(setUserRequest.getEmail());
         user.setFirstName(setUserRequest.getFirstName());
         user.setLastName(setUserRequest.getLastName());
@@ -79,6 +80,7 @@ final public class UserService {
         if (setUserRequest.getPassword() != null && !(userPassword != null && (userPasswordEncoder.matchUserPassword(setUserRequest.getPassword(), userPassword)))) {
             user.setPassword(userPasswordEncoder.hashUserPassword(setUserRequest.getPassword()));
         }
+
         return user;
     }
 

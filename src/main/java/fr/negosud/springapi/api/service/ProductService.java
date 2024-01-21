@@ -2,7 +2,6 @@ package fr.negosud.springapi.api.service;
 
 import fr.negosud.springapi.api.model.dto.SetProductRequest;
 import fr.negosud.springapi.api.model.entity.Product;
-import fr.negosud.springapi.api.model.entity.ProductFamily;
 import fr.negosud.springapi.api.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,12 +25,8 @@ public class ProductService {
 
     public List<Product> getAllProducts(Optional<Boolean> active, String productFamilyName) {
         return (productFamilyName == null) ?
-                (active.isEmpty() ?
-                        productRepository.findAll() :
-                        productRepository.findAllByActive(active.get())) :
-                (active.isEmpty() ?
-                        productRepository.findAllByProductFamilyName(productFamilyName) :
-                        productRepository.findAllByActiveAndProductFamilyName(active.get(), productFamilyName));
+                (active.isEmpty() ? productRepository.findAll() : productRepository.findAllByActive(active.get())) :
+                (active.isEmpty() ? productRepository.findAllByProductFamilyName(productFamilyName) : productRepository.findAllByActiveAndProductFamilyName(active.get(), productFamilyName));
     }
 
     public Optional<Product> getProductById(long productId) {
@@ -47,15 +42,26 @@ public class ProductService {
     }
 
     public Product setProductFromRequest(SetProductRequest setProductRequest, Product product) {
-        if (product == null)
+        boolean create = product == null;
+        if (create)
             product = new Product();
-        String name = setProductRequest.getName();
-        String description = setProductRequest.getDescription();
-        int quantity = setProductRequest.getQuantity();
-        Year vintage = setProductRequest.getVintage();
-        ProductFamily productFamily = productFamilyService.getProductFamilyByCode(setProductRequest.getProductFamilyCode()).orElse(null);
-        BigDecimal unitPrice = setProductRequest.getUnitPrice();
-        boolean active = setProductRequest.isActive();
+
+        product.setName(setProductRequest.getName());
+        product.setDescription(setProductRequest.getDescription());
+        product.setVintage(Year.of(setProductRequest.getVintage()));
+        product.setProductFamily(productFamilyService.getProductFamilyByCode(setProductRequest.getProductFamilyCode()).orElse(null));
+        product.setUnitPrice(setProductRequest.getUnitPrice());
+        product.setUnitPriceVAT(setProductRequest.getUnitPrice().multiply(new BigDecimal("1.20")));
+
+        Integer quantity = setProductRequest.getQuantity();
+        product.setQuantity(create ?
+                (quantity == null ? 0 : quantity) :
+                (quantity == null ? product.getQuantity() : quantity));
+
+        Boolean active = setProductRequest.isActive();
+        product.setActive(create ?
+                (active != null ? active : (quantity != null && quantity != 0)) :
+                (active == null) ? product.isActive() : active);
 
         return product;
     }

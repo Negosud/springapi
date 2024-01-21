@@ -4,9 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
-import java.time.Year;
 
-public class SetProductRequest {
+abstract public class SetProductRequest {
 
     @NotBlank
     @Column(length = 100)
@@ -17,10 +16,7 @@ public class SetProductRequest {
     private String description;
 
     @NotBlank
-    private int quantity;
-
-    @NotBlank
-    private Year vintage;
+    private int vintage;
 
     @NotBlank
     private String productFamilyCode;
@@ -29,7 +25,9 @@ public class SetProductRequest {
     @Column(precision = 10, scale = 2)
     private BigDecimal unitPrice;
 
-    private boolean active;
+    private Integer quantity;
+
+    private Boolean active;
 
     public SetProductRequest() { this.active = true ; }
 
@@ -49,19 +47,19 @@ public class SetProductRequest {
         this.description = description;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
-    public Year getVintage() {
+    public int getVintage() {
         return vintage;
     }
 
-    public void setVintage(Year vintage) {
+    public void setVintage(int vintage) {
         this.vintage = vintage;
     }
 
@@ -81,11 +79,11 @@ public class SetProductRequest {
         this.unitPrice = unitPrice;
     }
 
-    public boolean isActive() {
+    public Boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 }

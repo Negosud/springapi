@@ -52,8 +52,7 @@ public class UserController {
             @ApiResponse(
                     description = "User not found",
                     responseCode = "404",
-                    content = @Content(
-                            schema = @Schema))
+                    content = @Content(schema = @Schema))
     })
     public ResponseEntity<User> getUserById(
             @PathVariable
@@ -86,8 +85,7 @@ public class UserController {
             @ApiResponse(
                     description = "User not found",
                     responseCode = "404",
-                    content = @Content(
-                            schema = @Schema))
+                    content = @Content(schema = @Schema))
     })
     public ResponseEntity<User> updateUser(
             @PathVariable

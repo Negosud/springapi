@@ -1,9 +1,11 @@
 package fr.negosud.springapi.api.service;
 
+import fr.negosud.springapi.api.model.dto.SetProductFamilyRequest;
 import fr.negosud.springapi.api.model.entity.ProductFamily;
 import fr.negosud.springapi.api.repository.ProductFamilyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
 
@@ -37,7 +39,12 @@ public class ProductFamilyService {
         return productFamilyRepository.findByCode(code);
     }
 
+    /**
+     * @throws org.springframework.dao.DuplicateKeyException A productFamily with processed name as code already exist
+     */
     public ProductFamily saveProductFamily(ProductFamily productFamily) {
+        if (productFamily.getId() == 0 && getProductFamilyByCode(productFamily.getCode()).isPresent())
+            throw new DuplicateKeyException("A productFamily with processed name as code already exist");
         return productFamilyRepository.save(productFamily);
     }
 
@@ -47,8 +54,24 @@ public class ProductFamilyService {
 
     public String getCodeFromName(String name) {
         return Normalizer.normalize(name, Normalizer.Form.NFD)
-                .replaceAll("[^a-zA-Z0-9 ]", "")
+                .replaceAll("[^a-zA-Z0-9]", "")
                 .replaceAll("\\s", "_");
+    }
+
+    public ProductFamily setProductFamilyFromRequest(SetProductFamilyRequest setProductFamilyRequest, ProductFamily productFamily) {
+        boolean create = productFamily == null;
+        if (create)
+            productFamily = new ProductFamily();
+
+        String name = setProductFamilyRequest.getName();
+        productFamily.setCode(create ? getCodeFromName(name) : productFamily.getCode());
+        productFamily.setName(name);
+        productFamily.setDescription(create ?
+                setProductFamilyRequest.getDescription() :
+                setProductFamilyRequest.getDescription() == null ? productFamily.getDescription() : setProductFamilyRequest.getDescription());
+
+
+        return productFamily;
     }
 
     public boolean initProductFamilies() {

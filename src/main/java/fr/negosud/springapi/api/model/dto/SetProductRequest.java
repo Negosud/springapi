@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
 
-abstract public class SetProductRequest {
+public class SetProductRequest {
 
     @NotBlank
     @Column(length = 100)

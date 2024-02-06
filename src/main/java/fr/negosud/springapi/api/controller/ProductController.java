@@ -81,7 +81,7 @@ public class ProductController {
     @PutMapping("/{id}")
     @ApiResponses(value = {
             @ApiResponse(
-                    description = "Product updated succesfully",
+                    description = "Product updated successfully",
                     responseCode = "200"),
             @ApiResponse(
                     description = "Product not found",
@@ -104,13 +104,10 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(
-            @PathVariable long id) {
-
+    public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
         if (productService.getProductById(id).isPresent()) {
             productService.deleteProduct(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

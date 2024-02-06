@@ -1,9 +1,16 @@
 package fr.negosud.springapi.api.controller;
 
+import fr.negosud.springapi.api.component.ActionUserContextHolder;
+import fr.negosud.springapi.api.model.dto.SetProductFamilyRequest;
 import fr.negosud.springapi.api.model.entity.ProductFamily;
 import fr.negosud.springapi.api.service.ProductFamilyService;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,59 +19,102 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/productFamily")
-@Tag(name = "ProductFamily")
+@Tag(name = "ProductFamily", description = "Endpoints related to ProductFamily crud and actions.")
 public class ProductFamilyController {
 
     private final ProductFamilyService productFamilyService;
 
-    @Autowired
-    public ProductFamilyController(ProductFamilyService productFamilyService) {
+    private final ActionUserContextHolder actionUserContextHolder;
 
+    @Autowired
+    public ProductFamilyController(ProductFamilyService productFamilyService, ActionUserContextHolder actionUserContextHolder) {
         this.productFamilyService = productFamilyService;
+        this.actionUserContextHolder = actionUserContextHolder;
     }
 
     @GetMapping
+    @ApiResponse(
+            description = "List of all productFamilies",
+            responseCode = "200")
     public ResponseEntity<List<ProductFamily>> getAllProductFamilies() {
-
         List<ProductFamily> productFamilies = productFamilyService.getAllProductFamilies();
         return new ResponseEntity<>(productFamilies, HttpStatus.OK);
     }
 
-    @GetMapping("/{productFamilyId}")
-    public ResponseEntity<ProductFamily> getProductFamilyById(@PathVariable long productFamilyId) {
-
-        return productFamilyService.getProductFamilyById(productFamilyId)
+    @GetMapping("/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    description = "ProductFamily found",
+                    responseCode = "200"),
+            @ApiResponse(
+                    description = "ProductFamily not found",
+                    responseCode = "404",
+                    content = @Content(
+                            schema = @Schema))
+    })
+    public ResponseEntity<ProductFamily> getProductFamilyById(
+            @PathVariable
+            long id) {
+        return productFamilyService.getProductFamilyById(id)
                 .map(productFamily -> new ResponseEntity<>(productFamily, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
-    public ResponseEntity<ProductFamily> createProductFamily(@RequestBody ProductFamily productFamily) {
-
-        ProductFamily createdProductFamily= productFamilyService.saveProductFamily(productFamily);
-        return new ResponseEntity<>(createdProductFamily, HttpStatus.CREATED);
+    @ApiResponses(value = {
+            @ApiResponse(
+                    description = "ProductFamily created",
+                    responseCode = "201",
+                    content = @Content(schema = @Schema(implementation = ProductFamily.class ))),
+            @ApiResponse(
+                    description = "ProductFamily processed name as code already exists",
+                    responseCode = "409",
+                    content = @Content(schema = @Schema(implementation = String.class)))
+    })
+    public ResponseEntity<?> createProductFamily(
+            @RequestBody
+            SetProductFamilyRequest createProductFamilyRequest,
+            @RequestParam(required = false)
+            long actionUserId) {
+        this.actionUserContextHolder.setActionUserId(actionUserId);
+        ProductFamily productFamily = productFamilyService.setProductFamilyFromRequest(createProductFamilyRequest, null);
+        try {
+            productFamilyService.saveProductFamily(productFamily);
+        } catch (DuplicateKeyException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(productFamily, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{productFamilyId}")
-    public ResponseEntity<ProductFamily> updateProductFamily(@PathVariable long productFamilyId, @RequestBody ProductFamily productFamily) {
-
-        if (productFamilyService.getProductFamilyById(productFamilyId).isPresent()) {
-            productFamily.setId(productFamilyId);
+    @PutMapping("/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    description = "ProductFamily updated successfully",
+                    responseCode = "200"),
+            @ApiResponse(
+                    description = "ProductFamily not found",
+                    responseCode = "404", content = @Content(schema = @Schema()))
+    })
+    public ResponseEntity<ProductFamily> updateProductFamily(
+            @PathVariable
+            long id,
+            @RequestBody
+            ProductFamily productFamily) {
+        if (productFamilyService.getProductFamilyById(id).isPresent()) {
+            productFamily.setId(id);
             ProductFamily updatedProductFamily = productFamilyService.saveProductFamily(productFamily);
             return new ResponseEntity<>(updatedProductFamily, HttpStatus.OK);
-
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
+    // TODO : Finish this
     @DeleteMapping("/{productFamilyId}")
     public ResponseEntity<Void> deleteProductFamily(@PathVariable long productFamilyId) {
-
         if (productFamilyService.getProductFamilyById(productFamilyId).isPresent()) {
             productFamilyService.deleteProductFamily(productFamilyId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

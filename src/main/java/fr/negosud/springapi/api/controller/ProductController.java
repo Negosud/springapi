@@ -52,8 +52,7 @@ public class ProductController {
             @ApiResponse(
                     description = "Product not found",
                     responseCode = "404",
-                    content = @Content(
-                            schema = @Schema))
+                    content = @Content(schema = @Schema))
     })
     public ResponseEntity<Product> getProductById(
             @PathVariable
@@ -74,7 +73,7 @@ public class ProductController {
             long actionUserId) {
         this.actionUserContextHolder.setActionUserId(actionUserId);
         Product product = productService.setProductFromRequest(createProductRequest, null);
-        product = productService.saveProduct(product);
+        productService.saveProduct(product);
         return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 
@@ -85,7 +84,7 @@ public class ProductController {
                     responseCode = "200"),
             @ApiResponse(
                     description = "Product not found",
-                    responseCode = "404", content = @Content(schema = @Schema()))
+                    responseCode = "404", content = @Content(schema = @Schema))
     })
     public ResponseEntity<Product> updateProduct(
             @PathVariable
@@ -94,12 +93,12 @@ public class ProductController {
             SetProductRequest updateProductRequest,
             @RequestParam(required = false)
             long actionUserId) {
-        this.actionUserContextHolder.setActionUserId(actionUserId);
         Product product = productService.getProductById(id).orElse(null);
         if (product == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        product = productService.setProductFromRequest(updateProductRequest, product);
-        product = productService.saveProduct(product);
+        this.actionUserContextHolder.setActionUserId(actionUserId);
+        productService.setProductFromRequest(updateProductRequest, product);
+        productService.saveProduct(product);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 

@@ -49,8 +49,7 @@ public class ProductFamilyController {
             @ApiResponse(
                     description = "ProductFamily not found",
                     responseCode = "404",
-                    content = @Content(
-                            schema = @Schema))
+                    content = @Content(schema = @Schema))
     })
     public ResponseEntity<ProductFamily> getProductFamilyById(
             @PathVariable
@@ -93,30 +92,56 @@ public class ProductFamilyController {
                     responseCode = "200"),
             @ApiResponse(
                     description = "ProductFamily not found",
-                    responseCode = "404", content = @Content(schema = @Schema()))
+                    responseCode = "404", content = @Content(schema = @Schema))
     })
     public ResponseEntity<ProductFamily> updateProductFamily(
             @PathVariable
             long id,
             @RequestBody
-            ProductFamily productFamily) {
-        if (productFamilyService.getProductFamilyById(id).isPresent()) {
-            productFamily.setId(id);
-            ProductFamily updatedProductFamily = productFamilyService.saveProductFamily(productFamily);
-            return new ResponseEntity<>(updatedProductFamily, HttpStatus.OK);
-        } else {
+            SetProductFamilyRequest updateProductFamilyRequest,
+            @RequestParam(required = false)
+            long actionUserId) {
+        ProductFamily productFamily = productFamilyService.getProductFamilyById(id).orElse(null);
+        if (productFamily == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        actionUserContextHolder.setActionUserId(actionUserId);
+        productFamilyService.setProductFamilyFromRequest(updateProductFamilyRequest, productFamily);
+        productFamilyService.saveProductFamily(productFamily);
+        return new ResponseEntity<>(productFamily, HttpStatus.OK);
+
     }
 
-    // TODO : Finish this
-    @DeleteMapping("/{productFamilyId}")
-    public ResponseEntity<Void> deleteProductFamily(@PathVariable long productFamilyId) {
-        if (productFamilyService.getProductFamilyById(productFamilyId).isPresent()) {
-            productFamilyService.deleteProductFamily(productFamilyId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
+    // TODO : API Doc
+    @DeleteMapping("/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    description = "ProductFamily deleted",
+                    responseCode = "204"),
+            @ApiResponse(
+                    description = "ProductFamily not found",
+                    responseCode = "404")
+    })
+    public ResponseEntity<?> deleteProductFamily(
+            @PathVariable
+            long id,
+            @RequestBody(required = false)
+            long replacedByProductFamilyId,
+            @RequestParam(required = false)
+            long actionUserId) {
+        ProductFamily productFamily = productFamilyService.getProductFamilyById(id).orElse(null);
+        if (productFamily == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (productFamily.getProductList().isEmpty()) {
+            productFamilyService.deleteProductFamily(productFamily);
+        } else {
+            actionUserContextHolder.setActionUserId(actionUserId);
+            if (replacedByProductFamilyId < 1)
+                return new ResponseEntity<>("replacedByProductFamilyId is needed as a valid Id", HttpStatus.FORBIDDEN);
+            ProductFamily replacingProductFamily = productFamilyService.getProductFamilyById(replacedByProductFamilyId).orElse(null);
+            if (replacingProductFamily == null)
+                return new ResponseEntity<>("replacedByProductFamily doesn't correspond to a proper ProductFamily", HttpStatus.FORBIDDEN);
+            productFamilyService.safeDeleteProductFamily(productFamily, replacingProductFamily);
         }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

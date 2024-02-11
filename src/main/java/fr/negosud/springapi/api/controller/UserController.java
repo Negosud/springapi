@@ -73,7 +73,7 @@ public class UserController {
             long actionUserId) {
         this.actionUserContextHolder.setActionUserId(actionUserId);
         User user = userService.setUserFromRequest(createUserRequest, null);
-        user = userService.saveUser(user);
+        userService.saveUser(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
@@ -98,8 +98,8 @@ public class UserController {
         User user = userService.getUserById(id).orElse(null);
         if (user == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        user = userService.setUserFromRequest(updateUserRequest, user);
-        user = userService.saveUser(user);
+        userService.setUserFromRequest(updateUserRequest, user);
+        userService.saveUser(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 

@@ -1,6 +1,7 @@
 package fr.negosud.springapi.api.service;
 
 import fr.negosud.springapi.api.model.dto.SetProductFamilyRequest;
+import fr.negosud.springapi.api.model.entity.Product;
 import fr.negosud.springapi.api.model.entity.ProductFamily;
 import fr.negosud.springapi.api.repository.ProductFamilyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,14 +43,21 @@ public class ProductFamilyService {
     /**
      * @throws org.springframework.dao.DuplicateKeyException A productFamily with processed name as code already exist
      */
-    public ProductFamily saveProductFamily(ProductFamily productFamily) {
+    public void saveProductFamily(ProductFamily productFamily) {
         if (productFamily.getId() == 0 && getProductFamilyByCode(productFamily.getCode()).isPresent())
             throw new DuplicateKeyException("A productFamily with processed name as code already exist");
-        return productFamilyRepository.save(productFamily);
+        productFamilyRepository.save(productFamily);
     }
 
-    public void deleteProductFamily(long productFamilyId) {
-        productFamilyRepository.deleteById(productFamilyId);
+    public void deleteProductFamily(ProductFamily productFamily) {
+        productFamilyRepository.delete(productFamily);
+    }
+
+    public void safeDeleteProductFamily(ProductFamily productFamily, ProductFamily replacingProductFamily) {
+        for (Product product : productFamily.getProductList()) {
+            product.setProductFamily(replacingProductFamily);
+        }
+        productFamilyRepository.delete(productFamily);
     }
 
     public String getCodeFromName(String name) {

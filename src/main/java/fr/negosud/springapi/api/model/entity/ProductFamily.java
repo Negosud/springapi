@@ -7,6 +7,8 @@ import fr.negosud.springapi.api.audit.FullAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.List;
+
 @Entity
 @EntityListeners(AuditListener.class)
 @Table(name = "\"product_family\"")
@@ -28,13 +30,10 @@ public class ProductFamily extends FullAuditableEntity {
     @Column(length = 1000)
     private String description;
 
-    public ProductFamily() { }
+    @OneToMany(mappedBy = "productFamily")
+    List<Product> productList;
 
-    public ProductFamily(long id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-    }
+    public ProductFamily() { }
 
     public long getId() {
         return id;
@@ -66,5 +65,13 @@ public class ProductFamily extends FullAuditableEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
     }
 }

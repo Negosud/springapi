@@ -23,14 +23,16 @@ final public class UserService {
     private final UserGroupService userGroupService;
     private final AddressService addressService;
     private final SupplierProductService supplierProductService;
+    private final UserPasswordEncoder userPasswordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, PermissionNodeService permissionNodeService, UserGroupService userGroupService, AddressService addressService, SupplierProductService supplierProductService) {
+    public UserService(UserRepository userRepository, PermissionNodeService permissionNodeService, UserGroupService userGroupService, AddressService addressService, SupplierProductService supplierProductService, UserPasswordEncoder userPasswordEncoder) {
         this.userRepository = userRepository;
         this.permissionNodeService = permissionNodeService;
         this.userGroupService = userGroupService;
         this.addressService = addressService;
         this.supplierProductService = supplierProductService;
+        this.userPasswordEncoder = userPasswordEncoder;
     }
 
     public List<User> getAllUsers(boolean active, String userGroupName) {
@@ -44,6 +46,10 @@ final public class UserService {
 
     public Optional<User> getUserByPseudoUniqueKey(String pseudoUniqueKey) {
         return Optional.ofNullable(this.userRepository.findByLogin(pseudoUniqueKey).orElse(this.userRepository.findByEmail(pseudoUniqueKey).orElse(null)));
+    }
+
+    public Optional<User> getUserByLogin(String login) {
+        return  this.userRepository.findByLogin(login);
     }
 
     public User saveUser(User user) {
@@ -109,5 +115,9 @@ final public class UserService {
             return false;
         }
         return true;
+    }
+
+    public boolean matchUserPassword(User user, String password) {
+        return userPasswordEncoder.matchUserPassword(password, user.getPassword());
     }
 }

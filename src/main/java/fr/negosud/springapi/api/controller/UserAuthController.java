@@ -3,6 +3,10 @@ package fr.negosud.springapi.api.controller;
 import fr.negosud.springapi.api.model.dto.LoginRequest;
 import fr.negosud.springapi.api.model.entity.User;
 import fr.negosud.springapi.api.service.UserService;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +29,13 @@ public class UserAuthController {
     }
 
     @PostMapping("/login")
+    @ApiResponses(value = {
+            @ApiResponse(description = "User not found", responseCode = "404"),
+            @ApiResponse(description = "User can't connect", responseCode = "403", content =
+                @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(description = "Login succesfully", responseCode = "200", content =
+                @Content(schema = @Schema(implementation = User.class)))
+    })
     public ResponseEntity<?> loginAction(
             @RequestBody
             LoginRequest loginRequest) {

@@ -45,9 +45,8 @@ public class UserController {
     @GetMapping("/{id}")
     @ApiResponses(value = {
             @ApiResponse(description = "User found", responseCode = "200"),
-            @ApiResponse(description = "User not found", responseCode = "404", content = {
-                    @Content(schema = @Schema())
-            })
+            @ApiResponse(description = "User not found", responseCode = "404", content =
+                    @Content(schema = @Schema()))
     })
     public ResponseEntity<User> getUserById(
             @PathVariable
@@ -74,9 +73,9 @@ public class UserController {
     @Operation(description = "Update a user by ID.")
     @ApiResponses(value = {
             @ApiResponse(description = "User updated successfully", responseCode = "200"),
-            @ApiResponse(description = "User not found", responseCode = "404", content = {
+            @ApiResponse(description = "User not found", responseCode = "404", content =
                     @Content(schema = @Schema())
-            })
+            )
     })
     public ResponseEntity<User> updateUser(
             @PathVariable

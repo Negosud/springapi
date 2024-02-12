@@ -111,7 +111,6 @@ public class ProductFamilyController {
 
     }
 
-    // TODO : API Doc
     @DeleteMapping("/{id}")
     @ApiResponses(value = {
             @ApiResponse(
@@ -119,7 +118,11 @@ public class ProductFamilyController {
                     responseCode = "204"),
             @ApiResponse(
                     description = "ProductFamily not found",
-                    responseCode = "404")
+                    responseCode = "404"),
+            @ApiResponse(
+                    description = "ProductFamily can't be deleted",
+                    responseCode = "403",
+                    content = @Content(schema = @Schema(implementation = String.class)))
     })
     public ResponseEntity<?> deleteProductFamily(
             @PathVariable

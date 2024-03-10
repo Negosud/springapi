@@ -1,6 +1,10 @@
 package fr.negosud.springapi.api.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import fr.negosud.springapi.api.audit.AuditListener;
+import fr.negosud.springapi.api.audit.FullAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +14,10 @@ import java.time.Year;
 import java.util.List;
 
 @Entity
-public class Product {
+@EntityListeners(AuditListener.class)
+@Table(name="\"product\"")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Product extends FullAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

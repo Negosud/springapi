@@ -74,7 +74,7 @@ public class ProductFamilyController {
             @RequestBody
             SetProductFamilyRequest createProductFamilyRequest,
             @RequestParam(required = false)
-            long actionUserId) {
+            Long actionUserId) {
         this.actionUserContextHolder.setActionUserId(actionUserId);
         ProductFamily productFamily = productFamilyService.setProductFamilyFromRequest(createProductFamilyRequest, null);
         try {
@@ -100,7 +100,7 @@ public class ProductFamilyController {
             @RequestBody
             SetProductFamilyRequest updateProductFamilyRequest,
             @RequestParam(required = false)
-            long actionUserId) {
+            Long actionUserId) {
         ProductFamily productFamily = productFamilyService.getProductFamilyById(id).orElse(null);
         if (productFamily == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -127,10 +127,10 @@ public class ProductFamilyController {
     public ResponseEntity<?> deleteProductFamily(
             @PathVariable
             long id,
-            @RequestBody(required = false)
-            long replacedByProductFamilyId,
             @RequestParam(required = false)
-            long actionUserId) {
+            Long replacedByProductFamilyId,
+            @RequestParam(required = false)
+            Long actionUserId) {
         ProductFamily productFamily = productFamilyService.getProductFamilyById(id).orElse(null);
         if (productFamily == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -142,7 +142,7 @@ public class ProductFamilyController {
                 return new ResponseEntity<>("replacedByProductFamilyId is needed as a valid Id", HttpStatus.FORBIDDEN);
             ProductFamily replacingProductFamily = productFamilyService.getProductFamilyById(replacedByProductFamilyId).orElse(null);
             if (replacingProductFamily == null)
-                return new ResponseEntity<>("replacedByProductFamily doesn't correspond to a proper ProductFamily", HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>("replacedByProductFamilyId doesn't correspond to a proper ProductFamily", HttpStatus.FORBIDDEN);
             productFamilyService.safeDeleteProductFamily(productFamily, replacingProductFamily);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

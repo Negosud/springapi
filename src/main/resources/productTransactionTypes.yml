@@ -1,0 +1,11 @@
+productTransactionTypes:
+  - name: Stock existant
+    description: Il s'agit de notre stock existant à la première utilisation de la suite d'outils informatique Negosud.
+    isEntry:
+  - name: Vente
+    description: Il s'agit d'une vente.
+  - name: Don de l'entrepôt Bichard
+    description: Don du stock de l'entrepôt Bichard le 16 janvier 2024.
+    isEntry:
+  - name: Don à la mairie
+    description: Don à la mairie de la commune, aussi appelé pot de vin.

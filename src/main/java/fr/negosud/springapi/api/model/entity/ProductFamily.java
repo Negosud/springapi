@@ -1,9 +1,11 @@
 package fr.negosud.springapi.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fr.negosud.springapi.api.audit.AuditListener;
 import fr.negosud.springapi.api.audit.FullAuditableEntity;
+import fr.negosud.springapi.api.util.Strings;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -30,10 +32,20 @@ public class ProductFamily extends FullAuditableEntity {
     @Column(length = 1000)
     private String description;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "productFamily")
     List<Product> productList;
 
     public ProductFamily() { }
+
+    /**
+     * Constructor used by ProductFamily init method
+     */
+    public ProductFamily(String name, String description) {
+        this.name = name;
+        this.description = description;
+        this.code = Strings.getCodeFromName(name);
+    }
 
     public long getId() {
         return id;

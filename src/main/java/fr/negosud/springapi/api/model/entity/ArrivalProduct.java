@@ -3,13 +3,16 @@ package fr.negosud.springapi.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import fr.negosud.springapi.api.audit.AuditListener;
+import fr.negosud.springapi.api.audit.CreationAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
+@EntityListeners(AuditListener.class)
 @Table(name="\"arrival_product\"")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class ArrivalProduct {
+public class ArrivalProduct extends CreationAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

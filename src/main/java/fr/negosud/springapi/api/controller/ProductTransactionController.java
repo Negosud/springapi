@@ -46,3 +46,4 @@ public class ProductTransactionController {
         }
     }
 }
+// TODO: Définir quels sont les besoins de crud manuel sur l'entité

@@ -70,7 +70,7 @@ public class ProductController {
             @RequestBody
             SetProductRequest createProductRequest,
             @RequestParam(required = false)
-            long actionUserId) {
+            Long actionUserId) {
         this.actionUserContextHolder.setActionUserId(actionUserId);
         Product product = productService.setProductFromRequest(createProductRequest, null);
         productService.saveProduct(product);
@@ -92,7 +92,7 @@ public class ProductController {
             @RequestBody
             SetProductRequest updateProductRequest,
             @RequestParam(required = false)
-            long actionUserId) {
+            Long actionUserId) {
         Product product = productService.getProductById(id).orElse(null);
         if (product == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -102,7 +102,7 @@ public class ProductController {
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") // TODO: This isn't finished
     public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
         if (productService.getProductById(id).isPresent()) {
             productService.deleteProduct(id);

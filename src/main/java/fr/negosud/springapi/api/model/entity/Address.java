@@ -42,17 +42,6 @@ final public class Address extends FullAuditableEntity {
 
     public Address() { }
 
-    public Address(long id, String country, String administrativeDivision, String city, String postalCode, String addressLine1, String addressLine2, boolean active) {
-        this.id = id;
-        this.country = country;
-        this.administrativeDivision = administrativeDivision;
-        this.city = city;
-        this.postalCode = postalCode;
-        this.addressLine1 = addressLine1;
-        this.addressLine2 = addressLine2;
-        this.active = active;
-    }
-
     public long getId() {
         return id;
     }

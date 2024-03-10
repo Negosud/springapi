@@ -70,7 +70,7 @@ public class UserController {
             @RequestBody
             SetUserRequest createUserRequest,
             @RequestParam(required = false)
-            long actionUserId) {
+            Long actionUserId) {
         this.actionUserContextHolder.setActionUserId(actionUserId);
         User user = userService.setUserFromRequest(createUserRequest, null);
         userService.saveUser(user);
@@ -93,7 +93,7 @@ public class UserController {
             @RequestBody
             SetUserRequest updateUserRequest,
             @RequestParam(required = false)
-            long actionUserId) {
+            Long actionUserId) {
         this.actionUserContextHolder.setActionUserId(actionUserId);
         User user = userService.getUserById(id).orElse(null);
         if (user == null)

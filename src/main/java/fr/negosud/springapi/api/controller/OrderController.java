@@ -19,13 +19,11 @@ public class OrderController {
 
     @Autowired
     public OrderController(OrderService orderService) {
-
         this.orderService = orderService;
     }
 
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrders() {
-
         List<Order> Orders = orderService.getAllOrders();
         return new ResponseEntity<>(Orders, HttpStatus.OK);
     }

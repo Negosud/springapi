@@ -1,32 +1,54 @@
 package fr.negosud.springapi.api.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import fr.negosud.springapi.api.audit.AuditListener;
+import fr.negosud.springapi.api.audit.FullAuditableEntity;
+import fr.negosud.springapi.api.util.Strings;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.List;
+
 @Entity
-public class ProductTransactionType {
+@EntityListeners(AuditListener.class)
+@Table(name="\"product_transaction_type\"")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "code")
+public class ProductTransactionType extends FullAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NotBlank
-    @Column(length = 100)
+    @Column(length = 100, unique = true)
+    private String code;
+
+    @NotBlank
+    @Column(length = 100, unique = true)
     private String name;
 
-    @Column(length = 100)
+    @Column(length = 1000)
     private String description;
 
     @NotBlank
     private boolean isEntry;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "produtTransactionType")
+    List<ProductTransaction> productTransactionList;
+
     public ProductTransactionType() { }
 
-    public ProductTransactionType(long id, String name, String description, boolean isEntry) {
-        this.id = id;
+    /**
+     * Constructor used by ProductTransactionType init method
+     */
+    public ProductTransactionType(String name, String description, boolean isEntry) {
         this.name = name;
         this.description = description;
         this.isEntry = isEntry;
+        this.code = Strings.getCodeFromName(name);
     }
 
     public long getId() {
@@ -35,6 +57,14 @@ public class ProductTransactionType {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {
@@ -53,11 +83,19 @@ public class ProductTransactionType {
         this.description = description;
     }
 
-    public boolean getEntry() {
+    public boolean isEntry() {
         return isEntry;
     }
 
     public void setEntry(boolean entry) {
         isEntry = entry;
+    }
+
+    public List<ProductTransaction> getProductTransactionList() {
+        return productTransactionList;
+    }
+
+    public void setProductTransactionList(List<ProductTransaction> productTransactionList) {
+        this.productTransactionList = productTransactionList;
     }
 }

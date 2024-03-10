@@ -1,9 +1,6 @@
 package fr.negosud.springapi.api.component;
 
-import fr.negosud.springapi.api.service.PermissionNodeService;
-import fr.negosud.springapi.api.service.ProductFamilyService;
-import fr.negosud.springapi.api.service.UserGroupService;
-import fr.negosud.springapi.api.service.UserService;
+import fr.negosud.springapi.api.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -16,13 +13,20 @@ public class DatabaseInitializer implements ApplicationRunner {
     final private UserGroupService userGroupService;
     final private UserService userService;
     final private ProductFamilyService productFamilyService;
+    final private ProductTransactionTypeService productTransactionTypeService;
 
     @Autowired
-    public DatabaseInitializer(PermissionNodeService permissionNodeService, UserGroupService userGroupService, UserService userService, ProductFamilyService productFamilyService) {
+    public DatabaseInitializer(
+            PermissionNodeService permissionNodeService,
+            UserGroupService userGroupService,
+            UserService userService,
+            ProductFamilyService productFamilyService,
+            ProductTransactionTypeService productTransactionTypeService) {
         this.permissionNodeService = permissionNodeService;
         this.userGroupService = userGroupService;
         this.userService = userService;
         this.productFamilyService = productFamilyService;
+        this.productTransactionTypeService = productTransactionTypeService;
     }
 
     public void run(ApplicationArguments args) {
@@ -37,5 +41,8 @@ public class DatabaseInitializer implements ApplicationRunner {
 
         if (!this.productFamilyService.initProductFamilies())
             throw new RuntimeException("Product families initialization failed");
+
+        if (!this.productTransactionTypeService.initProductTransactionTypes())
+            throw new RuntimeException("Product transaction types initialization failed");
     }
 }

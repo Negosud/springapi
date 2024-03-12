@@ -26,30 +26,25 @@ final public class PermissionNode {
     private PermissionNode parentPermissionNode;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "parentPermissionNode")
+    @OneToMany(mappedBy = "parentPermissionNode", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<PermissionNode> childPermissionNodeList;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "permissionNodeList")
+    @ManyToMany(mappedBy = "permissionNodeList", cascade = CascadeType.REMOVE)
     private List<UserGroup> userGroupList;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "permissionNodeList")
+    @ManyToMany(mappedBy = "permissionNodeList", cascade = CascadeType.REMOVE)
     private List<User> userList;
 
     public PermissionNode() { }
 
+    /**
+     * Constructor used by Permission Node init method
+     */
     public PermissionNode(String name, PermissionNode parentPermissionNode) {
         this.name = name;
         this.parentPermissionNode = parentPermissionNode;
-    }
-
-    public PermissionNode(long id, String name, PermissionNode parentPermissionNode, List<UserGroup> userGroupList, List<User> userList) {
-        this.id = id;
-        this.name = name;
-        this.parentPermissionNode = parentPermissionNode;
-        this.userGroupList = userGroupList;
-        this.userList = userList;
     }
 
     @Override

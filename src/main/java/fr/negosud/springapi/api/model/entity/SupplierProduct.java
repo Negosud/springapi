@@ -35,14 +35,6 @@ public class SupplierProduct extends FullAuditableEntity {
 
     public SupplierProduct() { }
 
-    public SupplierProduct(long id, int quantity, BigDecimal unitPrice, User supplier, Product product) {
-        this.id = id;
-        this.quantity = quantity;
-        this.unitPrice = unitPrice;
-        this.supplier = supplier;
-        this.product = product;
-    }
-
     public long getId() {
         return id;
     }

@@ -36,13 +36,6 @@ public class Issue extends FullAuditableEntity {
 
     public Issue() { }
 
-    public Issue(long id, String reference, boolean active, String description) {
-        this.id = id;
-        this.reference = reference;
-        this.active = active;
-        this.description = description;
-    }
-
     public long getId() {
         return id;
     }

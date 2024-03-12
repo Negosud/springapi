@@ -1,7 +1,8 @@
 package fr.negosud.springapi.api.controller;
 
 import fr.negosud.springapi.api.component.ActionUserContextHolder;
-import fr.negosud.springapi.api.model.dto.SetProductRequest;
+import fr.negosud.springapi.api.model.dto.CreateProductRequest;
+import fr.negosud.springapi.api.model.dto.UpdateProductRequest;
 import fr.negosud.springapi.api.model.entity.Product;
 import fr.negosud.springapi.api.service.ProductService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -63,16 +64,28 @@ public class ProductController {
     }
 
     @PostMapping
-    @ApiResponse(
-            description = "Product created",
-            responseCode = "201")
-    public ResponseEntity<Product> createProduct(
+    @ApiResponses(value = {
+            @ApiResponse(
+                    description = "Product created",
+                    responseCode = "201",
+                    content = @Content(schema = @Schema(implementation = Product.class))),
+            @ApiResponse(
+                    description = "Product can't be created",
+                    responseCode = "403",
+                    content = @Content(schema = @Schema(implementation = String.class)))
+    })
+    public ResponseEntity<?> createProduct(
             @RequestBody
-            SetProductRequest createProductRequest,
+            CreateProductRequest createProductRequest,
             @RequestParam(required = false)
             Long actionUserId) {
         this.actionUserContextHolder.setActionUserId(actionUserId);
-        Product product = productService.setProductFromRequest(createProductRequest, null);
+        Product product;
+        try {
+            product = productService.createProductFromRequest(createProductRequest);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
         productService.saveProduct(product);
         return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
@@ -81,29 +94,44 @@ public class ProductController {
     @ApiResponses(value = {
             @ApiResponse(
                     description = "Product updated successfully",
-                    responseCode = "200"),
+                    responseCode = "200",
+                    content = @Content(schema = @Schema(implementation = Product.class))),
+            @ApiResponse(
+                    description = "PProduct quantity field cannot be negative",
+                    responseCode = "403",
+                    content = @Content(schema = @Schema(implementation = String.class))),
             @ApiResponse(
                     description = "Product not found",
-                    responseCode = "404", content = @Content(schema = @Schema))
+                    responseCode = "404",
+                    content = @Content(schema = @Schema))
     })
-    public ResponseEntity<Product> updateProduct(
+    public ResponseEntity<?> updateProduct(
             @PathVariable
             long id,
             @RequestBody
-            SetProductRequest updateProductRequest,
+            UpdateProductRequest updateProductRequest,
             @RequestParam(required = false)
             Long actionUserId) {
         Product product = productService.getProductById(id).orElse(null);
         if (product == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         this.actionUserContextHolder.setActionUserId(actionUserId);
-        productService.setProductFromRequest(updateProductRequest, product);
+        Product newProduct;
+        try {
+            newProduct = productService.updateProductFromRequest(updateProductRequest, product);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
+        product.setActive(false);
         productService.saveProduct(product);
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        productService.saveProduct(newProduct);
+        return new ResponseEntity<>(newProduct, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}") // TODO: This isn't finished
-    public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(
+            @PathVariable
+            long id) {
         if (productService.getProductById(id).isPresent()) {
             productService.deleteProduct(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

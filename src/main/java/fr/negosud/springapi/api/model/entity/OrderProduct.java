@@ -30,13 +30,6 @@ public class OrderProduct extends CreationAuditableEntity {
 
     public OrderProduct() { }
 
-    public OrderProduct(long id, int quantity, Order order, Product product) {
-        this.id = id;
-        this.quantity = quantity;
-        this.order = order;
-        this.product = product;
-    }
-
     public long getId() {
         return id;
     }

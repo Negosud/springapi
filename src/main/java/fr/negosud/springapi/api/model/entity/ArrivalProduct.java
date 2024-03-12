@@ -31,13 +31,6 @@ public class ArrivalProduct extends CreationAuditableEntity {
 
     public ArrivalProduct() { }
 
-    public ArrivalProduct(long id, int quantity, Arrival arrival, Product product) {
-        this.id = id;
-        this.quantity = quantity;
-        this.arrival = arrival;
-        this.product = product;
-    }
-
     public long getId() {
         return id;
     }

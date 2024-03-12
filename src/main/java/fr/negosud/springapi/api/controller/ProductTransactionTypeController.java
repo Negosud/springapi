@@ -97,7 +97,7 @@ public class ProductTransactionTypeController {
                     description = "ProductTransactionType not found",
                     responseCode = "404"),
             @ApiResponse(
-                    description = "ProductTransactionType isEntry",
+                    description = "ProductTransactionType isEntry field cannot be changed",
                     responseCode = "409",
                     content = @Content(schema = @Schema(implementation = String.class)))
     })
@@ -160,5 +160,3 @@ public class ProductTransactionTypeController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
-
-

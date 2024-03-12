@@ -54,7 +54,7 @@ public class Product extends FullAuditableEntity {
     @NotBlank
     private boolean active;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SupplierProduct> supplierList;
 
     @OneToMany(mappedBy = "product")
@@ -63,7 +63,10 @@ public class Product extends FullAuditableEntity {
     @OneToMany(mappedBy = "product")
     private List<OrderProduct> orderList;
 
-    public Product() { }
+    public Product() {
+        this.active = true;
+        this.quantity = 0;
+    }
 
     public long getId() {
         return id;

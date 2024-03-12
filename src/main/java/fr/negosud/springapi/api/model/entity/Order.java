@@ -39,14 +39,6 @@ public class Order extends FullAuditableEntity {
 
     public Order() { }
 
-    public Order(long id, String reference, OrderStatus status, User preparedBy, Date preparedAt) {
-        this.id = id;
-        this.reference = reference;
-        this.status = status;
-        this.preparedBy = preparedBy;
-        this.preparedAt = preparedAt;
-    }
-
     public long getId() {
         return id;
     }

@@ -43,7 +43,7 @@ final public class User extends FullAuditableEntity {
     @NotNull
     private boolean active;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(
             name = "user_permission_node",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -58,15 +58,15 @@ final public class User extends FullAuditableEntity {
     @JoinColumn(referencedColumnName = "name")
     private UserGroup userGroup;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonIdentityReference(alwaysAsId = true)
     private Address mailingAddress;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonIdentityReference(alwaysAsId = true)
     private Address billingAddress;
 
-    @OneToMany(mappedBy = "supplier")
+    @OneToMany(mappedBy = "supplier", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonIdentityReference(alwaysAsId = true)
     private List<SupplierProduct> suppliedProductList;
 

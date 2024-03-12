@@ -33,13 +33,6 @@ public class Invoice extends CreationAuditableEntity {
 
     public Invoice() { }
 
-    public Invoice(long id, String reference, Address address, Order order) {
-        this.id = id;
-        this.reference = reference;
-        this.address = address;
-        this.order = order;
-    }
-
     public long getId() {
         return id;
     }

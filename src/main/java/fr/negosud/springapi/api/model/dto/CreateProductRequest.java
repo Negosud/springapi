@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
 
-public class SetProductRequest {
+public class CreateProductRequest {
 
     @NotBlank
     @Column(length = 100)
@@ -25,11 +25,14 @@ public class SetProductRequest {
     @Column(precision = 10, scale = 2)
     private BigDecimal unitPrice;
 
-    private Integer quantity;
+    private int quantity;
 
-    private Boolean active;
+    private boolean active;
 
-    public SetProductRequest() { this.active = true ; }
+    public CreateProductRequest() {
+        this.active = true;
+        this.quantity = 0;
+    }
 
     public String getName() {
         return name;
@@ -47,11 +50,11 @@ public class SetProductRequest {
         this.description = description;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
@@ -79,11 +82,11 @@ public class SetProductRequest {
         this.unitPrice = unitPrice;
     }
 
-    public Boolean isActive() {
+    public boolean isActive() {
         return active;
     }
 
-    public void setActive(Boolean active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 }

@@ -37,13 +37,6 @@ public class Arrival extends FullAuditableEntity {
 
     public Arrival() { }
 
-    public Arrival(long id, String reference, ArrivalStatus status, User suppliedBy) {
-        this.id = id;
-        this.reference = reference;
-        this.status = status;
-        this.suppliedBy = suppliedBy;
-    }
-
     public long getId() {
         return id;
     }

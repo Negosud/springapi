@@ -1,7 +1,9 @@
 package fr.negosud.springapi.api.service;
 
-import fr.negosud.springapi.api.model.dto.SetProductRequest;
+import fr.negosud.springapi.api.model.dto.CreateProductRequest;
+import fr.negosud.springapi.api.model.dto.UpdateProductRequest;
 import fr.negosud.springapi.api.model.entity.Product;
+import fr.negosud.springapi.api.model.entity.ProductFamily;
 import fr.negosud.springapi.api.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,11 +18,13 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductFamilyService productFamilyService;
+    private final ProductTransactionService productTransactionService;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductFamilyService productFamilyService) {
+    public ProductService(ProductRepository productRepository, ProductFamilyService productFamilyService, ProductTransactionService productTransactionService) {
         this.productRepository = productRepository;
         this.productFamilyService = productFamilyService;
+        this.productTransactionService = productTransactionService;
     }
 
     public List<Product> getAllProducts(Optional<Boolean> active, String productFamilyName) {
@@ -33,36 +37,66 @@ public class ProductService {
         return productRepository.findById(productId);
     }
 
-    public Product saveProduct(Product product) {
-        return productRepository.save(product);
+    public void saveProduct(Product product) {
+        productRepository.save(product);
     }
 
     public void deleteProduct(long productId) {
         productRepository.deleteById(productId);
     }
 
-    public Product setProductFromRequest(SetProductRequest setProductRequest, Product product) {
-        boolean create = product == null;
-        if (create)
-            product = new Product();
+    /**
+     * @throws IllegalArgumentException Product quantity can't be negative
+     */
+    public Product createProductFromRequest(CreateProductRequest createProductRequest) {
+        Product product = new Product();
 
-        product.setName(setProductRequest.getName());
-        product.setDescription(setProductRequest.getDescription());
-        product.setVintage(Year.of(setProductRequest.getVintage()));
-        product.setProductFamily(productFamilyService.getProductFamilyByCode(setProductRequest.getProductFamilyCode()).orElse(null));
-        product.setUnitPrice(setProductRequest.getUnitPrice());
-        product.setUnitPriceVAT(setProductRequest.getUnitPrice().multiply(new BigDecimal("1.20")));
+        product.setName(createProductRequest.getName());
+        product.setDescription(createProductRequest.getDescription());
+        product.setVintage(Year.of(createProductRequest.getVintage()));
+        product.setProductFamily(productFamilyService.getProductFamilyByCode(createProductRequest.getProductFamilyCode()).orElse(null));
+        product.setUnitPrice(createProductRequest.getUnitPrice());
+        product.setUnitPriceVAT(createProductRequest.getUnitPrice().multiply(new BigDecimal("1.20")));
+        product.setActive(createProductRequest.isActive());
 
-        Integer quantity = setProductRequest.getQuantity();
-        product.setQuantity(create ?
-                (quantity == null ? 0 : quantity) :
-                (quantity == null ? product.getQuantity() : quantity));
-
-        Boolean active = setProductRequest.isActive();
-        product.setActive(create ?
-                (active != null ? active : (quantity != null && quantity != 0)) :
-                (active == null) ? product.isActive() : active);
+        productTransactionService.handleProductQuantityDefinition(product, createProductRequest.getQuantity());
 
         return product;
+    }
+
+    /**
+     * @throws IllegalArgumentException Product quantity can't be negative
+     */
+    public Product updateProductFromRequest(UpdateProductRequest updateProductRequest, Product oldProduct) {
+        Product newProduct = new Product();
+
+        String name = updateProductRequest.getName();
+        newProduct.setName(name != null ? name : oldProduct.getName());
+
+        String description = updateProductRequest.getDescription();
+        newProduct.setDescription(description != null ? description : oldProduct.getDescription());
+
+        Integer vintage = updateProductRequest.getVintage();
+        newProduct.setVintage(vintage != null ? Year.of(updateProductRequest.getVintage()) : oldProduct.getVintage());
+
+        String productFamilyCode = updateProductRequest.getProductFamilyCode();
+        ProductFamily productFamily = productFamilyCode != null ? productFamilyService.getProductFamilyByCode(productFamilyCode).orElse(null) : null;
+        newProduct.setProductFamily(productFamily != null ? productFamily : oldProduct.getProductFamily());
+
+        BigDecimal unitPrice = updateProductRequest.getUnitPrice();
+        if (unitPrice != null) {
+            newProduct.setUnitPrice(unitPrice);
+            newProduct.setUnitPriceVAT(unitPrice.multiply(new BigDecimal("1.20")));
+        } else {
+            newProduct.setUnitPrice(oldProduct.getUnitPrice());
+            newProduct.setUnitPriceVAT(oldProduct.getUnitPriceVAT());
+        }
+
+        Integer quantity = updateProductRequest.getQuantity();
+        newProduct.setQuantity(oldProduct.getQuantity());
+        if (quantity != null)
+            productTransactionService.handleProductQuantityDefinition(newProduct, updateProductRequest.getQuantity());
+
+        return newProduct;
     }
 }

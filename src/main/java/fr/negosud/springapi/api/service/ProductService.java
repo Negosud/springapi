@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.Year;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -67,36 +68,83 @@ public class ProductService {
     /**
      * @throws IllegalArgumentException Product quantity can't be negative
      */
-    public Product updateProductFromRequest(UpdateProductRequest updateProductRequest, Product oldProduct) {
+    public Product updateProductFromRequest(UpdateProductRequest updateProductRequest, Product oldProduct) throws IllegalArgumentException {
         Product newProduct = new Product();
+        boolean isUpdateNeeded = false;
 
         String name = updateProductRequest.getName();
-        newProduct.setName(name != null ? name : oldProduct.getName());
-
         String description = updateProductRequest.getDescription();
-        newProduct.setDescription(description != null ? description : oldProduct.getDescription());
-
-        Integer vintage = updateProductRequest.getVintage();
-        newProduct.setVintage(vintage != null ? Year.of(updateProductRequest.getVintage()) : oldProduct.getVintage());
-
+        Year vintage = updateProductRequest.getVintage() != null ? Year.of(updateProductRequest.getVintage()) : null;
         String productFamilyCode = updateProductRequest.getProductFamilyCode();
         ProductFamily productFamily = productFamilyCode != null ? productFamilyService.getProductFamilyByCode(productFamilyCode).orElse(null) : null;
-        newProduct.setProductFamily(productFamily != null ? productFamily : oldProduct.getProductFamily());
-
         BigDecimal unitPrice = updateProductRequest.getUnitPrice();
-        if (unitPrice != null) {
+        Integer quantity = updateProductRequest.getQuantity();
+        Boolean active = updateProductRequest.isActive();
+
+        if (name != null && !Objects.equals(name, oldProduct.getName())) {
+            newProduct.setName(name);
+            isUpdateNeeded = true;
+        } else {
+            newProduct.setName(oldProduct.getName());
+        }
+
+        if (description != null && !Objects.equals(description, oldProduct.getDescription())) {
+            newProduct.setDescription(description);
+            isUpdateNeeded = true;
+        } else {
+            newProduct.setDescription(oldProduct.getDescription());
+        }
+
+        if (vintage != null && !Objects.equals(vintage, oldProduct.getVintage())) {
+            newProduct.setVintage(Year.of(updateProductRequest.getVintage()));
+            isUpdateNeeded = true;
+        } else {
+            newProduct.setVintage(vintage);
+        }
+
+        if (productFamily != null && !Objects.equals(productFamily, oldProduct.getProductFamily())) {
+            newProduct.setProductFamily(productFamily);
+            isUpdateNeeded = true;
+        } else {
+            newProduct.setProductFamily(oldProduct.getProductFamily());
+        }
+
+        if (unitPrice != null && !Objects.equals(unitPrice, oldProduct.getUnitPrice())) {
             newProduct.setUnitPrice(unitPrice);
             newProduct.setUnitPriceVAT(unitPrice.multiply(new BigDecimal("1.20")));
+            isUpdateNeeded = true;
         } else {
             newProduct.setUnitPrice(oldProduct.getUnitPrice());
             newProduct.setUnitPriceVAT(oldProduct.getUnitPriceVAT());
         }
 
-        Integer quantity = updateProductRequest.getQuantity();
-        newProduct.setQuantity(oldProduct.getQuantity());
-        if (quantity != null)
-            productTransactionService.handleProductQuantityDefinition(newProduct, updateProductRequest.getQuantity());
+        if (isUpdateNeeded) {
+            newProduct.setQuantity(oldProduct.getQuantity());
+            if (quantity != null && !Objects.equals(quantity, oldProduct.getQuantity()))
+                productTransactionService.handleProductQuantityDefinition(newProduct, quantity);
 
-        return newProduct;
+            if (active != null && !Objects.equals(active, oldProduct.isActive()))
+                newProduct.setActive(active);
+
+            oldProduct.setActive(false);
+            oldProduct.setQuantity(0);
+
+            return newProduct;
+        }
+
+        if (quantity != null && !Objects.equals(quantity, oldProduct.getQuantity())) {
+            productTransactionService.handleProductQuantityDefinition(oldProduct, quantity);
+            isUpdateNeeded = true;
+        }
+
+        if (active != null && active != oldProduct.isActive()) {
+            oldProduct.setActive(active);
+            isUpdateNeeded = true;
+        }
+
+        if (!isUpdateNeeded)
+            throw new IllegalArgumentException("No fields were changed or the request body is empty.");
+
+        return null;
     }
 }

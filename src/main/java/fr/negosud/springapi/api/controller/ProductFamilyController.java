@@ -117,12 +117,12 @@ public class ProductFamilyController {
                     description = "ProductFamily deleted",
                     responseCode = "204"),
             @ApiResponse(
-                    description = "ProductFamily not found",
-                    responseCode = "404"),
-            @ApiResponse(
                     description = "ProductFamily can't be deleted",
                     responseCode = "403",
-                    content = @Content(schema = @Schema(implementation = String.class)))
+                    content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(
+                    description = "ProductFamily not found",
+                    responseCode = "404")
     })
     public ResponseEntity<?> deleteProductFamily(
             @PathVariable

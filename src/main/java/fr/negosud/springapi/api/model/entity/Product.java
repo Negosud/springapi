@@ -54,6 +54,10 @@ public class Product extends FullAuditableEntity {
     @NotBlank
     private boolean active;
 
+    @OneToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private Product oldProduct;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SupplierProduct> supplierList;
 
@@ -66,6 +70,7 @@ public class Product extends FullAuditableEntity {
     public Product() {
         this.active = true;
         this.quantity = 0;
+        this.oldProduct = null;
     }
 
     public long getId() {
@@ -138,5 +143,13 @@ public class Product extends FullAuditableEntity {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Product getOldProduct() {
+        return oldProduct;
+    }
+
+    public void setOldProduct(Product oldProduct) {
+        this.oldProduct = oldProduct;
     }
 }

@@ -97,7 +97,7 @@ public class ProductController {
                     responseCode = "200",
                     content = @Content(schema = @Schema(implementation = Product.class))),
             @ApiResponse(
-                    description = "PProduct quantity field cannot be negative",
+                    description = "Product can't be updated",
                     responseCode = "403",
                     content = @Content(schema = @Schema(implementation = String.class))),
             @ApiResponse(
@@ -122,14 +122,30 @@ public class ProductController {
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
-        product.setActive(false);
+        if (newProduct == null) {
+            productService.saveProduct(product);
+            return new ResponseEntity<>(product, HttpStatus.OK);
+        }
         productService.saveProduct(product);
+        newProduct.setOldProduct(product);
         productService.saveProduct(newProduct);
         return new ResponseEntity<>(newProduct, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(
+    @ApiResponses(value = {
+            @ApiResponse(
+                    description = "Product deleted",
+                    responseCode = "204"),
+            @ApiResponse(
+                    description = "Product can't be deleted",
+                    responseCode = "403",
+                    content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(
+                    description = "Product not found",
+                    responseCode = "404")
+    })
+    public ResponseEntity<?> deleteProduct( // TODO : handle product delete (simpler than update lol)
             @PathVariable
             long id) {
         if (productService.getProductById(id).isPresent()) {

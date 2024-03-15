@@ -58,6 +58,10 @@ public class Product extends FullAuditableEntity {
     @JsonIdentityReference(alwaysAsId = true)
     private Product oldProduct;
 
+    @OneToOne(mappedBy = "oldProduct")
+    @JsonIdentityReference(alwaysAsId = true)
+    private Product newProduct;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SupplierProduct> supplierList;
 
@@ -151,5 +155,13 @@ public class Product extends FullAuditableEntity {
 
     public void setOldProduct(Product oldProduct) {
         this.oldProduct = oldProduct;
+    }
+
+    public Product getNewProduct() {
+        return newProduct;
+    }
+
+    public void setNewProduct(Product newProduct) {
+        this.newProduct = newProduct;
     }
 }

@@ -6,11 +6,16 @@ import fr.negosud.springapi.api.model.entity.Product;
 import fr.negosud.springapi.api.model.entity.ProductFamily;
 import fr.negosud.springapi.api.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.Year;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -44,6 +49,16 @@ public class ProductService {
 
     public void deleteProduct(long productId) {
         productRepository.deleteById(productId);
+    }
+
+    public Product getNewestProduct(Product product) {
+        Product newProduct = product.getNewProduct();
+        return newProduct == null ? product : getNewestProduct(newProduct);
+    }
+
+    public Product getOldestProduct(Product product) {
+        Product oldProduct = product.getOldProduct();
+        return oldProduct == null ? product : getOldestProduct(oldProduct);
     }
 
     /**
@@ -146,5 +161,25 @@ public class ProductService {
             throw new IllegalArgumentException("No fields were changed or the request body is empty.");
 
         return null;
+    }
+
+    public boolean initProducts() {
+        Yaml yaml = new Yaml();
+
+        try (InputStream inputStream = new ClassPathResource("products.yml").getInputStream()) {
+            Map<String, List<Map<String, Object>>> productsMap = yaml.load(inputStream);
+            if (productsMap != null && productsMap.containsKey("products")) {
+                List<Map<String, Object>> productsInfo = productsMap.get("products");
+                for (Map<String, Object> productInfo : productsInfo) {
+                    Product product = new Product();
+                    // Make a initProduct method, review what need to be stored in a product
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 }

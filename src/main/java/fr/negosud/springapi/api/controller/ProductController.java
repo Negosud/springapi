@@ -131,28 +131,4 @@ public class ProductController {
         productService.saveProduct(newProduct);
         return new ResponseEntity<>(newProduct, HttpStatus.OK);
     }
-
-    @DeleteMapping("/{id}")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    description = "Product deleted",
-                    responseCode = "204"),
-            @ApiResponse(
-                    description = "Product can't be deleted",
-                    responseCode = "403",
-                    content = @Content(schema = @Schema(implementation = String.class))),
-            @ApiResponse(
-                    description = "Product not found",
-                    responseCode = "404")
-    })
-    public ResponseEntity<?> deleteProduct( // TODO : handle product delete (simpler than update lol)
-            @PathVariable
-            long id) {
-        if (productService.getProductById(id).isPresent()) {
-            productService.deleteProduct(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 }

@@ -2,8 +2,10 @@ userGroups:
   - name: CUSTOMER
     permissions:
       - web
+
   - name: SUPPLIER
     inherit: CUSTOMER
+
   - name: EMPLOYEE
     inherit: CUSTOMER
     permissions:
@@ -13,6 +15,7 @@ userGroups:
       - desktop.arrival.list
       - desktop.issue.view
       - desktop.issue.list
+
   - name: MANAGER
     inherit: EMPLOYEE
     permissions:
@@ -20,6 +23,7 @@ userGroups:
       - desktop.issue
       - desktop.scrud.scheme
       - desktop.scrud.read
+
   - name: ADMIN
     inherit: MANAGER
     permissions:

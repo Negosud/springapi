@@ -2,6 +2,7 @@ package fr.negosud.springapi.api.service;
 
 import fr.negosud.springapi.api.component.UserPasswordEncoder;
 import fr.negosud.springapi.api.model.dto.SetUserRequest;
+import fr.negosud.springapi.api.model.entity.SupplierProduct;
 import fr.negosud.springapi.api.model.entity.User;
 import fr.negosud.springapi.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,12 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static java.lang.System.out;
 
 @Service
 final public class UserService {
@@ -51,8 +55,20 @@ final public class UserService {
         return Optional.ofNullable(this.userRepository.findByLogin(pseudoUniqueKey).orElse(this.userRepository.findByEmail(pseudoUniqueKey).orElse(null)));
     }
 
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    public void saveUser(User user) {
+        if (user.getUserGroup() != null && user.getUserGroup().getName().equals("SUPPLIER") && user.getSuppliedProductList() != null && !user.getSuppliedProductList().isEmpty()) {
+            List<SupplierProduct> supplierProductList = new ArrayList<>(user.getSuppliedProductList());
+            user.setSuppliedProductList(null);
+            userRepository.save(user);
+            user.setSuppliedProductList(supplierProductList);
+            out.println("SupplierProduct List :");
+            out.println(supplierProductList);
+            for (SupplierProduct supplierProduct : supplierProductList) {
+                if (supplierProduct != null)
+                    supplierProductService.saveSupplierProduct(supplierProduct);
+            }
+        }
+        userRepository.save(user);
     }
 
     public void deleteUser(long userId) {
@@ -73,7 +89,7 @@ final public class UserService {
         user.setPermissionNodeList(permissionNodeService.getPermissionNodeListByFullName(setUserRequest.getPermissionList()).orElse(null));
         user.setMailingAddress(addressService.getAddressById(setUserRequest.getMailingAddress()).orElse(null));
         user.setBillingAddress(addressService.getAddressById(setUserRequest.getBillingAddress()).orElse(null));
-        user.setSuppliedProductList(supplierProductService.getSupplierProductListByIdList(setUserRequest.getSuppliedProductList()));
+        user.setSuppliedProductList(supplierProductService.setUsersSuppliedProductListFromRequest(user, setUserRequest.getSupplierProductList()));
 
         UserPasswordEncoder userPasswordEncoder = new UserPasswordEncoder();
         String userPassword = user.getPassword();
@@ -93,7 +109,7 @@ final public class UserService {
                 List<Map<String, Object>> usersList = usersMap.get("users");
                 for (Map<String, Object> userInfo : usersList) {
                     String pseudoUniqueKey = (String) userInfo.get("pseudouniquekey");
-                    System.out.println("Trying " + pseudoUniqueKey);
+                    out.println("Trying " + pseudoUniqueKey);
                     User existingUser = this.getUserByPseudoUniqueKey(pseudoUniqueKey).orElse(null);
                     if (existingUser == null) {
                         UserPasswordEncoder userPasswordEncoder = new UserPasswordEncoder();

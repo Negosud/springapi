@@ -51,8 +51,8 @@ public class SetUserRequest {
     @Schema(description = "User's billing address id")
     private long billingAddress;
 
-    @Schema(description = "User's supplied product list as ids")
-    private List<Long> suppliedProductList;
+    @Schema(description = "User's supplied products info")
+    private List<SetUsersSuppliedProductRequest> supplierProductList;
 
     public SetUserRequest() {
         this.active = true;
@@ -146,11 +146,11 @@ public class SetUserRequest {
         this.billingAddress = billingAddress;
     }
 
-    public List<Long> getSuppliedProductList() {
-        return suppliedProductList;
+    public List<SetUsersSuppliedProductRequest> getSupplierProductList() {
+        return supplierProductList;
     }
 
-    public void setSuppliedProductList(List<Long> suppliedProductList) {
-        this.suppliedProductList = suppliedProductList;
+    public void setSupplierProductList(List<SetUsersSuppliedProductRequest> supplierProductList) {
+        this.supplierProductList = supplierProductList;
     }
 }

@@ -1,6 +1,7 @@
 products:
   - name: Château de la Vallée
     description: Ce vin rouge riche et corsé offre des arômes de fruits noirs mûrs et d'épices, avec des tanins souples et une longue finale.
+    expirationDate: 2026-02-03
     quantity: 72
     vintage: 2018
     productFamily: Vin Rouge
@@ -9,6 +10,7 @@ products:
 
   - name: Domaine des Vignobles
     description: Un vin blanc frais et vif aux notes d'agrumes et de fleurs blanches, avec une acidité équilibrée et une finale rafraîchissante.
+    expirationDate: 2029-04-12
     quantity: 36
     vintage: 2020
     productFamily: Vin blanc
@@ -17,6 +19,7 @@ products:
 
   - name: Cuvée Royale
     description: Ce champagne élégant et pétillant séduit par ses arômes de fruits à chair blanche, de brioche et de miel, avec une effervescence fine et persistante.
+    expirationDate: 2025-03-04
     quantity: 48
     vintage: 2016
     productFamily: Vin Effervescent
@@ -25,6 +28,7 @@ products:
 
   - name: Rosé de Provence
     description: Un rosé pâle et rafraîchissant aux notes de fraises et de fleurs, avec une texture soyeuse et une acidité vive.
+    expirationDate: 2027-06-08
     quantity: 0
     vintage: 2021
     productFamily: Vin Rosé
@@ -32,6 +36,7 @@ products:
 
   - name: Barolo Classico
     description: Ce vin rouge italien prestigieux offre des arômes intenses de cerise, de truffe et de cuir, avec des tanins fermes et une longue persistance en bouche.
+    expirationDate: 2023-12-06
     quantity: 0
     vintage: 2016
     productFamily: Vin rouge

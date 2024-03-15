@@ -15,22 +15,18 @@ public class InvoiceService {
 
     @Autowired
     public InvoiceService(InvoiceRepository invoiceRepository) {
-
         this.invoiceRepository = invoiceRepository;
     }
 
     public List<Invoice> getAllInvoices() {
-
         return invoiceRepository.findAll();
     }
 
     public Optional<Invoice> getInvoiceById(long invoiceId) {
-
         return invoiceRepository.findById(invoiceId);
     }
 
     public Invoice saveInvoice(Invoice invoice) {
-
         return invoiceRepository.save(invoice);
     }
 }

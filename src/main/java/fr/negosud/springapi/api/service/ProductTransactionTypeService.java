@@ -91,7 +91,11 @@ public class ProductTransactionTypeService {
             if (productTransactionTypesMap != null && productTransactionTypesMap.containsKey("productTransactionTypes")) {
                 List<Map<String, Object>> productTransactionTypesInfo = productTransactionTypesMap.get("productTransactionTypes");
                 for (Map<String, Object> productTransactionTypeInfo : productTransactionTypesInfo) {
-                    ProductTransactionType productTransactionType = new ProductTransactionType((String) productTransactionTypeInfo.get("name"), (String) productTransactionTypeInfo.get("description"),  productTransactionTypeInfo.containsKey("isEntry"));
+                    ProductTransactionType productTransactionType = new ProductTransactionType(
+                            (String) productTransactionTypeInfo.get("name"),
+                            (String) productTransactionTypeInfo.get("description"),
+                            productTransactionTypeInfo.containsKey("isEntry")
+                    );
                     if (productTransactionTypeRepository.findByCode(productTransactionType.getCode()).isEmpty())
                         saveProductTransactionType(productTransactionType);
                 }

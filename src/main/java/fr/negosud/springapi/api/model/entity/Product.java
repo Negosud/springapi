@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.time.Year;
 import java.util.List;
 
@@ -36,6 +37,8 @@ public class Product extends FullAuditableEntity {
     private int quantity;
 
     @NotBlank
+    private Date expirationDate;
+
     private Year vintage;
 
     @ManyToOne
@@ -74,7 +77,18 @@ public class Product extends FullAuditableEntity {
     public Product() {
         this.active = true;
         this.quantity = 0;
-        this.oldProduct = null;
+    }
+
+    public Product (String name, String description, int quantity, Date expirationDate, Year vintage, ProductFamily productFamily, BigDecimal unitPrice, boolean active) {
+        this.name = name;
+        this.description = description;
+        this.quantity = quantity;
+        this.expirationDate = expirationDate;
+        this.vintage = vintage;
+        this.productFamily = productFamily;
+        this.unitPrice = unitPrice;
+        this.unitPriceVAT = unitPrice.multiply(new BigDecimal("1.20"));
+        this.active = active;
     }
 
     public long getId() {
@@ -107,6 +121,14 @@ public class Product extends FullAuditableEntity {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
     }
 
     public Year getVintage() {

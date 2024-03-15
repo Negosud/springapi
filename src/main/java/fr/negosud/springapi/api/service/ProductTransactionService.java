@@ -29,8 +29,8 @@ public class ProductTransactionService {
         return productTransactionRepository.findById(productTransactionId);
     }
 
-    public ProductTransaction saveProductTransaction(ProductTransaction productTransaction) {
-        return productTransactionRepository.save(productTransaction);
+    public void saveProductTransaction(ProductTransaction productTransaction) {
+        productTransactionRepository.save(productTransaction);
     }
 
     public void deleteProductTransaction(long productTransactionId) {
@@ -40,18 +40,18 @@ public class ProductTransactionService {
     /**
      * @throws IllegalArgumentException Product quantity field cannot be negative
      */
-    public void handleProductQuantityDefinition(Product product, int newQuantity) {
+    public ProductTransaction handleProductQuantityDefinition(Product product, int newQuantity) {
         int quantity = product.getQuantity();
+        ProductTransaction productTransaction = null;
         if (newQuantity < 0)
             throw new IllegalArgumentException("Product quantity field cannot be negative");
         if (quantity > newQuantity) {
-            ProductTransaction productTransaction = new ProductTransaction(product, quantity-newQuantity, productTransactionTypeService.getProductTransactionTypeByCode("SORTIE_A_CLASSIFIER").orElse(null));
-            productTransactionRepository.save(productTransaction);
+            productTransaction = new ProductTransaction(product, quantity - newQuantity, productTransactionTypeService.getProductTransactionTypeByCode("SORTIE_A_CLASSIFIER").orElse(null));
         } else if (quantity < newQuantity) {
-            ProductTransaction productTransaction = new ProductTransaction(product, newQuantity - quantity, productTransactionTypeService.getProductTransactionTypeByCode("ENTREE_A_CLASSIFIER").orElse(null));
-            productTransactionRepository.save(productTransaction);
+            productTransaction = new ProductTransaction(product, newQuantity - quantity, productTransactionTypeService.getProductTransactionTypeByCode("ENTREE_A_CLASSIFIER").orElse(null));
         }
         product.setQuantity(newQuantity);
+        return productTransaction;
     }
 }
 

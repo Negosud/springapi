@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class CreateProductRequest {
 
@@ -16,7 +17,9 @@ public class CreateProductRequest {
     private String description;
 
     @NotBlank
-    private int vintage;
+    private Date expirationDate;
+
+    private Integer vintage;
 
     @NotBlank
     private String productFamilyCode;
@@ -58,11 +61,19 @@ public class CreateProductRequest {
         this.quantity = quantity;
     }
 
-    public int getVintage() {
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public Integer getVintage() {
         return vintage;
     }
 
-    public void setVintage(int vintage) {
+    public void setVintage(Integer vintage) {
         this.vintage = vintage;
     }
 

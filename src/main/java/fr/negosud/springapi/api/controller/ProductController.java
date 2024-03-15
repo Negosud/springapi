@@ -80,14 +80,11 @@ public class ProductController {
             @RequestParam(required = false)
             Long actionUserId) {
         this.actionUserContextHolder.setActionUserId(actionUserId);
-        Product product;
         try {
-            product = productService.createProductFromRequest(createProductRequest);
+            return new ResponseEntity<>(productService.createProductFromRequest(createProductRequest), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
-        productService.saveProduct(product);
-        return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -116,19 +113,10 @@ public class ProductController {
         if (product == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         this.actionUserContextHolder.setActionUserId(actionUserId);
-        Product newProduct;
         try {
-            newProduct = productService.updateProductFromRequest(updateProductRequest, product);
+            return new ResponseEntity<>(productService.updateProductFromRequest(updateProductRequest, product), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
-        if (newProduct == null) {
-            productService.saveProduct(product);
-            return new ResponseEntity<>(product, HttpStatus.OK);
-        }
-        productService.saveProduct(product);
-        newProduct.setOldProduct(product);
-        productService.saveProduct(newProduct);
-        return new ResponseEntity<>(newProduct, HttpStatus.OK);
     }
 }

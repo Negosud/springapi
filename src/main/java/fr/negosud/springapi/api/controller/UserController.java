@@ -63,16 +63,28 @@ public class UserController {
     }
 
     @PostMapping
-    @ApiResponse(
-            description = "User created",
-            responseCode = "201")
-    public ResponseEntity<User> createUser(
+    @ApiResponses(value =  {
+            @ApiResponse(
+                    description = "User created",
+                    responseCode = "201",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @ApiResponse(
+                    description = "User can't be created",
+                    responseCode = "403",
+                    content = @Content(schema = @Schema(implementation = String.class)))
+    })
+    public ResponseEntity<?> createUser(
             @RequestBody
             SetUserRequest createUserRequest,
             @RequestParam(required = false)
             Long actionUserId) {
         this.actionUserContextHolder.setActionUserId(actionUserId);
-        User user = userService.setUserFromRequest(createUserRequest, null);
+        User user;
+        try {
+            user = userService.setUserFromRequest(createUserRequest, null);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
         userService.saveUser(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
@@ -81,13 +93,18 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(
                     description = "User updated successfully",
-                    responseCode = "200"),
+                    responseCode = "200",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @ApiResponse(
+                    description = "User can't be updated",
+                    responseCode = "403",
+                    content = @Content(schema = @Schema(implementation = String.class))),
             @ApiResponse(
                     description = "User not found",
                     responseCode = "404",
                     content = @Content(schema = @Schema))
     })
-    public ResponseEntity<User> updateUser(
+    public ResponseEntity<?> updateUser(
             @PathVariable
             long id,
             @RequestBody
@@ -98,7 +115,11 @@ public class UserController {
         User user = userService.getUserById(id).orElse(null);
         if (user == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        userService.setUserFromRequest(updateUserRequest, user);
+        try {
+            userService.setUserFromRequest(updateUserRequest, user);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
         userService.saveUser(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }

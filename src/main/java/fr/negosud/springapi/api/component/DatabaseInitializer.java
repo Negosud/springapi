@@ -14,6 +14,7 @@ public class DatabaseInitializer implements ApplicationRunner {
     final private UserService userService;
     final private ProductFamilyService productFamilyService;
     final private ProductTransactionTypeService productTransactionTypeService;
+    final private ProductService productService;
 
     @Autowired
     public DatabaseInitializer(
@@ -21,12 +22,14 @@ public class DatabaseInitializer implements ApplicationRunner {
             UserGroupService userGroupService,
             UserService userService,
             ProductFamilyService productFamilyService,
-            ProductTransactionTypeService productTransactionTypeService) {
+            ProductTransactionTypeService productTransactionTypeService,
+            ProductService productService) {
         this.permissionNodeService = permissionNodeService;
         this.userGroupService = userGroupService;
         this.userService = userService;
         this.productFamilyService = productFamilyService;
         this.productTransactionTypeService = productTransactionTypeService;
+        this.productService = productService;
     }
 
     public void run(ApplicationArguments args) {
@@ -44,5 +47,8 @@ public class DatabaseInitializer implements ApplicationRunner {
 
         if (!this.productTransactionTypeService.initProductTransactionTypes())
             throw new RuntimeException("Product transaction types initialization failed");
+
+        if (!this.productService.initProducts())
+            throw new RuntimeException("Products initialization failed");
     }
 }

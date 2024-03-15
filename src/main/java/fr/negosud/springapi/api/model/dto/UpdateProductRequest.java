@@ -3,6 +3,7 @@ package fr.negosud.springapi.api.model.dto;
 import jakarta.persistence.Column;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class UpdateProductRequest {
 
@@ -11,6 +12,8 @@ public class UpdateProductRequest {
 
     @Column(length = 1000)
     private String description;
+
+    private Date expirationDate;
 
     private Integer vintage;
 
@@ -47,6 +50,14 @@ public class UpdateProductRequest {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
     }
 
     public Integer getVintage() {

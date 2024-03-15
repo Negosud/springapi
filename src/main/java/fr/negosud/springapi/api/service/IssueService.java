@@ -15,27 +15,22 @@ public class IssueService {
 
     @Autowired
     public IssueService(IssueRepository issueRepository) {
-
         this.issueRepository = issueRepository;
     }
 
     public List<Issue> getAllIssues() {
-
         return issueRepository.findAll();
     }
 
     public Optional<Issue> getIssueById(long issueId) {
-
         return issueRepository.findById(issueId);
     }
 
     public Issue saveIssue(Issue issue) {
-
         return issueRepository.save(issue);
     }
 
     public void deleteIssue(long issueId) {
-
         issueRepository.deleteById(issueId);
     }
 }

@@ -73,7 +73,7 @@ public class ProductFamilyController {
     public ResponseEntity<?> createProductFamily(
             @RequestBody
             SetProductFamilyRequest createProductFamilyRequest,
-            @RequestParam(required = false)
+            @RequestParam
             Long actionUserId) {
         this.actionUserContextHolder.setActionUserId(actionUserId);
         ProductFamily productFamily = productFamilyService.setProductFamilyFromRequest(createProductFamilyRequest, null);
@@ -99,7 +99,7 @@ public class ProductFamilyController {
             long id,
             @RequestBody
             SetProductFamilyRequest updateProductFamilyRequest,
-            @RequestParam(required = false)
+            @RequestParam
             Long actionUserId) {
         ProductFamily productFamily = productFamilyService.getProductFamilyById(id).orElse(null);
         if (productFamily == null)
@@ -129,7 +129,7 @@ public class ProductFamilyController {
             long id,
             @RequestParam(required = false)
             Long replacedByProductFamilyId,
-            @RequestParam(required = false)
+            @RequestParam
             Long actionUserId) {
         ProductFamily productFamily = productFamilyService.getProductFamilyById(id).orElse(null);
         if (productFamily == null)

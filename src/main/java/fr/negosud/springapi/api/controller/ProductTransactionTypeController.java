@@ -75,7 +75,7 @@ public class ProductTransactionTypeController {
     public ResponseEntity<?> createProductTransactionType(
             @RequestBody
             SetProductTransactionTypeRequest createProductTransactionTypeRequest,
-            @RequestParam(required = false)
+            @RequestParam
             Long actionUserId) {
         this.actionUserContextHolder.setActionUserId(actionUserId);
         ProductTransactionType productTransactionType = productTransactionTypeService.setProductTransactionTypeFromRequest(createProductTransactionTypeRequest, null);
@@ -106,7 +106,7 @@ public class ProductTransactionTypeController {
             long id,
             @RequestBody
             SetProductTransactionTypeRequest updateProductTransactionTypeRequest,
-            @RequestParam(required = false)
+            @RequestParam
             Long actionUserId) {
         ProductTransactionType productTransactionType = productTransactionTypeService.getProductTransactionTypeById(id).orElse(null);
         if (productTransactionType == null)
@@ -139,7 +139,7 @@ public class ProductTransactionTypeController {
             long id,
             @RequestParam(required = false)
             Long replacedByProductTransactionTypeId,
-            @RequestParam(required = false)
+            @RequestParam
             Long actionUserId) {
         ProductTransactionType productTransactionType = productTransactionTypeService.getProductTransactionTypeById(id).orElse(null);
         if (productTransactionType == null)

@@ -76,7 +76,7 @@ public class UserController {
     public ResponseEntity<?> createUser(
             @RequestBody
             SetUserRequest createUserRequest,
-            @RequestParam(required = false)
+            @RequestParam
             Long actionUserId) {
         this.actionUserContextHolder.setActionUserId(actionUserId);
         User user;
@@ -109,7 +109,7 @@ public class UserController {
             long id,
             @RequestBody
             SetUserRequest updateUserRequest,
-            @RequestParam(required = false)
+            @RequestParam
             Long actionUserId) {
         this.actionUserContextHolder.setActionUserId(actionUserId);
         User user = userService.getUserById(id).orElse(null);

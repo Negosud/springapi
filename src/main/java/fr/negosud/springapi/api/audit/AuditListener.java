@@ -3,13 +3,15 @@ package fr.negosud.springapi.api.audit;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 
+import static java.lang.System.out;
+
 public class AuditListener<T> {
 
     @PrePersist
     public void prePersist(Object object) {
-        System.out.println("Listener trigger OnCreate for entity : ");
-        System.out.println(object.getClass());
-        System.out.println(object);
+        out.println("Listener trigger OnCreate for entity : ");
+        out.println(object.getClass());
+        out.println(object);
         if (object instanceof AuditableEntity auditable) {
             auditable.onCreate();
         }
@@ -17,9 +19,9 @@ public class AuditListener<T> {
 
     @PreUpdate
     public void preUpdate(Object object) {
-        System.out.println("Listener trigger OnUpdate for entity : ");
-        System.out.println(object.getClass());
-        System.out.println(object);
+        out.println("Listener trigger OnUpdate for entity : ");
+        out.println(object.getClass());
+        out.println(object);
         if (object instanceof AuditableEntity auditable) {
             auditable.onUpdate();
         }

@@ -41,8 +41,7 @@ public class ProductController {
             String productFamilyName,
             @RequestParam(required = false)
             Optional<Boolean> active) {
-        List<Product> products = productService.getAllProducts(active, productFamilyName);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        return new ResponseEntity<>(productService.getAllProducts(active, productFamilyName), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -77,7 +76,7 @@ public class ProductController {
     public ResponseEntity<?> createProduct(
             @RequestBody
             CreateProductRequest createProductRequest,
-            @RequestParam(required = false)
+            @RequestParam
             Long actionUserId) {
         this.actionUserContextHolder.setActionUserId(actionUserId);
         try {
@@ -107,7 +106,7 @@ public class ProductController {
             long id,
             @RequestBody
             UpdateProductRequest updateProductRequest,
-            @RequestParam(required = false)
+            @RequestParam
             Long actionUserId) {
         Product product = productService.getProductById(id).orElse(null);
         if (product == null)

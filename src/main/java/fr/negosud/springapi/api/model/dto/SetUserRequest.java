@@ -52,7 +52,7 @@ public class SetUserRequest {
     private long billingAddress;
 
     @Schema(description = "User's supplied products info")
-    private List<SetUsersSuppliedProductRequest> supplierProductList;
+    private List<SetUsersSuppliedProductElement> supplierProductList;
 
     public SetUserRequest() {
         this.active = true;
@@ -146,11 +146,11 @@ public class SetUserRequest {
         this.billingAddress = billingAddress;
     }
 
-    public List<SetUsersSuppliedProductRequest> getSupplierProductList() {
+    public List<SetUsersSuppliedProductElement> getSupplierProductList() {
         return supplierProductList;
     }
 
-    public void setSupplierProductList(List<SetUsersSuppliedProductRequest> supplierProductList) {
+    public void setSupplierProductList(List<SetUsersSuppliedProductElement> supplierProductList) {
         this.supplierProductList = supplierProductList;
     }
 }

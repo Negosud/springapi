@@ -4,15 +4,19 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fr.negosud.springapi.api.audit.AuditListener;
 import fr.negosud.springapi.api.audit.CreationAuditableEntity;
+import fr.negosud.springapi.api.model.annotation.AutoReference;
+import fr.negosud.springapi.api.model.constraint.ReferencedEntityConstraint;
+import fr.negosud.springapi.api.model.listener.ReferenceListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@EntityListeners(AuditListener.class)
+@EntityListeners({AuditListener.class, ReferenceListener.class})
 @Table(name = "\"invoice\"")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "reference")
-public class Invoice extends CreationAuditableEntity {
+@AutoReference(referenceCode = "INVC")
+public class Invoice extends CreationAuditableEntity implements ReferencedEntityConstraint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

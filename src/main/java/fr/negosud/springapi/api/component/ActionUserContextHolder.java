@@ -24,14 +24,4 @@ final public class ActionUserContextHolder {
         if (userId != 0)
             this.userService.getUserById(userId).ifPresent(userIdHolder::set);
     }
-
-    public static void setActionUser(User user) { // TODO: Remove if never used
-        if (user != null) {
-            userIdHolder.set(user);
-        }
-    }
-
-    public static void clear() {
-        userIdHolder.remove();
-    }
 }

@@ -4,17 +4,21 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fr.negosud.springapi.api.audit.AuditListener;
 import fr.negosud.springapi.api.audit.FullAuditableEntity;
+import fr.negosud.springapi.api.model.annotation.AutoReference;
+import fr.negosud.springapi.api.model.constraint.ReferencedEntityConstraint;
 import fr.negosud.springapi.api.model.dto.ArrivalStatus;
+import fr.negosud.springapi.api.model.listener.ReferenceListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 
 @Entity
-@EntityListeners(AuditListener.class)
+@EntityListeners({AuditListener.class, ReferenceListener.class})
 @Table(name = "\"arrival\"")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "reference")
-public class Arrival extends FullAuditableEntity {
+@AutoReference(referenceCode = "ARVL")
+public class Arrival extends FullAuditableEntity implements ReferencedEntityConstraint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

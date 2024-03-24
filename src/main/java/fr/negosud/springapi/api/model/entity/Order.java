@@ -5,7 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fr.negosud.springapi.api.audit.AuditListener;
 import fr.negosud.springapi.api.audit.FullAuditableEntity;
+import fr.negosud.springapi.api.model.annotation.AutoReference;
+import fr.negosud.springapi.api.model.constraint.ReferencedEntityConstraint;
 import fr.negosud.springapi.api.model.dto.OrderStatus;
+import fr.negosud.springapi.api.model.listener.ReferenceListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -13,10 +16,11 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@EntityListeners(AuditListener.class)
+@EntityListeners({AuditListener.class, ReferenceListener.class})
 @Table(name="\"order\"")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "reference")
-public class Order extends FullAuditableEntity {
+@AutoReference(referenceCode = "ORDR")
+public class Order extends FullAuditableEntity implements ReferencedEntityConstraint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

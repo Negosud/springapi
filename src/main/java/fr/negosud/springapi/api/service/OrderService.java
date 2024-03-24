@@ -34,12 +34,14 @@ public class OrderService {
         return orderRepository.findById(orderId);
     }
 
-    public Order saveOrder(Order order) {
-        return orderRepository.save(order);
+    public void saveOrder(Order order) {
+        orderRepository.save(order);
     }
 
     public Order placeOrderFromRequest(PlaceOrderRequest placeOrderRequest) {
         Order order = new Order();
+
+        saveOrder(order);
 
         return order;
     }

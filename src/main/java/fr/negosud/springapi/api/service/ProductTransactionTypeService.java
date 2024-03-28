@@ -64,7 +64,7 @@ public class ProductTransactionTypeService {
     /**
      * @throws IllegalArgumentException ProductTransactionType isEntry field cannot be changed
      */
-    public ProductTransactionType setProductTransactionTypeFromRequest(SetProductTransactionTypeRequest setProductTransactionTypeRequest, ProductTransactionType productTransactionType) {
+    public ProductTransactionType   setProductTransactionTypeFromRequest(SetProductTransactionTypeRequest setProductTransactionTypeRequest, ProductTransactionType productTransactionType) {
         boolean create = productTransactionType == null;
         if (create) {
             productTransactionType = new ProductTransactionType();
@@ -80,7 +80,7 @@ public class ProductTransactionTypeService {
                 setProductTransactionTypeRequest.getDescription() :
                 setProductTransactionTypeRequest.getDescription() == null ? productTransactionType.getDescription() : setProductTransactionTypeRequest.getDescription());
 
-    return productTransactionType;
+        return productTransactionType;
     }
 
     public boolean initProductTransactionTypes() {

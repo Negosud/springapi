@@ -21,10 +21,12 @@ import java.util.Optional;
 public class ProductFamilyService {
 
     private final ProductFamilyRepository productFamilyRepository;
+    private final ProductService productService;
 
     @Autowired
-    public ProductFamilyService(ProductFamilyRepository productFamilyRepository) {
+    public ProductFamilyService(ProductFamilyRepository productFamilyRepository, ProductService productService) {
         this.productFamilyRepository = productFamilyRepository;
+        this.productService = productService;
     }
 
     public List<ProductFamily> getAllProductFamilies() {
@@ -56,6 +58,7 @@ public class ProductFamilyService {
     public void safeDeleteProductFamily(ProductFamily productFamily, ProductFamily replacingProductFamily) {
         for (Product product : productFamily.getProductList()) {
             product.setProductFamily(replacingProductFamily);
+            productService.saveProduct(product);
         }
         productFamilyRepository.delete(productFamily);
     }

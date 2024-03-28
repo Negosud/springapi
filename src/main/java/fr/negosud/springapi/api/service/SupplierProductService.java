@@ -25,7 +25,7 @@ final public class SupplierProductService {
     }
 
     public List<SupplierProduct> getAllSupplierProducts(Optional<User> supplier, Optional<Product> product) {
-        return null;
+        return null; // TODO: use Optional supplier and Optional product
     }
 
     public Optional<SupplierProduct> getSupplierProductById(long supplierProductId) {

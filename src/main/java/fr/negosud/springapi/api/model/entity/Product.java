@@ -186,4 +186,28 @@ public class Product extends FullAuditableEntity {
     public void setNewProduct(Product newProduct) {
         this.newProduct = newProduct;
     }
+
+    public List<SupplierProduct> getSupplierList() {
+        return supplierList;
+    }
+
+    public void setSupplierList(List<SupplierProduct> supplierList) {
+        this.supplierList = supplierList;
+    }
+
+    public List<ArrivalProduct> getArrivalList() {
+        return arrivalList;
+    }
+
+    public void setArrivalList(List<ArrivalProduct> arrivalList) {
+        this.arrivalList = arrivalList;
+    }
+
+    public List<OrderProduct> getOrderList() {
+        return orderList;
+    }
+
+    public void setOrderList(List<OrderProduct> orderList) {
+        this.orderList = orderList;
+    }
 }

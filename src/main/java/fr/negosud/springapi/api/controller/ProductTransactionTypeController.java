@@ -43,7 +43,7 @@ public class ProductTransactionTypeController {
         return new ResponseEntity<>(productTransactionTypes, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{code}")
     @ApiResponses(value = {
             @ApiResponse(
                     description = "ProductTransactionType found",
@@ -53,10 +53,10 @@ public class ProductTransactionTypeController {
                     responseCode = "404",
                     content = @Content(schema = @Schema))
     })
-    public ResponseEntity<ProductTransactionType> getProductTransactionTypeById(
+    public ResponseEntity<ProductTransactionType> getProductTransactionTypeByCode(
             @PathVariable
-            long id) {
-        return productTransactionTypeService.getProductTransactionTypeById(id)
+            String code) {
+        return productTransactionTypeService.getProductTransactionTypeByCode(code)
                 .map(product -> new ResponseEntity<>(product, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -87,7 +87,7 @@ public class ProductTransactionTypeController {
         return new ResponseEntity<>(productTransactionType, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{code}")
     @ApiResponses(value = {
             @ApiResponse(
                     description = "ProductTransactionType updated successfully",
@@ -103,12 +103,12 @@ public class ProductTransactionTypeController {
     })
     public ResponseEntity<?> updateProductTransactionType(
             @PathVariable
-            long id,
+            String code,
             @RequestBody
             SetProductTransactionTypeRequest updateProductTransactionTypeRequest,
             @RequestParam
             Long actionUserId) {
-        ProductTransactionType productTransactionType = productTransactionTypeService.getProductTransactionTypeById(id).orElse(null);
+        ProductTransactionType productTransactionType = productTransactionTypeService.getProductTransactionTypeByCode(code).orElse(null);
         if (productTransactionType == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         actionUserContextHolder.setActionUserId(actionUserId);
@@ -121,7 +121,7 @@ public class ProductTransactionTypeController {
         return new ResponseEntity<>(productTransactionType, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{code}")
     @ApiResponses(value = {
             @ApiResponse(
                     description = "ProductTransactionType deleted",
@@ -136,23 +136,23 @@ public class ProductTransactionTypeController {
     })
     public ResponseEntity<?> deleteProductTransactionType(
             @PathVariable
-            long id,
+            String code,
             @RequestParam(required = false)
-            Long replacedByProductTransactionTypeId,
+            String replacedByProductTransactionTypeCode,
             @RequestParam
             Long actionUserId) {
-        ProductTransactionType productTransactionType = productTransactionTypeService.getProductTransactionTypeById(id).orElse(null);
+        ProductTransactionType productTransactionType = productTransactionTypeService.getProductTransactionTypeByCode(code).orElse(null);
         if (productTransactionType == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         if (productTransactionType.getProductTransactionList().isEmpty()) {
             productTransactionTypeService.deleteProductTransactionType(productTransactionType);
         } else {
             actionUserContextHolder.setActionUserId(actionUserId);
-            if (replacedByProductTransactionTypeId < 1)
-                return new ResponseEntity<>("replacedByProductTransactionTypeId is needed as a valid Id", HttpStatus.FORBIDDEN);
-            ProductTransactionType replacingProductTransactionType = productTransactionTypeService.getProductTransactionTypeById(replacedByProductTransactionTypeId).orElse(null);
+            if (replacedByProductTransactionTypeCode.isBlank())
+                return new ResponseEntity<>("replacedByProductTransactionTypeCode is needed as a valid Code", HttpStatus.FORBIDDEN);
+            ProductTransactionType replacingProductTransactionType = productTransactionTypeService.getProductTransactionTypeByCode(replacedByProductTransactionTypeCode).orElse(null);
             if (replacingProductTransactionType == null)
-                return new ResponseEntity<>("replacedByProductTransactionTypeId doesn't correspond to a proper ProductTransactionType", HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>("replacedByProductTransactionTypeCode doesn't correspond to a proper ProductTransactionType", HttpStatus.FORBIDDEN);
             if (productTransactionType.isEntry() != replacingProductTransactionType.isEntry())
                 return new ResponseEntity<>("ProductTransactionType can't be replaced by replacingProductTransactionType (invalid property isEntry)", HttpStatus.FORBIDDEN);
             productTransactionTypeService.safeDeleteProductTransactionType(productTransactionType, replacingProductTransactionType);

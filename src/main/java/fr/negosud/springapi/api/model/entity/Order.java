@@ -40,7 +40,7 @@ public class Order extends FullAuditableEntity implements ReferencedEntityConstr
 
     private Date preparedAt;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderProduct> productList;
 
     public Order() { }
@@ -83,5 +83,13 @@ public class Order extends FullAuditableEntity implements ReferencedEntityConstr
 
     public void setPreparedAt(Date preparedAt) {
         this.preparedAt = preparedAt;
+    }
+
+    public List<OrderProduct> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<OrderProduct> productList) {
+        this.productList = productList;
     }
 }

@@ -6,7 +6,7 @@ import java.util.List;
 
 public class PlaceOrderRequest {
 
-    @Description("A list of product id and quantity as value")
+    @Description("A list of product ids and quantities")
     private List<SetOrderedProductElement> orderedProducts;
 
     public PlaceOrderRequest() { }

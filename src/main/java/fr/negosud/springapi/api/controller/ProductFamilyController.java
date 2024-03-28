@@ -41,7 +41,7 @@ public class ProductFamilyController {
         return new ResponseEntity<>(productFamilies, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{code}")
     @ApiResponses(value = {
             @ApiResponse(
                     description = "ProductFamily found",
@@ -51,10 +51,10 @@ public class ProductFamilyController {
                     responseCode = "404",
                     content = @Content(schema = @Schema))
     })
-    public ResponseEntity<ProductFamily> getProductFamilyById(
+    public ResponseEntity<ProductFamily> getProductFamilyByCode(
             @PathVariable
-            long id) {
-        return productFamilyService.getProductFamilyById(id)
+            String code) {
+        return productFamilyService.getProductFamilyByCode(code)
                 .map(productFamily -> new ResponseEntity<>(productFamily, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -85,7 +85,7 @@ public class ProductFamilyController {
         return new ResponseEntity<>(productFamily, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{code}")
     @ApiResponses(value = {
             @ApiResponse(
                     description = "ProductFamily updated successfully",
@@ -96,12 +96,12 @@ public class ProductFamilyController {
     })
     public ResponseEntity<ProductFamily> updateProductFamily(
             @PathVariable
-            long id,
+            String code,
             @RequestBody
             SetProductFamilyRequest updateProductFamilyRequest,
             @RequestParam
             Long actionUserId) {
-        ProductFamily productFamily = productFamilyService.getProductFamilyById(id).orElse(null);
+        ProductFamily productFamily = productFamilyService.getProductFamilyByCode(code).orElse(null);
         if (productFamily == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         actionUserContextHolder.setActionUserId(actionUserId);
@@ -111,7 +111,7 @@ public class ProductFamilyController {
 
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{code}")
     @ApiResponses(value = {
             @ApiResponse(
                     description = "ProductFamily deleted",
@@ -126,21 +126,21 @@ public class ProductFamilyController {
     })
     public ResponseEntity<?> deleteProductFamily(
             @PathVariable
-            long id,
+            String code,
             @RequestParam(required = false)
-            Long replacedByProductFamilyId,
+            String replacedByProductFamilyCode,
             @RequestParam
             Long actionUserId) {
-        ProductFamily productFamily = productFamilyService.getProductFamilyById(id).orElse(null);
+        ProductFamily productFamily = productFamilyService.getProductFamilyByCode(code).orElse(null);
         if (productFamily == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         if (productFamily.getProductList().isEmpty()) {
             productFamilyService.deleteProductFamily(productFamily);
         } else {
             actionUserContextHolder.setActionUserId(actionUserId);
-            if (replacedByProductFamilyId < 1)
-                return new ResponseEntity<>("replacedByProductFamilyId is needed as a valid Id", HttpStatus.FORBIDDEN);
-            ProductFamily replacingProductFamily = productFamilyService.getProductFamilyById(replacedByProductFamilyId).orElse(null);
+            if (replacedByProductFamilyCode.isBlank())
+                return new ResponseEntity<>("replacedByProductFamilyCode is needed as a valid Code", HttpStatus.FORBIDDEN);
+            ProductFamily replacingProductFamily = productFamilyService.getProductFamilyByCode(replacedByProductFamilyCode).orElse(null);
             if (replacingProductFamily == null)
                 return new ResponseEntity<>("replacedByProductFamilyId doesn't correspond to a proper ProductFamily", HttpStatus.FORBIDDEN);
             productFamilyService.safeDeleteProductFamily(productFamily, replacingProductFamily);

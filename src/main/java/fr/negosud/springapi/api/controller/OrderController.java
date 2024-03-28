@@ -78,8 +78,8 @@ public class OrderController {
         this.actionUserContextHolder.setActionUserId(actionUserId);
         try {
             return new ResponseEntity<>(orderService.placeOrderFromRequest(placeOrderRequest), HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return null;
+        } catch (AssertionError e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
 }

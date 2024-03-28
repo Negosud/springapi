@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fr.negosud.springapi.api.audit.AuditListener;
 import fr.negosud.springapi.api.audit.CreationAuditableEntity;
+import fr.negosud.springapi.api.model.listener.OrderProductListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@EntityListeners(AuditListener.class)
+@EntityListeners({AuditListener.class, OrderProductListener.class})
 @Table(name="\"order_product\"")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class OrderProduct extends CreationAuditableEntity {

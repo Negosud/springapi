@@ -2,9 +2,7 @@ package fr.negosud.springapi.api.service;
 
 import fr.negosud.springapi.api.model.dto.CreateProductRequest;
 import fr.negosud.springapi.api.model.dto.UpdateProductRequest;
-import fr.negosud.springapi.api.model.entity.Product;
-import fr.negosud.springapi.api.model.entity.ProductFamily;
-import fr.negosud.springapi.api.model.entity.ProductTransaction;
+import fr.negosud.springapi.api.model.entity.*;
 import fr.negosud.springapi.api.repository.ProductRepository;
 import fr.negosud.springapi.api.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +50,35 @@ public class ProductService {
 
     public void deleteProduct(long productId) {
         productRepository.deleteById(productId);
+    }
+
+    public int getMaxOrderableProductQuantity(Product product) {
+        int stock = product.getQuantity();
+        int outgoing = getOutgoingProductQuantity(product);
+        int incoming = getIncomingProductQuantity(product);
+        int supplierStock = 0;
+
+        for (SupplierProduct supplierProduct : product.getSupplierList()) {
+            // Buying price shouldn't be higher than our selling price
+            if (supplierProduct.getUnitPrice().compareTo(product.getUnitPriceVAT()) < 1)
+                supplierStock += supplierProduct.getQuantity();
+        }
+
+        return stock-outgoing+incoming+supplierStock;
+    }
+
+    public int getIncomingProductQuantity(Product product) {
+        int incoming = 0;
+        for (ArrivalProduct arrivalProduct : product.getArrivalList())
+            incoming += arrivalProduct.getQuantity();
+        return incoming;
+    }
+
+    public int getOutgoingProductQuantity(Product product) {
+        int outgoing = 0;
+        for (OrderProduct orderProduct : product.getOrderList())
+            outgoing += orderProduct.getQuantity();
+        return outgoing;
     }
 
     public Product getNewestProduct(Product product) {

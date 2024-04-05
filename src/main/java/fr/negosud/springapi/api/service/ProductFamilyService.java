@@ -1,6 +1,6 @@
 package fr.negosud.springapi.api.service;
 
-import fr.negosud.springapi.api.model.dto.SetProductFamilyRequest;
+import fr.negosud.springapi.api.model.dto.request.SetProductFamilyRequest;
 import fr.negosud.springapi.api.model.entity.Product;
 import fr.negosud.springapi.api.model.entity.ProductFamily;
 import fr.negosud.springapi.api.repository.ProductFamilyRepository;

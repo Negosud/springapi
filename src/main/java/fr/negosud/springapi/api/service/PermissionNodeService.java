@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-final public class PermissionNodeService {
+public class PermissionNodeService {
 
     final private PermissionNodeRepository permissionNodeRepository;
 

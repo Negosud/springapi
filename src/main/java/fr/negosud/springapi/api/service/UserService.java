@@ -1,7 +1,7 @@
 package fr.negosud.springapi.api.service;
 
 import fr.negosud.springapi.api.component.UserPasswordEncoder;
-import fr.negosud.springapi.api.model.dto.SetUserRequest;
+import fr.negosud.springapi.api.model.dto.request.SetUserRequest;
 import fr.negosud.springapi.api.model.entity.SupplierProduct;
 import fr.negosud.springapi.api.model.entity.User;
 import fr.negosud.springapi.api.repository.UserRepository;
@@ -20,7 +20,7 @@ import java.util.Optional;
 import static java.lang.System.out;
 
 @Service
-final public class UserService {
+public class UserService {
 
     private final UserRepository userRepository;
     private final PermissionNodeService permissionNodeService;

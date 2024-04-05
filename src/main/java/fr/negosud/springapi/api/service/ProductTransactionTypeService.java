@@ -1,6 +1,6 @@
 package fr.negosud.springapi.api.service;
 
-import fr.negosud.springapi.api.model.dto.SetProductTransactionTypeRequest;
+import fr.negosud.springapi.api.model.dto.request.SetProductTransactionTypeRequest;
 import fr.negosud.springapi.api.model.entity.ProductTransaction;
 import fr.negosud.springapi.api.model.entity.ProductTransactionType;
 import fr.negosud.springapi.api.repository.ProductTransactionTypeRepository;

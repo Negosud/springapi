@@ -1,8 +1,9 @@
 package fr.negosud.springapi.api.controller;
 
 import fr.negosud.springapi.api.component.ActionUserContextHolder;
-import fr.negosud.springapi.api.model.dto.CreateProductRequest;
-import fr.negosud.springapi.api.model.dto.UpdateProductRequest;
+import fr.negosud.springapi.api.model.dto.request.CreateProductRequest;
+import fr.negosud.springapi.api.model.dto.request.UpdateProductRequest;
+import fr.negosud.springapi.api.model.dto.response.ProductResponse;
 import fr.negosud.springapi.api.model.entity.Product;
 import fr.negosud.springapi.api.service.ProductService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,12 +38,18 @@ public class ProductController {
     @ApiResponse(
             description = "List of all products",
             responseCode = "200")
-    public ResponseEntity<List<Product>> getAllProducts(
+    public ResponseEntity<List<ProductResponse>> getAllProducts(
             @RequestParam(required = false)
             String productFamilyName,
             @RequestParam(required = false)
             Optional<Boolean> active) {
-        return new ResponseEntity<>(productService.getAllProducts(active, productFamilyName), HttpStatus.OK);
+        List<Product> products = productService.getAllProducts(active, productFamilyName);
+        List<ProductResponse> productResponses = new ArrayList<>();
+        for (Product product : products) {
+            ProductResponse productResponse = productService.getResponseFromProduct(product);
+            productResponses.add(productResponse);
+        }
+        return new ResponseEntity<>(productResponses, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -52,13 +60,13 @@ public class ProductController {
             @ApiResponse(
                     description = "Product not found",
                     responseCode = "404",
-                    content = @Content(schema = @Schema))
+                    content = @Content)
     })
-    public ResponseEntity<Product> getProductById(
+    public ResponseEntity<ProductResponse> getProductById(
             @PathVariable
             long id) {
         return productService.getProductById(id)
-                .map(product -> new ResponseEntity<>(product, HttpStatus.OK))
+                .map(product -> new ResponseEntity<>(productService.getResponseFromProduct(product), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
@@ -67,7 +75,7 @@ public class ProductController {
             @ApiResponse(
                     description = "Product created",
                     responseCode = "201",
-                    content = @Content(schema = @Schema(implementation = Product.class))),
+                    content = @Content(schema = @Schema(implementation = ProductResponse.class))),
             @ApiResponse(
                     description = "Product can't be created",
                     responseCode = "403",
@@ -80,7 +88,8 @@ public class ProductController {
             Long actionUserId) {
         this.actionUserContextHolder.setActionUserId(actionUserId);
         try {
-            return new ResponseEntity<>(productService.createProductFromRequest(createProductRequest), HttpStatus.CREATED);
+            Product product = productService.createProductFromRequest(createProductRequest);
+            return new ResponseEntity<>(productService.getResponseFromProduct(product), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
@@ -91,7 +100,7 @@ public class ProductController {
             @ApiResponse(
                     description = "Product updated successfully",
                     responseCode = "200",
-                    content = @Content(schema = @Schema(implementation = Product.class))),
+                    content = @Content(schema = @Schema(implementation = ProductResponse.class))),
             @ApiResponse(
                     description = "Product can't be updated",
                     responseCode = "403",
@@ -99,7 +108,7 @@ public class ProductController {
             @ApiResponse(
                     description = "Product not found",
                     responseCode = "404",
-                    content = @Content(schema = @Schema))
+                    content = @Content)
     })
     public ResponseEntity<?> updateProduct(
             @PathVariable
@@ -113,7 +122,8 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         this.actionUserContextHolder.setActionUserId(actionUserId);
         try {
-            return new ResponseEntity<>(productService.updateProductFromRequest(updateProductRequest, product), HttpStatus.OK);
+            product = productService.updateProductFromRequest(updateProductRequest, product);
+            return new ResponseEntity<>(productService.getResponseFromProduct(product), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }

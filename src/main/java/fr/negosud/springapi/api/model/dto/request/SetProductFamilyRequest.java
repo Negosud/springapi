@@ -1,4 +1,4 @@
-package fr.negosud.springapi.api.model.dto;
+package fr.negosud.springapi.api.model.dto.request;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;

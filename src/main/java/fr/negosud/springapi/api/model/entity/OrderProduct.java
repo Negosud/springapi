@@ -1,18 +1,19 @@
 package fr.negosud.springapi.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import fr.negosud.springapi.api.audit.AuditListener;
-import fr.negosud.springapi.api.audit.CreationAuditableEntity;
 import fr.negosud.springapi.api.model.listener.OrderProductListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.Date;
+
 @Entity
-@EntityListeners({AuditListener.class, OrderProductListener.class})
+@EntityListeners(OrderProductListener.class)
 @Table(name="\"order_product\"")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class OrderProduct extends CreationAuditableEntity {
+public class OrderProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,12 +22,21 @@ public class OrderProduct extends CreationAuditableEntity {
     @NotBlank
     private int quantity;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date preparedAt;
+
+    @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private User preparedBy;
+
     @ManyToOne
     @NotBlank
+    @JsonIdentityReference(alwaysAsId = true)
     private Order order;
 
     @ManyToOne
     @NotBlank
+    @JsonIdentityReference(alwaysAsId = true)
     private Product product;
 
     public OrderProduct() { }
@@ -45,6 +55,22 @@ public class OrderProduct extends CreationAuditableEntity {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public Date getPreparedAt() {
+        return preparedAt;
+    }
+
+    public void setPreparedAt(Date preparedAt) {
+        this.preparedAt = preparedAt;
+    }
+
+    public User getPreparedBy() {
+        return preparedBy;
+    }
+
+    public void setPreparedBy(User preparedBy) {
+        this.preparedBy = preparedBy;
     }
 
     public Order getOrder() {

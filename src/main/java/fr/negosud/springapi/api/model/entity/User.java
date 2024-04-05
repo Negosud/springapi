@@ -14,7 +14,7 @@ import java.util.List;
 @EntityListeners(AuditListener.class)
 @Table(name="\"user\"")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-final public class User extends FullAuditableEntity {
+public class User extends FullAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,7 +67,6 @@ final public class User extends FullAuditableEntity {
     private Address billingAddress;
 
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @JsonIdentityReference(alwaysAsId = true)
     private List<SupplierProduct> suppliedProductList;
 
     public User() {

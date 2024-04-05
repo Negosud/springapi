@@ -1,25 +1,19 @@
-package fr.negosud.springapi.api.model.entity;
+package fr.negosud.springapi.api.model.dto.response;
 
-import com.fasterxml.jackson.annotation.*;
-import fr.negosud.springapi.api.audit.AuditListener;
-import fr.negosud.springapi.api.audit.FullAuditableEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import fr.negosud.springapi.api.model.dto.response.element.OrderProductInProductElement;
+import fr.negosud.springapi.api.model.entity.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.time.Year;
+import java.util.Date;
 import java.util.List;
 
-@Entity
-@EntityListeners(AuditListener.class)
-@Table(name="\"product\"")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class Product extends FullAuditableEntity {
+public class ProductResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
     private long id;
 
@@ -39,7 +33,6 @@ public class Product extends FullAuditableEntity {
 
     private Year vintage;
 
-    @ManyToOne
     @NotBlank
     @JsonIdentityReference(alwaysAsId = true)
     private ProductFamily productFamily;
@@ -55,158 +48,152 @@ public class Product extends FullAuditableEntity {
     @NotBlank
     private boolean active;
 
-    @OneToOne
     @JsonIdentityReference(alwaysAsId = true)
     private Product oldProduct;
 
-    @OneToOne(mappedBy = "oldProduct")
     @JsonIdentityReference(alwaysAsId = true)
     private Product newProduct;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SupplierProduct> supplierList;
 
-    @OneToMany(mappedBy = "product")
-    @JsonIgnore
     private List<ArrivalProduct> arrivalList;
 
-    @OneToMany(mappedBy = "product")
-    private List<OrderProduct> orderList;
+    private List<OrderProductInProductElement> orderList;
 
-    public Product() {
-        this.active = true;
-        this.quantity = 0;
-    }
-
-    public Product (String name, String description, int quantity, Date expirationDate, Year vintage, ProductFamily productFamily, BigDecimal unitPrice, boolean active) {
-        this.name = name;
-        this.description = description;
-        this.quantity = quantity;
-        this.expirationDate = expirationDate;
-        this.vintage = vintage;
-        this.productFamily = productFamily;
-        this.unitPrice = unitPrice;
-        this.unitPriceVAT = unitPrice.multiply(new BigDecimal("1.20"));
-        this.active = active;
-    }
+    public ProductResponse() { }
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public ProductResponse setId(long id) {
         this.id = id;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public ProductResponse setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public ProductResponse setDescription(String description) {
         this.description = description;
+        return this;
     }
 
     public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public ProductResponse setQuantity(int quantity) {
         this.quantity = quantity;
+        return this;
     }
 
     public Date getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(Date expirationDate) {
+    public ProductResponse setExpirationDate(Date expirationDate) {
         this.expirationDate = expirationDate;
+        return this;
     }
 
     public Year getVintage() {
         return vintage;
     }
 
-    public void setVintage(Year vintage) {
+    public ProductResponse setVintage(Year vintage) {
         this.vintage = vintage;
+        return this;
     }
 
     public ProductFamily getProductFamily() {
         return productFamily;
     }
 
-    public void setProductFamily(ProductFamily productFamily) {
+    public ProductResponse setProductFamily(ProductFamily productFamily) {
         this.productFamily = productFamily;
+        return this;
     }
 
     public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(BigDecimal unitPrice) {
+    public ProductResponse setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+        return this;
     }
 
     public BigDecimal getUnitPriceVAT() {
         return unitPriceVAT;
     }
 
-    public void setUnitPriceVAT(BigDecimal unitPriceVAT) {
+    public ProductResponse setUnitPriceVAT(BigDecimal unitPriceVAT) {
         this.unitPriceVAT = unitPriceVAT;
+        return this;
     }
 
     public boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public ProductResponse setActive(boolean active) {
         this.active = active;
+        return this;
     }
 
     public Product getOldProduct() {
         return oldProduct;
     }
 
-    public void setOldProduct(Product oldProduct) {
+    public ProductResponse setOldProduct(Product oldProduct) {
         this.oldProduct = oldProduct;
+        return this;
     }
 
     public Product getNewProduct() {
         return newProduct;
     }
 
-    public void setNewProduct(Product newProduct) {
+    public ProductResponse setNewProduct(Product newProduct) {
         this.newProduct = newProduct;
+        return this;
     }
 
     public List<SupplierProduct> getSupplierList() {
         return supplierList;
     }
 
-    public void setSupplierList(List<SupplierProduct> supplierList) {
+    public ProductResponse setSupplierList(List<SupplierProduct> supplierList) {
         this.supplierList = supplierList;
+        return this;
     }
 
     public List<ArrivalProduct> getArrivalList() {
         return arrivalList;
     }
 
-    public void setArrivalList(List<ArrivalProduct> arrivalList) {
+    public ProductResponse setArrivalList(List<ArrivalProduct> arrivalList) {
         this.arrivalList = arrivalList;
+        return this;
     }
 
-    public List<OrderProduct> getOrderList() {
+    public List<OrderProductInProductElement> getOrderList() {
         return orderList;
     }
 
-    public void setOrderList(List<OrderProduct> orderList) {
+    public ProductResponse setOrderList(List<OrderProductInProductElement> orderList) {
         this.orderList = orderList;
+        return this;
     }
 }

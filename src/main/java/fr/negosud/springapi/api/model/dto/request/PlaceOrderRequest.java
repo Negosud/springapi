@@ -1,5 +1,6 @@
-package fr.negosud.springapi.api.model.dto;
+package fr.negosud.springapi.api.model.dto.request;
 
+import fr.negosud.springapi.api.model.dto.request.element.SetOrderedProductElement;
 import jdk.jfr.Description;
 
 import java.util.List;

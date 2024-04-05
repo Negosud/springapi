@@ -1,7 +1,7 @@
 package fr.negosud.springapi.api.controller;
 
 import fr.negosud.springapi.api.component.ActionUserContextHolder;
-import fr.negosud.springapi.api.model.dto.SetProductTransactionTypeRequest;
+import fr.negosud.springapi.api.model.dto.request.SetProductTransactionTypeRequest;
 import fr.negosud.springapi.api.model.entity.ProductTransactionType;
 import fr.negosud.springapi.api.service.ProductTransactionTypeService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -51,7 +51,7 @@ public class ProductTransactionTypeController {
             @ApiResponse(
                     description = "ProductTransactionType not found",
                     responseCode = "404",
-                    content = @Content(schema = @Schema))
+                    content = @Content)
     })
     public ResponseEntity<ProductTransactionType> getProductTransactionTypeByCode(
             @PathVariable

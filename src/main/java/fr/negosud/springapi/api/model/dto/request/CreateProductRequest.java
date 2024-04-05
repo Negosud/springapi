@@ -1,32 +1,41 @@
-package fr.negosud.springapi.api.model.dto;
+package fr.negosud.springapi.api.model.dto.request;
 
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class UpdateProductRequest {
+public class CreateProductRequest {
 
+    @NotBlank
     @Column(length = 100)
     private String name;
 
+    @NotBlank
     @Column(length = 1000)
     private String description;
 
+    @NotBlank
     private Date expirationDate;
 
     private Integer vintage;
 
+    @NotBlank
     private String productFamilyCode;
 
+    @NotBlank
     @Column(precision = 10, scale = 2)
     private BigDecimal unitPrice;
 
-    private Integer quantity;
+    private int quantity;
 
-    private Boolean active;
+    private boolean active;
 
-    public UpdateProductRequest() { }
+    public CreateProductRequest() {
+        this.active = true;
+        this.quantity = 0;
+    }
 
     public String getName() {
         return name;
@@ -44,11 +53,11 @@ public class UpdateProductRequest {
         this.description = description;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
@@ -84,11 +93,11 @@ public class UpdateProductRequest {
         this.unitPrice = unitPrice;
     }
 
-    public Boolean isActive() {
+    public boolean isActive() {
         return active;
     }
 
-    public void setActive(Boolean active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 }

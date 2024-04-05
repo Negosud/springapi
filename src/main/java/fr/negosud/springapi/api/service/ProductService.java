@@ -1,11 +1,14 @@
 package fr.negosud.springapi.api.service;
 
-import fr.negosud.springapi.api.model.dto.CreateProductRequest;
-import fr.negosud.springapi.api.model.dto.UpdateProductRequest;
+import fr.negosud.springapi.api.model.dto.request.CreateProductRequest;
+import fr.negosud.springapi.api.model.dto.request.UpdateProductRequest;
+import fr.negosud.springapi.api.model.dto.response.ProductResponse;
+import fr.negosud.springapi.api.model.dto.response.element.OrderProductInProductElement;
 import fr.negosud.springapi.api.model.entity.*;
 import fr.negosud.springapi.api.repository.ProductRepository;
 import fr.negosud.springapi.api.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
@@ -24,7 +27,7 @@ public class ProductService {
     private final ProductTransactionService productTransactionService;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductFamilyService productFamilyService, ProductTransactionService productTransactionService) {
+    public ProductService(ProductRepository productRepository, @Lazy ProductFamilyService productFamilyService, ProductTransactionService productTransactionService) {
         this.productRepository = productRepository;
         this.productFamilyService = productFamilyService;
         this.productTransactionService = productTransactionService;
@@ -204,6 +207,39 @@ public class ProductService {
             productTransactionService.saveProductTransaction(productTransaction);
 
         return newProduct;
+    }
+
+    public ProductResponse getResponseFromProduct(Product product) {
+        return new ProductResponse()
+                .setId(product.getId())
+                .setName(product.getName())
+                .setDescription(product.getDescription())
+                .setQuantity(product.getQuantity())
+                .setExpirationDate(product.getExpirationDate())
+                .setVintage(product.getVintage())
+                .setProductFamily(product.getProductFamily())
+                .setUnitPrice(product.getUnitPrice())
+                .setUnitPriceVAT(product.getUnitPriceVAT())
+                .setActive(product.isActive())
+                .setOldProduct(product.getOldProduct())
+                .setNewProduct(product.getNewProduct())
+                .setSupplierList(product.getSupplierList())
+                .setArrivalList(product.getArrivalList())
+                .setOrderList(getOrderProductElements(product.getOrderList()));
+    }
+
+    private List<OrderProductInProductElement> getOrderProductElements(List<OrderProduct> orderProducts) {
+        List<OrderProductInProductElement> orderProductElements = new ArrayList<>();
+        for (OrderProduct orderProduct : orderProducts) {
+            OrderProductInProductElement orderProductInProductElement = new OrderProductInProductElement();
+            orderProductInProductElement.setId(orderProduct.getId())
+                    .setQuantity(orderProduct.getQuantity())
+                    .setPreparedAt(orderProduct.getPreparedAt())
+                    .setPreparedBy(orderProduct.getPreparedBy())
+                    .setOrder(orderProduct.getOrder());
+            orderProductElements.add(orderProductInProductElement);
+        }
+        return orderProductElements;
     }
 
     public boolean initProducts() {

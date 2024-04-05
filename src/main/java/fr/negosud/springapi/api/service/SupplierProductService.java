@@ -1,6 +1,6 @@
 package fr.negosud.springapi.api.service;
 
-import fr.negosud.springapi.api.model.dto.SetUsersSuppliedProductElement;
+import fr.negosud.springapi.api.model.dto.request.element.SetUsersSuppliedProductElement;
 import fr.negosud.springapi.api.model.entity.Product;
 import fr.negosud.springapi.api.model.entity.SupplierProduct;
 import fr.negosud.springapi.api.model.entity.User;
@@ -11,9 +11,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Stack;
 
 @Service
-final public class SupplierProductService {
+public class SupplierProductService {
 
     final private SupplierProductRepository supplierProductRepository;
     final private ProductService productService;
@@ -25,7 +26,17 @@ final public class SupplierProductService {
     }
 
     public List<SupplierProduct> getAllSupplierProducts(Optional<User> supplier, Optional<Product> product) {
-        return null; // TODO: use Optional supplier and Optional product
+        return supplier.isPresent() ?
+                product.isPresent() ?
+                        supplierProductRepository.findAllBySupplierAndProduct(supplier.get(), product.get()) :
+                        supplierProductRepository.findAllBySupplier(supplier.get()) :
+                product.isPresent() ?
+                        supplierProductRepository.findAllByProduct(product.get()) :
+                        supplierProductRepository.findAll();
+    }
+
+    public Stack<SupplierProduct> getAllSupplierProductsForProductOrderedByPrice(Product product) {
+        return supplierProductRepository.findAllByProductOrderByUnitPriceAsc(product);
     }
 
     public Optional<SupplierProduct> getSupplierProductById(long supplierProductId) {
@@ -38,6 +49,10 @@ final public class SupplierProductService {
 
     public void saveSupplierProduct(SupplierProduct supplierProduct) {
         supplierProductRepository.save(supplierProduct);
+    }
+
+    public void deleteSupplierProduct(SupplierProduct supplierProduct) {
+        supplierProductRepository.delete(supplierProduct);
     }
 
     public List<SupplierProduct> setUsersSuppliedProductListFromRequest(User supplier, List<SetUsersSuppliedProductElement> setUsersSuppliedProductElementList) {

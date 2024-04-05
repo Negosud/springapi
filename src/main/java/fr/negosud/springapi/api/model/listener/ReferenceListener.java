@@ -27,8 +27,7 @@ public class ReferenceListener<T> {
     }
 
     @PostPersist
-    public void postPersist(Object object) {
-        // Automatically set reference field
+    public void autoSetReference(Object object) {
         if (object instanceof ReferencedEntityConstraint referencedEntity && referencedEntity.getReference() == null) {
             Class<?> entityClass = referencedEntity.getClass();
             String entityCode;

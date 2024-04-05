@@ -2,7 +2,8 @@ package fr.negosud.springapi.api.controller;
 
 import fr.negosud.springapi.api.component.ActionUserContextHolder;
 import fr.negosud.springapi.api.model.dto.OrderStatus;
-import fr.negosud.springapi.api.model.dto.PlaceOrderRequest;
+import fr.negosud.springapi.api.model.dto.request.PlaceOrderRequest;
+import fr.negosud.springapi.api.model.dto.response.OrderResponse;
 import fr.negosud.springapi.api.model.entity.Order;
 import fr.negosud.springapi.api.service.OrderService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -35,10 +37,16 @@ public class OrderController {
     @ApiResponse(
             description = "List of all orders",
             responseCode = "200")
-    public ResponseEntity<List<Order>> getAllOrders(
+    public ResponseEntity<List<OrderResponse>> getAllOrders(
             @RequestParam(required = false)
             OrderStatus status) {
-        return new ResponseEntity<>(orderService.getAllOrders(status), HttpStatus.OK);
+        List<Order> orders = orderService.getAllOrders(status);
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        for (Order order : orders) {
+            OrderResponse orderResponse = orderService.getResponseFromOrder(order);
+            orderResponses.add(orderResponse);
+        }
+        return new ResponseEntity<>(orderResponses, HttpStatus.OK);
     }
 
     @GetMapping("/{reference}")
@@ -49,13 +57,13 @@ public class OrderController {
             @ApiResponse(
                     description = "Order not found",
                     responseCode = "404",
-                    content = @Content(schema = @Schema))
+                    content = @Content)
     })
-    public ResponseEntity<Order> getOrderByReference(
+    public ResponseEntity<OrderResponse> getOrderByReference(
             @PathVariable
             String reference) {
         return orderService.getOrderByReference(reference)
-                .map(order -> new ResponseEntity<>(order, HttpStatus.OK))
+                .map(order -> new ResponseEntity<>(orderService.getResponseFromOrder(order), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
@@ -64,7 +72,7 @@ public class OrderController {
             @ApiResponse(
                     description = "Order placed",
                     responseCode = "201",
-                    content = @Content(schema = @Schema(implementation = Order.class))),
+                    content = @Content(schema = @Schema(implementation = OrderResponse.class))),
             @ApiResponse(
                     description = "Order can't be placed",
                     responseCode = "403",
@@ -77,9 +85,94 @@ public class OrderController {
             Long actionUserId) {
         this.actionUserContextHolder.setActionUserId(actionUserId);
         try {
-            return new ResponseEntity<>(orderService.placeOrderFromRequest(placeOrderRequest), HttpStatus.CREATED);
+            Order order = orderService.placeOrderFromRequest(placeOrderRequest);
+            return new ResponseEntity<>(orderService.getResponseFromOrder(order), HttpStatus.CREATED);
         } catch (AssertionError e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
+    }
+
+    @PatchMapping("/{reference}/prepare")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    description = "Order has been prepared",
+                    responseCode = "200"),
+            @ApiResponse(description = "Order not found",
+                    responseCode = "404",
+                    content = @Content)
+    })
+    public ResponseEntity<OrderResponse> prepareOrder(
+            @PathVariable
+            String reference,
+            @RequestParam
+            Long actionUserId) {
+        Order order = orderService.getOrderByReference(reference).orElse(null);
+        if (order == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        actionUserContextHolder.setActionUserId(actionUserId);
+        orderService.markAsReady(order);
+        return new ResponseEntity<>(orderService.getResponseFromOrder(order), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{reference}/cancel")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    description = "Order has been canceled",
+                    responseCode = "200",
+                    content = @Content(schema = @Schema(implementation = OrderResponse.class))),
+            @ApiResponse(
+                    description = "Order can't be canceled",
+                    responseCode = "403",
+                    content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(description = "Order not found",
+                    responseCode = "404",
+                    content = @Content)
+    })
+    public ResponseEntity<?> cancelOrder(
+            @PathVariable
+            String reference,
+            @RequestParam
+            Long actionUserId) {
+        Order order = orderService.getOrderByReference(reference).orElse(null);
+        if (order == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        actionUserContextHolder.setActionUserId(actionUserId);
+        try {
+            orderService.cancelOrder(order);
+        } catch (AssertionError e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(orderService.getResponseFromOrder(order), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{reference}/complete")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    description = "Order has been completeed",
+                    responseCode = "200",
+                    content = @Content(schema = @Schema(implementation = OrderResponse.class))),
+            @ApiResponse(
+                    description = "Order can't be completeed",
+                    responseCode = "403",
+                    content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(description = "Order not found",
+                    responseCode = "404",
+                    content = @Content)
+    })
+    public ResponseEntity<?> completeOrder(
+            @PathVariable
+            String reference,
+            @RequestParam
+            Long actionUserId) {
+        Order order = orderService.getOrderByReference(reference).orElse(null);
+        if (order == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        actionUserContextHolder.setActionUserId(actionUserId);
+        try {
+            orderService.completeOrder(order);
+        } catch (AssertionError e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(orderService.getResponseFromOrder(order), HttpStatus.OK);
     }
 }

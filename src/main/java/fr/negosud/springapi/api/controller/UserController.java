@@ -1,7 +1,7 @@
 package fr.negosud.springapi.api.controller;
 
 import fr.negosud.springapi.api.component.ActionUserContextHolder;
-import fr.negosud.springapi.api.model.dto.SetUserRequest;
+import fr.negosud.springapi.api.model.dto.request.SetUserRequest;
 import fr.negosud.springapi.api.model.entity.User;
 import fr.negosud.springapi.api.service.UserService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -52,7 +52,7 @@ public class UserController {
             @ApiResponse(
                     description = "User not found",
                     responseCode = "404",
-                    content = @Content(schema = @Schema))
+                    content = @Content)
     })
     public ResponseEntity<User> getUserById(
             @PathVariable
@@ -102,7 +102,7 @@ public class UserController {
             @ApiResponse(
                     description = "User not found",
                     responseCode = "404",
-                    content = @Content(schema = @Schema))
+                    content = @Content)
     })
     public ResponseEntity<?> updateUser(
             @PathVariable

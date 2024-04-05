@@ -1,7 +1,7 @@
 package fr.negosud.springapi.api.controller;
 
 import fr.negosud.springapi.api.component.ActionUserContextHolder;
-import fr.negosud.springapi.api.model.dto.SetProductFamilyRequest;
+import fr.negosud.springapi.api.model.dto.request.SetProductFamilyRequest;
 import fr.negosud.springapi.api.model.entity.ProductFamily;
 import fr.negosud.springapi.api.service.ProductFamilyService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -49,7 +49,7 @@ public class ProductFamilyController {
             @ApiResponse(
                     description = "ProductFamily not found",
                     responseCode = "404",
-                    content = @Content(schema = @Schema))
+                    content = @Content)
     })
     public ResponseEntity<ProductFamily> getProductFamilyByCode(
             @PathVariable
@@ -92,7 +92,7 @@ public class ProductFamilyController {
                     responseCode = "200"),
             @ApiResponse(
                     description = "ProductFamily not found",
-                    responseCode = "404", content = @Content(schema = @Schema))
+                    responseCode = "404", content = @Content)
     })
     public ResponseEntity<ProductFamily> updateProductFamily(
             @PathVariable

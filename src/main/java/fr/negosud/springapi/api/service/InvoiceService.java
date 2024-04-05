@@ -1,6 +1,7 @@
 package fr.negosud.springapi.api.service;
 
 import fr.negosud.springapi.api.model.entity.Invoice;
+import fr.negosud.springapi.api.model.entity.Order;
 import fr.negosud.springapi.api.repository.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,11 @@ public class InvoiceService {
         return invoiceRepository.findById(invoiceId);
     }
 
-    public Invoice saveInvoice(Invoice invoice) {
-        return invoiceRepository.save(invoice);
+    public List<Invoice> getInvoicesForOrder(Order order) {
+        return invoiceRepository.findAllByOrder(order);
+    }
+
+    public void saveInvoice(Invoice invoice) {
+        invoiceRepository.save(invoice);
     }
 }

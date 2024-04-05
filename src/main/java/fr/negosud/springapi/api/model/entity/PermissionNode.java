@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "\"permission_node\"")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "full_name")
-final public class PermissionNode {
+public class PermissionNode {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

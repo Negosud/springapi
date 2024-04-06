@@ -1,5 +1,6 @@
-package fr.negosud.springapi.api.model.dto;
+package fr.negosud.springapi.api.model.dto.request;
 
+import fr.negosud.springapi.api.model.dto.request.element.SetUsersSuppliedProductElement;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
@@ -42,7 +43,7 @@ public class SetUserRequest {
     @Schema(description = "User's international phone number")
     private String phoneNumber;
 
-    @Schema(description = "User's permission list as full permission names")
+    @Schema(description = "User's permission list as permission full names")
     private List<String> permissionList;
 
     @Schema(description = "User's mailing address id")
@@ -51,8 +52,8 @@ public class SetUserRequest {
     @Schema(description = "User's billing address id")
     private long billingAddress;
 
-    @Schema(description = "User's supplied product list as ids")
-    private List<Long> suppliedProductList;
+    @Schema(description = "User's supplied products info")
+    private List<SetUsersSuppliedProductElement> supplierProductList;
 
     public SetUserRequest() {
         this.active = true;
@@ -146,11 +147,11 @@ public class SetUserRequest {
         this.billingAddress = billingAddress;
     }
 
-    public List<Long> getSuppliedProductList() {
-        return suppliedProductList;
+    public List<SetUsersSuppliedProductElement> getSupplierProductList() {
+        return supplierProductList;
     }
 
-    public void setSuppliedProductList(List<Long> suppliedProductList) {
-        this.suppliedProductList = suppliedProductList;
+    public void setSupplierProductList(List<SetUsersSuppliedProductElement> supplierProductList) {
+        this.supplierProductList = supplierProductList;
     }
 }

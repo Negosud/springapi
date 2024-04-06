@@ -1,15 +1,22 @@
 package fr.negosud.springapi.api.model.entity;
 
+import com.fasterxml.jackson.annotation.*;
+import fr.negosud.springapi.api.audit.AuditListener;
+import fr.negosud.springapi.api.audit.FullAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.time.Year;
 import java.util.List;
 
 @Entity
-public class Product {
+@EntityListeners(AuditListener.class)
+@Table(name="\"product\"")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Product extends FullAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +35,13 @@ public class Product {
     private int quantity;
 
     @NotBlank
+    private Date expirationDate;
+
     private Year vintage;
 
     @ManyToOne
+    @NotBlank
+    @JsonIdentityReference(alwaysAsId = true)
     private ProductFamily productFamily;
 
     @NotBlank
@@ -44,16 +55,40 @@ public class Product {
     @NotBlank
     private boolean active;
 
-    @OneToMany(mappedBy = "product")
+    @OneToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private Product oldProduct;
+
+    @OneToOne(mappedBy = "oldProduct")
+    @JsonIdentityReference(alwaysAsId = true)
+    private Product newProduct;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SupplierProduct> supplierList;
 
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     private List<ArrivalProduct> arrivalList;
 
     @OneToMany(mappedBy = "product")
     private List<OrderProduct> orderList;
 
-    public Product() { }
+    public Product() {
+        this.active = true;
+        this.quantity = 0;
+    }
+
+    public Product (String name, String description, int quantity, Date expirationDate, Year vintage, ProductFamily productFamily, BigDecimal unitPrice, boolean active) {
+        this.name = name;
+        this.description = description;
+        this.quantity = quantity;
+        this.expirationDate = expirationDate;
+        this.vintage = vintage;
+        this.productFamily = productFamily;
+        this.unitPrice = unitPrice;
+        this.unitPriceVAT = unitPrice.multiply(new BigDecimal("1.20"));
+        this.active = active;
+    }
 
     public long getId() {
         return id;
@@ -85,6 +120,14 @@ public class Product {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
     }
 
     public Year getVintage() {
@@ -119,11 +162,51 @@ public class Product {
         this.unitPriceVAT = unitPriceVAT;
     }
 
-    public boolean getActive() {
+    public boolean isActive() {
         return active;
     }
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Product getOldProduct() {
+        return oldProduct;
+    }
+
+    public void setOldProduct(Product oldProduct) {
+        this.oldProduct = oldProduct;
+    }
+
+    public Product getNewProduct() {
+        return newProduct;
+    }
+
+    public void setNewProduct(Product newProduct) {
+        this.newProduct = newProduct;
+    }
+
+    public List<SupplierProduct> getSupplierList() {
+        return supplierList;
+    }
+
+    public void setSupplierList(List<SupplierProduct> supplierList) {
+        this.supplierList = supplierList;
+    }
+
+    public List<ArrivalProduct> getArrivalList() {
+        return arrivalList;
+    }
+
+    public void setArrivalList(List<ArrivalProduct> arrivalList) {
+        this.arrivalList = arrivalList;
+    }
+
+    public List<OrderProduct> getOrderList() {
+        return orderList;
+    }
+
+    public void setOrderList(List<OrderProduct> orderList) {
+        this.orderList = orderList;
     }
 }

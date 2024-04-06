@@ -1,9 +1,10 @@
 package fr.negosud.springapi.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fr.negosud.springapi.api.audit.AuditListener;
-import fr.negosud.springapi.api.audit.CreationAuditableEntity;
+import fr.negosud.springapi.api.audit.FullAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -11,28 +12,34 @@ import jakarta.validation.constraints.NotBlank;
 @EntityListeners(AuditListener.class)
 @Table(name = "\"product_transaction\"")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class ProductTransaction extends CreationAuditableEntity {
+public class ProductTransaction extends FullAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne
+    @NotBlank
+    @JsonIdentityReference(alwaysAsId = true)
     private Product product;
 
     @NotBlank
     private int quantity;
 
     @ManyToOne
+    @NotBlank
+    @JsonIdentityReference(alwaysAsId = true)
     private ProductTransactionType produtTransactionType;
 
     public ProductTransaction() { }
 
-    public ProductTransaction(long id, Product product, int quantity, ProductTransactionType produtTransactionType) {
-        this.id = id;
+    /**
+     * Constructor used by handleProductQuantityDefinition method
+     */
+    public ProductTransaction(Product product, int quantity, ProductTransactionType productTransactionType) {
         this.product = product;
         this.quantity = quantity;
-        this.produtTransactionType = produtTransactionType;
+        this.produtTransactionType = productTransactionType;
     }
 
     public long getId() {

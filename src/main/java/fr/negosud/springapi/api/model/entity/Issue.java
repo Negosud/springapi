@@ -1,17 +1,22 @@
 package fr.negosud.springapi.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fr.negosud.springapi.api.audit.AuditListener;
 import fr.negosud.springapi.api.audit.FullAuditableEntity;
+import fr.negosud.springapi.api.model.annotation.AutoReference;
+import fr.negosud.springapi.api.model.constraint.ReferencedEntityConstraint;
+import fr.negosud.springapi.api.model.listener.ReferenceListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@EntityListeners(AuditListener.class)
+@EntityListeners({AuditListener.class, ReferenceListener.class})
 @Table(name = "\"issue\"")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "reference")
-public class Issue extends FullAuditableEntity {
+@AutoReference(referenceCode = "ISSU")
+public class Issue extends FullAuditableEntity implements ReferencedEntityConstraint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,19 +34,14 @@ public class Issue extends FullAuditableEntity {
     private String description;
 
     @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
     private Arrival arrival;
 
     @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
     private Order order;
 
     public Issue() { }
-
-    public Issue(long id, String reference, boolean active, String description) {
-        this.id = id;
-        this.reference = reference;
-        this.active = active;
-        this.description = description;
-    }
 
     public long getId() {
         return id;

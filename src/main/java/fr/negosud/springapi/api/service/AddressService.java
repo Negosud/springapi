@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-final public class AddressService {
+public class AddressService {
 
     private final AddressRepository addressRepository;
 

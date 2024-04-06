@@ -1,10 +1,15 @@
 package fr.negosud.springapi.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fr.negosud.springapi.api.audit.AuditListener;
 import fr.negosud.springapi.api.audit.FullAuditableEntity;
+import fr.negosud.springapi.api.model.annotation.AutoReference;
+import fr.negosud.springapi.api.model.constraint.ReferencedEntityConstraint;
 import fr.negosud.springapi.api.model.dto.OrderStatus;
+import fr.negosud.springapi.api.model.listener.OrderListener;
+import fr.negosud.springapi.api.model.listener.ReferenceListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -12,10 +17,11 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@EntityListeners(AuditListener.class)
+@EntityListeners({AuditListener.class, ReferenceListener.class, OrderListener.class})
 @Table(name="\"order\"")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "reference")
-public class Order extends FullAuditableEntity {
+@AutoReference(referenceCode = "ORDR")
+public class Order extends FullAuditableEntity implements ReferencedEntityConstraint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,22 +36,19 @@ public class Order extends FullAuditableEntity {
     private OrderStatus status;
 
     @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
     private User preparedBy;
 
     private Date preparedAt;
 
-    @OneToMany(mappedBy = "order")
+    @OneToOne(mappedBy = "order")
+    @JsonIdentityReference(alwaysAsId = true)
+    private Invoice invoice;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderProduct> productList;
 
     public Order() { }
-
-    public Order(long id, String reference, OrderStatus status, User preparedBy, Date preparedAt) {
-        this.id = id;
-        this.reference = reference;
-        this.status = status;
-        this.preparedBy = preparedBy;
-        this.preparedAt = preparedAt;
-    }
 
     public long getId() {
         return id;
@@ -85,5 +88,21 @@ public class Order extends FullAuditableEntity {
 
     public void setPreparedAt(Date preparedAt) {
         this.preparedAt = preparedAt;
+    }
+
+    public Invoice getInvoice() {
+        return invoice;
+    }
+
+    public void setInvoice(Invoice invoice) {
+        this.invoice = invoice;
+    }
+
+    public List<OrderProduct> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<OrderProduct> productList) {
+        this.productList = productList;
     }
 }

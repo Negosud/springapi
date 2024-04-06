@@ -2,6 +2,7 @@ package fr.negosud.springapi.api.model.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fr.negosud.springapi.api.audit.AuditListener;
 import fr.negosud.springapi.api.audit.FullAuditableEntity;
@@ -24,24 +25,20 @@ public class SupplierProduct extends FullAuditableEntity {
     private int quantity;
 
     @NotBlank
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(precision = 10, scale = 2)
     private BigDecimal unitPrice;
 
     @ManyToOne
+    @NotBlank
+    @JsonIdentityReference(alwaysAsId = true)
     private User supplier;
 
     @ManyToOne
+    @NotBlank
+    @JsonIdentityReference(alwaysAsId = true)
     private Product product;
 
     public SupplierProduct() { }
-
-    public SupplierProduct(long id, int quantity, BigDecimal unitPrice, User supplier, Product product) {
-        this.id = id;
-        this.quantity = quantity;
-        this.unitPrice = unitPrice;
-        this.supplier = supplier;
-        this.product = product;
-    }
 
     public long getId() {
         return id;

@@ -2,14 +2,18 @@ package fr.negosud.springapi.api.model.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import fr.negosud.springapi.api.audit.AuditListener;
+import fr.negosud.springapi.api.audit.CreationAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
+@EntityListeners(AuditListener.class)
 @Table(name="\"arrival_product\"")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class ArrivalProduct {
+public class ArrivalProduct extends CreationAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,19 +23,21 @@ public class ArrivalProduct {
     private int quantity;
 
     @ManyToOne
-    @NotBlank
+    @JsonIdentityReference(alwaysAsId = true)
     private Arrival arrival;
 
     @ManyToOne
     @NotBlank
+    @JsonIdentityReference(alwaysAsId = true)
     private Product product;
 
     public ArrivalProduct() { }
 
-    public ArrivalProduct(long id, int quantity, Arrival arrival, Product product) {
-        this.id = id;
+    /**
+     * Constructor used by OrderProductListener PostPersist Method
+     */
+    public ArrivalProduct(int quantity, Product product) {
         this.quantity = quantity;
-        this.arrival = arrival;
         this.product = product;
     }
 

@@ -1,0 +1,22 @@
+productFamilies:
+
+  - name: Vin Rouge
+    description: "Les vins rouges sont élaborés à partir de raisins à peau rouge. Ils varient en saveur, allant des arômes riches de cassis et de prune dans les Cabernet Sauvignon aux notes plus souples de cerise et de framboise dans les Pinot Noir."
+
+  - name: Vin Blanc
+    description: "Les vins blancs sont produits à partir de raisins à peau verte ou jaune. Ils présentent une grande diversité de saveurs, des vins secs et croquants comme le Sauvignon Blanc aux vins riches et crémeux comme le Chardonnay."
+
+  - name: Vin Rosé
+    description: "Les vins rosés sont fabriqués à partir de raisins à peau rouge, mais la peau est enlevée avant la fermentation complète, ce qui donne aux vins une teinte rose. Ils offrent une palette de saveurs, allant des notes fruitées et florales aux arômes plus épicés et complexes."
+
+  - name: Vin Effervescent
+    description: "Les vins effervescents sont caractérisés par leurs bulles pétillantes. Le Champagne, le Prosecco et le Cava sont des exemples bien connus. Ils sont parfaits pour célébrer des occasions spéciales et offrent une gamme de saveurs allant du sec au doux."
+
+  - name: Vin Fortifié
+    description: "Les vins fortifiés ont une teneur en alcool plus élevée, généralement due à l'ajout de spiritueux. Des exemples incluent le Porto, le Sherry et le Madeira. Ils offrent des saveurs riches et complexes, souvent associées à des notes de fruits secs, de noix et de caramel."
+
+  - name: Vin Doux Naturel
+    description: "Les vins doux naturels sont des vins sucrés élaborés en interrompant la fermentation avec l'ajout d'alcool. Ils incluent des vins comme le Muscat et le Banyuls, offrant des arômes intenses de fruits, de miel et d'épices."
+
+  - name: Vin Nouveau
+    description: "Les vins nouveaux, tels que le Beaujolais Nouveau, sont des vins issus de la dernière récolte et sont mis en vente peu de temps après la vinification. Ils sont caractérisés par leur fraîcheur et leur fruité prononcé, parfaits pour être consommés rapidement après la mise en bouteille."

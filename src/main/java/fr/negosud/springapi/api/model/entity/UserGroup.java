@@ -37,14 +37,10 @@ public class UserGroup {
 
     public UserGroup() { }
 
+    /**
+     * Constructor used by User Group init method
+     */
     public UserGroup(String name, UserGroup childUserGroup, List<PermissionNode> permissionNodeList) {
-        this.name = name;
-        this.childUserGroup = childUserGroup;
-        this.permissionNodeList = permissionNodeList;
-    }
-
-    public UserGroup(long id, String name, UserGroup childUserGroup, List<PermissionNode> permissionNodeList) {
-        this.id = id;
         this.name = name;
         this.childUserGroup = childUserGroup;
         this.permissionNodeList = permissionNodeList;
@@ -103,26 +99,26 @@ public class UserGroup {
         List<PermissionNode> fullPermissionNodeList = new ArrayList<>(this.permissionNodeList);
         if (this.childUserGroup != null)
             fullPermissionNodeList.addAll(this.childUserGroup.getFullPermissionNodeList());
-        return this.clearPermissionNodeList(fullPermissionNodeList);
+        return this.cleanPermissionNodeList(fullPermissionNodeList);
     }
 
     /**
      * Don't look at this method : it's just a piece of french engineering right here
      * It does the job still...
      */
-    private List<PermissionNode> clearPermissionNodeList(List<PermissionNode> permissionNodeList) {
-        List<PermissionNode> clearPermissionNodeList = new ArrayList<>(permissionNodeList);
-        for (PermissionNode clearedPermissionNode : permissionNodeList) {
-            PermissionNode checkedPermissionNode = clearedPermissionNode;
+    private List<PermissionNode> cleanPermissionNodeList(List<PermissionNode> permissionNodeList) {
+        List<PermissionNode> cleanPermissionNodeList = new ArrayList<>(permissionNodeList);
+        for (PermissionNode cleanedPermissionNode : permissionNodeList) {
+            PermissionNode checkedPermissionNode = cleanedPermissionNode;
             while (checkedPermissionNode.getParentPermissionNode() != null) {
                 if (permissionNodeList.contains(checkedPermissionNode.getParentPermissionNode())) {
-                    clearPermissionNodeList.remove(clearedPermissionNode);
+                    cleanPermissionNodeList.remove(cleanedPermissionNode);
                     break;
                 } else {
                     checkedPermissionNode = checkedPermissionNode.getParentPermissionNode();
                 }
             }
         }
-        return clearPermissionNodeList;
+        return cleanPermissionNodeList;
     }
 }

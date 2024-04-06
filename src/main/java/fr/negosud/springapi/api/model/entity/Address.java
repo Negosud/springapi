@@ -1,6 +1,7 @@
 package fr.negosud.springapi.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fr.negosud.springapi.api.audit.AuditListener;
 import fr.negosud.springapi.api.audit.FullAuditableEntity;
@@ -10,7 +11,7 @@ import jakarta.persistence.*;
 @EntityListeners(AuditListener.class)
 @Table(name = "\"address\"")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-final public class Address extends FullAuditableEntity {
+public class Address extends FullAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,23 +36,14 @@ final public class Address extends FullAuditableEntity {
     private boolean active;
 
     @OneToOne(mappedBy = "mailingAddress")
+    @JsonIdentityReference(alwaysAsId = true)
     private User userMailingAdress;
 
     @OneToOne(mappedBy = "billingAddress")
+    @JsonIdentityReference(alwaysAsId = true)
     private User userBillingAddress;
 
     public Address() { }
-
-    public Address(long id, String country, String administrativeDivision, String city, String postalCode, String addressLine1, String addressLine2, boolean active) {
-        this.id = id;
-        this.country = country;
-        this.administrativeDivision = administrativeDivision;
-        this.city = city;
-        this.postalCode = postalCode;
-        this.addressLine1 = addressLine1;
-        this.addressLine2 = addressLine2;
-        this.active = active;
-    }
 
     public long getId() {
         return id;

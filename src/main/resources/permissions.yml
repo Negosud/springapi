@@ -20,6 +20,7 @@ permissions:
           - name: preview # preview invoice (before order validation)
           - name: view # view invoice (with a proper invoice number)
           - name: list
+
   - name: desktop
     children:
       - name: connect

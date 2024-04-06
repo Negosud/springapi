@@ -1,7 +1,9 @@
 package fr.negosud.springapi.api.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import fr.negosud.springapi.api.model.dto.response.element.ArrivalProductInProductElement;
 import fr.negosud.springapi.api.model.dto.response.element.OrderProductInProductElement;
+import fr.negosud.springapi.api.model.dto.response.element.SupplierProductInProductElement;
 import fr.negosud.springapi.api.model.entity.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -54,9 +56,9 @@ public class ProductResponse {
     @JsonIdentityReference(alwaysAsId = true)
     private Product newProduct;
 
-    private List<SupplierProduct> supplierList;
+    private List<SupplierProductInProductElement> supplierList;
 
-    private List<ArrivalProduct> arrivalList;
+    private List<ArrivalProductInProductElement> arrivalList;
 
     private List<OrderProductInProductElement> orderList;
 
@@ -170,20 +172,20 @@ public class ProductResponse {
         return this;
     }
 
-    public List<SupplierProduct> getSupplierList() {
+    public List<SupplierProductInProductElement> getSupplierList() {
         return supplierList;
     }
 
-    public ProductResponse setSupplierList(List<SupplierProduct> supplierList) {
+    public ProductResponse setSupplierList(List<SupplierProductInProductElement> supplierList) {
         this.supplierList = supplierList;
         return this;
     }
 
-    public List<ArrivalProduct> getArrivalList() {
+    public List<ArrivalProductInProductElement> getArrivalList() {
         return arrivalList;
     }
 
-    public ProductResponse setArrivalList(List<ArrivalProduct> arrivalList) {
+    public ProductResponse setArrivalList(List<ArrivalProductInProductElement> arrivalList) {
         this.arrivalList = arrivalList;
         return this;
     }

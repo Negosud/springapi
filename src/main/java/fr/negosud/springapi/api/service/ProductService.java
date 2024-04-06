@@ -3,7 +3,9 @@ package fr.negosud.springapi.api.service;
 import fr.negosud.springapi.api.model.dto.request.CreateProductRequest;
 import fr.negosud.springapi.api.model.dto.request.UpdateProductRequest;
 import fr.negosud.springapi.api.model.dto.response.ProductResponse;
+import fr.negosud.springapi.api.model.dto.response.element.ArrivalProductInProductElement;
 import fr.negosud.springapi.api.model.dto.response.element.OrderProductInProductElement;
+import fr.negosud.springapi.api.model.dto.response.element.SupplierProductInProductElement;
 import fr.negosud.springapi.api.model.entity.*;
 import fr.negosud.springapi.api.repository.ProductRepository;
 import fr.negosud.springapi.api.util.Strings;
@@ -74,14 +76,14 @@ public class ProductService {
         int incoming = 0;
         for (ArrivalProduct arrivalProduct : product.getArrivalList())
             incoming += arrivalProduct.getQuantity();
-        return incoming;
+        return product.getOldProduct() != null ? incoming+getIncomingProductQuantity(product.getOldProduct()) : incoming;
     }
 
     public int getOutgoingProductQuantity(Product product) {
         int outgoing = 0;
         for (OrderProduct orderProduct : product.getOrderList())
             outgoing += orderProduct.getQuantity();
-        return outgoing;
+        return product.getOldProduct() != null ? outgoing+getOutgoingProductQuantity(product.getOldProduct()) : outgoing;
     }
 
     public Product getNewestProduct(Product product) {
@@ -223,9 +225,34 @@ public class ProductService {
                 .setActive(product.isActive())
                 .setOldProduct(product.getOldProduct())
                 .setNewProduct(product.getNewProduct())
-                .setSupplierList(product.getSupplierList())
-                .setArrivalList(product.getArrivalList())
+                .setSupplierList(getSupplierProductElements(product.getSupplierList()))
+                .setArrivalList(getArrivalProductElements(product.getArrivalList()))
                 .setOrderList(getOrderProductElements(product.getOrderList()));
+    }
+
+    private List<SupplierProductInProductElement> getSupplierProductElements(List<SupplierProduct> supplierProducts) {
+        List<SupplierProductInProductElement> supplierProductElements = new ArrayList<>();
+        for (SupplierProduct supplierProduct : supplierProducts) {
+            SupplierProductInProductElement supplierProductInProductElement = new SupplierProductInProductElement();
+            supplierProductInProductElement.setId(supplierProduct.getId())
+                    .setQuantity(supplierProduct.getQuantity())
+                    .setUnitPrice(supplierProduct.getUnitPrice())
+                    .setSupplier(supplierProduct.getSupplier());
+            supplierProductElements.add(supplierProductInProductElement);
+        }
+        return supplierProductElements;
+    }
+
+    private List<ArrivalProductInProductElement> getArrivalProductElements(List<ArrivalProduct> arrivalProducts) {
+        List<ArrivalProductInProductElement> arrivalProductElements = new ArrayList<>();
+        for (ArrivalProduct arrivalProduct : arrivalProducts) {
+            ArrivalProductInProductElement arrivalProductInProductElement = new ArrivalProductInProductElement();
+            arrivalProductInProductElement.setId(arrivalProduct.getId())
+                    .setQuantity(arrivalProduct.getQuantity())
+                    .setArrival(arrivalProduct.getArrival());
+            arrivalProductElements.add(arrivalProductInProductElement);
+        }
+        return arrivalProductElements;
     }
 
     private List<OrderProductInProductElement> getOrderProductElements(List<OrderProduct> orderProducts) {

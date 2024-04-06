@@ -2,6 +2,7 @@ package fr.negosud.springapi.api.controller;
 
 import fr.negosud.springapi.api.component.ActionUserContextHolder;
 import fr.negosud.springapi.api.model.dto.request.SetUserRequest;
+import fr.negosud.springapi.api.model.dto.response.UserResponse;
 import fr.negosud.springapi.api.model.entity.User;
 import fr.negosud.springapi.api.service.UserService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,13 +37,18 @@ public class UserController {
     @ApiResponse(
             description = "List of all users",
             responseCode = "200")
-    public ResponseEntity<List<User>> getAllUsers(
+    public ResponseEntity<List<UserResponse>> getAllUsers(
             @RequestParam(required = false)
             String userGroupName,
             @RequestParam
             Optional<Boolean> active) {
         List<User> users = userService.getAllUsers(active, userGroupName);
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        List<UserResponse> userResponses = new ArrayList<>();
+        for (User user : users) {
+            UserResponse userResponse = userService.getResponseFromUser(user);
+            userResponses.add(userResponse);
+        }
+        return new ResponseEntity<>(userResponses, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -54,11 +61,11 @@ public class UserController {
                     responseCode = "404",
                     content = @Content)
     })
-    public ResponseEntity<User> getUserById(
+    public ResponseEntity<UserResponse> getUserById(
             @PathVariable
             long id) {
         return userService.getUserById(id)
-                .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                .map(user -> new ResponseEntity<>(userService.getResponseFromUser(user), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
@@ -67,7 +74,7 @@ public class UserController {
             @ApiResponse(
                     description = "User created",
                     responseCode = "201",
-                    content = @Content(schema = @Schema(implementation = User.class))),
+                    content = @Content(schema = @Schema(implementation = UserResponse.class))),
             @ApiResponse(
                     description = "User can't be created",
                     responseCode = "403",
@@ -86,7 +93,7 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
         userService.saveUser(user);
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.getResponseFromUser(user), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -94,7 +101,7 @@ public class UserController {
             @ApiResponse(
                     description = "User updated successfully",
                     responseCode = "200",
-                    content = @Content(schema = @Schema(implementation = User.class))),
+                    content = @Content(schema = @Schema(implementation = UserResponse.class))),
             @ApiResponse(
                     description = "User can't be updated",
                     responseCode = "403",
@@ -121,7 +128,7 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
         userService.saveUser(user);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(userService.getResponseFromUser(user), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

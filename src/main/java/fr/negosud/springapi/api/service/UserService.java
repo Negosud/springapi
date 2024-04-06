@@ -2,6 +2,8 @@ package fr.negosud.springapi.api.service;
 
 import fr.negosud.springapi.api.component.UserPasswordEncoder;
 import fr.negosud.springapi.api.model.dto.request.SetUserRequest;
+import fr.negosud.springapi.api.model.dto.response.UserResponse;
+import fr.negosud.springapi.api.model.dto.response.element.SupplierProductInUserElement;
 import fr.negosud.springapi.api.model.entity.SupplierProduct;
 import fr.negosud.springapi.api.model.entity.User;
 import fr.negosud.springapi.api.repository.UserRepository;
@@ -98,6 +100,35 @@ public class UserService {
         }
 
         return user;
+    }
+
+    public UserResponse getResponseFromUser(User user) {
+        UserResponse userResponse = new UserResponse();
+        return userResponse.setId(user.getId())
+                .setLogin(user.getLogin())
+                .setEmail(user.getEmail())
+                .setFirstName(user.getFirstName())
+                .setLastName(user.getLastName())
+                .setPhoneNumber(user.getPhoneNumber())
+                .setActive(user.isActive())
+                .setPermissionNodeList(user.getPermissionNodeList())
+                .setUserGroup(user.getUserGroup())
+                .setMailingAddress(user.getMailingAddress())
+                .setBillingAddress(user.getBillingAddress())
+                .setSuppliedProductList(getSupplierProductElements(user.getSuppliedProductList()));
+    }
+
+    private List<SupplierProductInUserElement> getSupplierProductElements(List<SupplierProduct> supplierProductList) {
+        List<SupplierProductInUserElement> supplierProductInUserElements = new ArrayList<>();
+        for (SupplierProduct supplierProduct : supplierProductList) {
+            SupplierProductInUserElement supplierProductInUserElement = new SupplierProductInUserElement();
+            supplierProductInUserElement.setId(supplierProduct.getId())
+                    .setQuantity(supplierProduct.getQuantity())
+                    .setUnitPrice(supplierProduct.getUnitPrice())
+                    .setProduct(supplierProduct.getProduct());
+            supplierProductInUserElements.add(supplierProductInUserElement);
+        }
+        return supplierProductInUserElements;
     }
 
     public boolean initUsers() {

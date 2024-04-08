@@ -1,6 +1,6 @@
 package fr.negosud.springapi.api.service;
 
-import fr.negosud.springapi.api.model.dto.request.element.SetUsersSuppliedProductElement;
+import fr.negosud.springapi.api.model.dto.request.element.SetSupplierProductElement;
 import fr.negosud.springapi.api.model.entity.Product;
 import fr.negosud.springapi.api.model.entity.SupplierProduct;
 import fr.negosud.springapi.api.model.entity.User;
@@ -55,14 +55,14 @@ public class SupplierProductService {
         supplierProductRepository.delete(supplierProduct);
     }
 
-    public List<SupplierProduct> setUsersSuppliedProductListFromRequest(User supplier, List<SetUsersSuppliedProductElement> setUsersSuppliedProductElementList) {
+    public List<SupplierProduct> setUsersSuppliedProductListFromRequest(User supplier, List<SetSupplierProductElement> setSupplierProductElementList) {
         List<SupplierProduct> supplierProducts = supplier.getSuppliedProductList();
         if (supplierProducts == null)
             supplierProducts = new ArrayList<>();
 
-        for (SetUsersSuppliedProductElement setUsersSuppliedProductElement : setUsersSuppliedProductElementList) {
-            SupplierProduct supplierProduct = supplier.getId() != 0 ? getSupplierProductBySupplierAndProductId(supplier, setUsersSuppliedProductElement.getProductId()).orElse(null) : null;
-            supplierProducts.add(setUsersSuppliedProductFromRequest(supplier, setUsersSuppliedProductElement, supplierProduct));
+        for (SetSupplierProductElement setSupplierProductElement : setSupplierProductElementList) {
+            SupplierProduct supplierProduct = supplier.getId() != 0 ? getSupplierProductBySupplierAndProductId(supplier, setSupplierProductElement.getProductId()).orElse(null) : null;
+            supplierProducts.add(setUsersSuppliedProductFromRequest(supplier, setSupplierProductElement, supplierProduct));
         }
         return supplierProducts;
     }
@@ -70,18 +70,18 @@ public class SupplierProductService {
     /**
      * @throws IllegalArgumentException Can't find a product with user's supplied product id
      */
-    private SupplierProduct setUsersSuppliedProductFromRequest(User supplier, SetUsersSuppliedProductElement setUsersSuppliedProductElement, SupplierProduct supplierProduct) {
+    private SupplierProduct setUsersSuppliedProductFromRequest(User supplier, SetSupplierProductElement setSupplierProductElement, SupplierProduct supplierProduct) {
         if (supplierProduct == null)
             supplierProduct = new SupplierProduct();
 
-        Product product = productService.getProductById(setUsersSuppliedProductElement.getProductId()).orElse(null);
+        Product product = productService.getProductById(setSupplierProductElement.getProductId()).orElse(null);
         if (product == null)
             throw new IllegalArgumentException("Can't find a product with user's supplied product id");
 
-        supplierProduct.setProduct(productService.getProductById(setUsersSuppliedProductElement.getProductId()).orElse(null));
+        supplierProduct.setProduct(productService.getProductById(setSupplierProductElement.getProductId()).orElse(null));
         supplierProduct.setSupplier(supplier);
-        supplierProduct.setQuantity(setUsersSuppliedProductElement.getQuantity());
-        supplierProduct.setUnitPrice(setUsersSuppliedProductElement.getUnitPrice());
+        supplierProduct.setQuantity(setSupplierProductElement.getQuantity());
+        supplierProduct.setUnitPrice(setSupplierProductElement.getUnitPrice());
 
         return supplierProduct;
     }

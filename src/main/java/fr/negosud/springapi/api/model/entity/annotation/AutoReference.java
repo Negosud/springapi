@@ -1,4 +1,4 @@
-package fr.negosud.springapi.api.model.annotation;
+package fr.negosud.springapi.api.model.entity.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

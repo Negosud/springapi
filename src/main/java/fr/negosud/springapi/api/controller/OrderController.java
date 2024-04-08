@@ -1,7 +1,7 @@
 package fr.negosud.springapi.api.controller;
 
 import fr.negosud.springapi.api.component.ActionUserContextHolder;
-import fr.negosud.springapi.api.model.dto.OrderStatus;
+import fr.negosud.springapi.api.model.OrderStatus;
 import fr.negosud.springapi.api.model.dto.request.PlaceOrderRequest;
 import fr.negosud.springapi.api.model.dto.response.OrderResponse;
 import fr.negosud.springapi.api.model.entity.Order;
@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,7 @@ public class OrderController {
             description = "List of all orders",
             responseCode = "200")
     public ResponseEntity<List<OrderResponse>> getAllOrders(
-            @RequestParam(required = false)
+            @Valid @RequestParam(required = false)
             OrderStatus status) {
         List<Order> orders = orderService.getAllOrders(status);
         List<OrderResponse> orderResponses = new ArrayList<>();
@@ -79,11 +80,11 @@ public class OrderController {
                     content = @Content(schema = @Schema(implementation = String.class)))
     })
     public ResponseEntity<?> placeOrder(
-            @RequestBody
+            @Valid @RequestBody
             PlaceOrderRequest placeOrderRequest,
             @RequestParam
             Long actionUserId) {
-        this.actionUserContextHolder.setActionUserId(actionUserId);
+        actionUserContextHolder.setActionUserId(actionUserId);
         try {
             Order order = orderService.placeOrderFromRequest(placeOrderRequest);
             return new ResponseEntity<>(orderService.getResponseFromOrder(order), HttpStatus.CREATED);

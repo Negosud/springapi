@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -81,11 +82,11 @@ public class UserController {
                     content = @Content(schema = @Schema(implementation = String.class)))
     })
     public ResponseEntity<?> createUser(
-            @RequestBody
+            @Valid @RequestBody
             SetUserRequest createUserRequest,
             @RequestParam
             Long actionUserId) {
-        this.actionUserContextHolder.setActionUserId(actionUserId);
+        actionUserContextHolder.setActionUserId(actionUserId);
         User user;
         try {
             user = userService.setUserFromRequest(createUserRequest, null);
@@ -114,11 +115,11 @@ public class UserController {
     public ResponseEntity<?> updateUser(
             @PathVariable
             long id,
-            @RequestBody
+            @Valid @RequestBody
             SetUserRequest updateUserRequest,
             @RequestParam
             Long actionUserId) {
-        this.actionUserContextHolder.setActionUserId(actionUserId);
+        actionUserContextHolder.setActionUserId(actionUserId);
         User user = userService.getUserById(id).orElse(null);
         if (user == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

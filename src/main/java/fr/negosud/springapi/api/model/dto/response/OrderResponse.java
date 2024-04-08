@@ -1,7 +1,7 @@
 package fr.negosud.springapi.api.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import fr.negosud.springapi.api.model.dto.OrderStatus;
+import fr.negosud.springapi.api.model.OrderStatus;
 import fr.negosud.springapi.api.model.dto.response.element.OrderProductInOrderElement;
 import fr.negosud.springapi.api.model.entity.Invoice;
 import fr.negosud.springapi.api.model.entity.User;

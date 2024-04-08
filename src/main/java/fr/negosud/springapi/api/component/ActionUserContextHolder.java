@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-final public class ActionUserContextHolder {
+public class ActionUserContextHolder {
     private static final ThreadLocal<User> userIdHolder = new ThreadLocal<>();
 
     final private UserService userService;

@@ -2,7 +2,7 @@ package fr.negosud.springapi.api.model.dto.request.element;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class SetOrderedProductElement {
+public class SetArrivalProductElement {
 
     @NotBlank
     private long productId;
@@ -10,21 +10,23 @@ public class SetOrderedProductElement {
     @NotBlank
     private int quantity;
 
-    public SetOrderedProductElement() { }
+    public SetArrivalProductElement() { }
 
     public long getProductId() {
         return productId;
     }
 
-    public void setProductId(long productId) {
+    public SetArrivalProductElement setProductId(long productId) {
         this.productId = productId;
+        return this;
     }
 
     public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public SetArrivalProductElement setQuantity(int quantity) {
         this.quantity = quantity;
+        return this;
     }
 }

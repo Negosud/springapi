@@ -4,8 +4,8 @@ package fr.negosud.springapi.api.model.entity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import fr.negosud.springapi.api.audit.AuditListener;
-import fr.negosud.springapi.api.audit.CreationAuditableEntity;
+import fr.negosud.springapi.api.model.entity.listener.AuditListener;
+import fr.negosud.springapi.api.model.entity.audit.CreationAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 

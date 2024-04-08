@@ -21,23 +21,26 @@ public class ArrivalProductInArrivalElement {
         return id;
     }
 
-    public void setId(long id) {
+    public ArrivalProductInArrivalElement setId(long id) {
         this.id = id;
+        return this;
     }
 
     public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public ArrivalProductInArrivalElement setQuantity(int quantity) {
         this.quantity = quantity;
+        return this;
     }
 
     public Product getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public ArrivalProductInArrivalElement setProduct(Product product) {
         this.product = product;
+        return this;
     }
 }

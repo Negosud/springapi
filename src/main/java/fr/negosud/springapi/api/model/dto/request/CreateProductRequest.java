@@ -1,7 +1,7 @@
 package fr.negosud.springapi.api.model.dto.request;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -9,11 +9,11 @@ import java.util.Date;
 public class CreateProductRequest {
 
     @NotBlank
-    @Column(length = 100)
+    @Size(max = 100)
     private String name;
 
     @NotBlank
-    @Column(length = 1000)
+    @Size(max = 1000)
     private String description;
 
     @NotBlank
@@ -25,7 +25,6 @@ public class CreateProductRequest {
     private String productFamilyCode;
 
     @NotBlank
-    @Column(precision = 10, scale = 2)
     private BigDecimal unitPrice;
 
     private int quantity;

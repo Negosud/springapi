@@ -1,14 +1,13 @@
 package fr.negosud.springapi.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import fr.negosud.springapi.api.audit.AuditListener;
-import fr.negosud.springapi.api.audit.FullAuditableEntity;
-import fr.negosud.springapi.api.model.annotation.AutoReference;
-import fr.negosud.springapi.api.model.constraint.ReferencedEntityConstraint;
-import fr.negosud.springapi.api.model.dto.ArrivalStatus;
-import fr.negosud.springapi.api.model.listener.ReferenceListener;
+import fr.negosud.springapi.api.model.entity.listener.AuditListener;
+import fr.negosud.springapi.api.model.entity.audit.FullAuditableEntity;
+import fr.negosud.springapi.api.model.entity.annotation.AutoReference;
+import fr.negosud.springapi.api.model.entity.constraint.ReferencedEntityConstraint;
+import fr.negosud.springapi.api.model.ArrivalStatus;
+import fr.negosud.springapi.api.model.entity.listener.ReferenceListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -35,8 +34,10 @@ public class Arrival extends FullAuditableEntity implements ReferencedEntityCons
 
     @ManyToOne
     @NotBlank
-    @JsonIdentityReference(alwaysAsId = true)
     private User suppliedBy;
+
+    @Column(length = 1000)
+    private String comment;
 
     @OneToMany(mappedBy = "arrival")
     private List<ArrivalProduct> productList;
@@ -73,5 +74,21 @@ public class Arrival extends FullAuditableEntity implements ReferencedEntityCons
 
     public void setSuppliedBy(User suppliedBy) {
         this.suppliedBy = suppliedBy;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public List<ArrivalProduct> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<ArrivalProduct> productList) {
+        this.productList = productList;
     }
 }

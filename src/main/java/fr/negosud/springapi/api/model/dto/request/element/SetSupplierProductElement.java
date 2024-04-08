@@ -1,23 +1,21 @@
 package fr.negosud.springapi.api.model.dto.request.element;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
 
-public class SetUsersSuppliedProductElement {
+public class SetSupplierProductElement {
 
     @NotBlank
     private int quantity;
 
     @NotBlank
-    @Column(precision = 10, scale = 2)
     private BigDecimal unitPrice;
 
     @NotBlank
     private long productId;
 
-    public SetUsersSuppliedProductElement() { }
+    public SetSupplierProductElement() { }
 
     public int getQuantity() {
         return quantity;

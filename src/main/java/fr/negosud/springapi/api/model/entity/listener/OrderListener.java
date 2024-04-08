@@ -1,6 +1,6 @@
-package fr.negosud.springapi.api.model.listener;
+package fr.negosud.springapi.api.model.entity.listener;
 
-import fr.negosud.springapi.api.model.dto.OrderStatus;
+import fr.negosud.springapi.api.model.OrderStatus;
 import fr.negosud.springapi.api.model.entity.Invoice;
 import fr.negosud.springapi.api.model.entity.Order;
 import fr.negosud.springapi.api.service.InvoiceService;

@@ -1,7 +1,7 @@
-package fr.negosud.springapi.api.model.listener;
+package fr.negosud.springapi.api.model.entity.listener;
 
-import fr.negosud.springapi.api.model.annotation.AutoReference;
-import fr.negosud.springapi.api.model.constraint.ReferencedEntityConstraint;
+import fr.negosud.springapi.api.model.entity.annotation.AutoReference;
+import fr.negosud.springapi.api.model.entity.constraint.ReferencedEntityConstraint;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PostPersist;

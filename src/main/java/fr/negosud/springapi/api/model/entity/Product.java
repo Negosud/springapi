@@ -1,8 +1,8 @@
 package fr.negosud.springapi.api.model.entity;
 
 import com.fasterxml.jackson.annotation.*;
-import fr.negosud.springapi.api.audit.AuditListener;
-import fr.negosud.springapi.api.audit.FullAuditableEntity;
+import fr.negosud.springapi.api.model.entity.listener.AuditListener;
+import fr.negosud.springapi.api.model.entity.audit.FullAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -41,7 +41,6 @@ public class Product extends FullAuditableEntity {
 
     @ManyToOne
     @NotBlank
-    @JsonIdentityReference(alwaysAsId = true)
     private ProductFamily productFamily;
 
     @NotBlank
@@ -56,18 +55,15 @@ public class Product extends FullAuditableEntity {
     private boolean active;
 
     @OneToOne
-    @JsonIdentityReference(alwaysAsId = true)
     private Product oldProduct;
 
     @OneToOne(mappedBy = "oldProduct")
-    @JsonIdentityReference(alwaysAsId = true)
     private Product newProduct;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SupplierProduct> supplierList;
 
     @OneToMany(mappedBy = "product")
-    @JsonIgnore
     private List<ArrivalProduct> arrivalList;
 
     @OneToMany(mappedBy = "product")

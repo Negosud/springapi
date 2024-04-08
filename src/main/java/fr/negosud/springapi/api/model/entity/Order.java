@@ -1,15 +1,14 @@
 package fr.negosud.springapi.api.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import fr.negosud.springapi.api.audit.AuditListener;
-import fr.negosud.springapi.api.audit.FullAuditableEntity;
-import fr.negosud.springapi.api.model.annotation.AutoReference;
-import fr.negosud.springapi.api.model.constraint.ReferencedEntityConstraint;
-import fr.negosud.springapi.api.model.dto.OrderStatus;
-import fr.negosud.springapi.api.model.listener.OrderListener;
-import fr.negosud.springapi.api.model.listener.ReferenceListener;
+import fr.negosud.springapi.api.model.entity.listener.AuditListener;
+import fr.negosud.springapi.api.model.entity.audit.FullAuditableEntity;
+import fr.negosud.springapi.api.model.entity.annotation.AutoReference;
+import fr.negosud.springapi.api.model.entity.constraint.ReferencedEntityConstraint;
+import fr.negosud.springapi.api.model.OrderStatus;
+import fr.negosud.springapi.api.model.entity.listener.OrderListener;
+import fr.negosud.springapi.api.model.entity.listener.ReferenceListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -36,13 +35,11 @@ public class Order extends FullAuditableEntity implements ReferencedEntityConstr
     private OrderStatus status;
 
     @ManyToOne
-    @JsonIdentityReference(alwaysAsId = true)
     private User preparedBy;
 
     private Date preparedAt;
 
     @OneToOne(mappedBy = "order")
-    @JsonIdentityReference(alwaysAsId = true)
     private Invoice invoice;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)

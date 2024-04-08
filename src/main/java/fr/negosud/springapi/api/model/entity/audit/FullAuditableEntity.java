@@ -1,4 +1,4 @@
-package fr.negosud.springapi.api.audit;
+package fr.negosud.springapi.api.model.entity.audit;
 
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import fr.negosud.springapi.api.component.ActionUserContextHolder;

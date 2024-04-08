@@ -1,10 +1,9 @@
 package fr.negosud.springapi.api.model.dto.request;
 
-import fr.negosud.springapi.api.model.dto.request.element.SetUsersSuppliedProductElement;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
+import fr.negosud.springapi.api.model.dto.request.element.SetSupplierProductElement;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
@@ -12,48 +11,36 @@ public class SetUserRequest {
 
     @NotBlank
     @Email
-    @Schema(description = "User's contact email")
     private String email;
 
     @NotBlank
-    @Schema(description = "User's first name")
     private String firstName;
 
     @NotBlank
-    @Schema(description = "User's last name")
     private String lastName;
 
     @NotBlank
-    @Schema(description = "User's userGroup name")
     private String userGroup;
 
-    @Schema(description = "Is user active")
     private boolean active;
 
     @Email
-    @Column(unique = true, length = 320)
-    @Schema(description = "User's login email")
+    @Size(max = 320)
     private String login;
 
-    @Column(length = 60)
-    @Schema(description = "User's password hashed by a front app")
+    @Size(max = 60)
     private String password;
 
-    @Column(length = 14)
-    @Schema(description = "User's international phone number")
+    @Size(max = 14)
     private String phoneNumber;
 
-    @Schema(description = "User's permission list as permission full names")
     private List<String> permissionList;
 
-    @Schema(description = "User's mailing address id")
     private long mailingAddress;
 
-    @Schema(description = "User's billing address id")
     private long billingAddress;
 
-    @Schema(description = "User's supplied products info")
-    private List<SetUsersSuppliedProductElement> supplierProductList;
+    private List<SetSupplierProductElement> supplierProducts;
 
     public SetUserRequest() {
         this.active = true;
@@ -147,11 +134,11 @@ public class SetUserRequest {
         this.billingAddress = billingAddress;
     }
 
-    public List<SetUsersSuppliedProductElement> getSupplierProductList() {
-        return supplierProductList;
+    public List<SetSupplierProductElement> getSupplierProducts() {
+        return supplierProducts;
     }
 
-    public void setSupplierProductList(List<SetUsersSuppliedProductElement> supplierProductList) {
-        this.supplierProductList = supplierProductList;
+    public void setSupplierProducts(List<SetSupplierProductElement> supplierProducts) {
+        this.supplierProducts = supplierProducts;
     }
 }

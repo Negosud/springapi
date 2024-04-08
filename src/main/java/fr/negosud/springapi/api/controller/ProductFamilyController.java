@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -71,11 +72,11 @@ public class ProductFamilyController {
                     content = @Content(schema = @Schema(implementation = String.class)))
     })
     public ResponseEntity<?> createProductFamily(
-            @RequestBody
+            @Valid @RequestBody
             SetProductFamilyRequest createProductFamilyRequest,
             @RequestParam
             Long actionUserId) {
-        this.actionUserContextHolder.setActionUserId(actionUserId);
+        actionUserContextHolder.setActionUserId(actionUserId);
         ProductFamily productFamily = productFamilyService.setProductFamilyFromRequest(createProductFamilyRequest, null);
         try {
             productFamilyService.saveProductFamily(productFamily);
@@ -97,7 +98,7 @@ public class ProductFamilyController {
     public ResponseEntity<ProductFamily> updateProductFamily(
             @PathVariable
             String code,
-            @RequestBody
+            @Valid @RequestBody
             SetProductFamilyRequest updateProductFamilyRequest,
             @RequestParam
             Long actionUserId) {

@@ -1,4 +1,4 @@
-package fr.negosud.springapi.api.model.constraint;
+package fr.negosud.springapi.api.model.entity.constraint;
 
 import java.util.Date;
 

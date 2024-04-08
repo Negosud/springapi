@@ -1,5 +1,6 @@
-package fr.negosud.springapi.api.audit;
+package fr.negosud.springapi.api.model.entity.listener;
 
+import fr.negosud.springapi.api.model.entity.audit.AuditableEntity;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 

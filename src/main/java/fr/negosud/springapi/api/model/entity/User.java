@@ -1,8 +1,8 @@
 package fr.negosud.springapi.api.model.entity;
 
 import com.fasterxml.jackson.annotation.*;
-import fr.negosud.springapi.api.audit.AuditListener;
-import fr.negosud.springapi.api.audit.FullAuditableEntity;
+import fr.negosud.springapi.api.model.entity.listener.AuditListener;
+import fr.negosud.springapi.api.model.entity.audit.FullAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -49,21 +49,16 @@ public class User extends FullAuditableEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_node_id")
     )
-    @JsonIdentityReference(alwaysAsId = true)
     private List<PermissionNode> permissionNodeList;
 
     @ManyToOne
     @NotBlank
-    @JsonIdentityReference(alwaysAsId = true)
-    @JoinColumn(referencedColumnName = "name")
     private UserGroup userGroup;
 
     @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @JsonIdentityReference(alwaysAsId = true)
     private Address mailingAddress;
 
     @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @JsonIdentityReference(alwaysAsId = true)
     private Address billingAddress;
 
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -119,7 +114,6 @@ public class User extends FullAuditableEntity {
         this.login = login;
     }
 
-    @JsonIgnore
     public String getPassword() {
         return password;
     }

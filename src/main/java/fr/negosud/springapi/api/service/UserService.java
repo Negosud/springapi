@@ -97,7 +97,7 @@ public class UserService {
         user.setPermissionNodeList(permissionNodeService.getPermissionNodeListByFullName(setUserRequest.getPermissionList()).orElse(null));
         user.setMailingAddress(addressService.getAddressById(setUserRequest.getMailingAddress()).orElse(null));
         user.setBillingAddress(addressService.getAddressById(setUserRequest.getBillingAddress()).orElse(null));
-        user.setSuppliedProductList(supplierProductService.setUsersSuppliedProductListFromRequest(user, setUserRequest.getSupplierProductList()));
+        user.setSuppliedProductList(supplierProductService.setUsersSuppliedProductListFromRequest(user, setUserRequest.getSupplierProducts()));
 
         UserPasswordEncoder userPasswordEncoder = new UserPasswordEncoder();
         String userPassword = user.getPassword();
@@ -109,8 +109,7 @@ public class UserService {
     }
 
     public UserResponse getResponseFromUser(User user) {
-        UserResponse userResponse = new UserResponse();
-        return userResponse.setId(user.getId())
+        return new UserResponse().setId(user.getId())
                 .setLogin(user.getLogin())
                 .setEmail(user.getEmail())
                 .setFirstName(user.getFirstName())

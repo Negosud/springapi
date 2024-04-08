@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,18 +45,15 @@ public class UserAuthController {
                     content = @Content(schema = @Schema(implementation = UserResponse.class)))
     })
     public ResponseEntity<?> loginAction(
-            @RequestBody
+            @Valid @RequestBody
             LoginRequest loginRequest) {
-        User user = this.userService.getUserByLogin(loginRequest.getLogin()).orElse(null);
+        User user = userService.getUserByLogin(loginRequest.getLogin()).orElse(null);
         if (user == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
         if (!user.isActive())
             return new ResponseEntity<>("User isn't active", HttpStatus.FORBIDDEN);
-
-        if (this.userService.matchUserPassword(user, loginRequest.getPassword()))
+        if (userService.matchUserPassword(user, loginRequest.getPassword()))
             return new ResponseEntity<>(userService.getResponseFromUser(user), HttpStatus.OK);
-
         return new ResponseEntity<>("Password isn't matching", HttpStatus.FORBIDDEN);
     }
 

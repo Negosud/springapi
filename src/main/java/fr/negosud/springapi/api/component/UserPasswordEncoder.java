@@ -4,7 +4,7 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-final public class UserPasswordEncoder {
+public class UserPasswordEncoder {
 
     private final Argon2PasswordEncoder passwordEncoder;
 

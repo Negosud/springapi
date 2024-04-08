@@ -1,22 +1,24 @@
 package fr.negosud.springapi.api.model.dto.request;
 
-import fr.negosud.springapi.api.model.dto.request.element.SetOrderedProductElement;
-import jdk.jfr.Description;
+import fr.negosud.springapi.api.model.dto.request.element.SetOrderProductElement;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
 public class PlaceOrderRequest {
 
-    @Description("A list of product ids and quantities")
-    private List<SetOrderedProductElement> orderedProducts;
+    @NotNull
+    @Valid
+    private List<SetOrderProductElement> orderProducts;
 
     public PlaceOrderRequest() { }
 
-    public List<SetOrderedProductElement> getOrderedProducts() {
-        return orderedProducts;
+    public List<SetOrderProductElement> getOrderProducts() {
+        return orderProducts;
     }
 
-    public void setOrderedProducts(List<SetOrderedProductElement> orderedProducts) {
-        this.orderedProducts = orderedProducts;
+    public void setOrderProducts(List<SetOrderProductElement> orderProducts) {
+        this.orderProducts = orderProducts;
     }
 }

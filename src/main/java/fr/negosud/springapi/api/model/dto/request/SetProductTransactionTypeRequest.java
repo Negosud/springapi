@@ -1,15 +1,15 @@
 package fr.negosud.springapi.api.model.dto.request;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class SetProductTransactionTypeRequest {
 
     @NotBlank
-    @Column(length = 100)
+    @Size(max = 100)
     private String name;
 
-    @Column(length = 1000)
+    @Size(max = 1000)
     private String description;
 
     @NotBlank

@@ -1,16 +1,16 @@
 package fr.negosud.springapi.api.model.dto.request;
 
-import jakarta.persistence.Column;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class UpdateProductRequest {
 
-    @Column(length = 100)
+    @Size(max = 100)
     private String name;
 
-    @Column(length = 1000)
+    @Size(max = 1000)
     private String description;
 
     private Date expirationDate;
@@ -19,7 +19,6 @@ public class UpdateProductRequest {
 
     private String productFamilyCode;
 
-    @Column(precision = 10, scale = 2)
     private BigDecimal unitPrice;
 
     private Integer quantity;

@@ -1,8 +1,8 @@
 package fr.negosud.springapi.api.service;
 
-import fr.negosud.springapi.api.model.dto.OrderStatus;
+import fr.negosud.springapi.api.model.OrderStatus;
 import fr.negosud.springapi.api.model.dto.request.PlaceOrderRequest;
-import fr.negosud.springapi.api.model.dto.request.element.SetOrderedProductElement;
+import fr.negosud.springapi.api.model.dto.request.element.SetOrderProductElement;
 import fr.negosud.springapi.api.model.dto.response.OrderResponse;
 import fr.negosud.springapi.api.model.dto.response.element.OrderProductInOrderElement;
 import fr.negosud.springapi.api.model.entity.Order;
@@ -49,17 +49,16 @@ public class OrderService {
     public Order placeOrderFromRequest(PlaceOrderRequest placeOrderRequest) {
         Order order = new Order();
 
-        List<SetOrderedProductElement> orderedProducts = placeOrderRequest.getOrderedProducts();
         List<OrderProduct> orderProducts = new ArrayList<>();
-        for (SetOrderedProductElement orderedProductElement : orderedProducts) {
-            Product product = productService.getProductById(orderedProductElement.getProductId()).orElse(null);
-            assert product != null : "Product Id " + orderedProductElement.getProductId() + "  doesn't correspond to a proper product";
-            assert !product.isActive() : "Product for Id " + orderedProductElement.getProductId() + " isn't active";
-            assert productService.getMaxOrderableProductQuantity(product) < orderedProductElement.getQuantity() : "Available product quantity for Product Id " + orderedProductElement.getProductId() + " is insufficient";
+        for (SetOrderProductElement orderProductElement : placeOrderRequest.getOrderProducts()) {
+            Product product = productService.getProductById(orderProductElement.getProductId()).orElse(null);
+            assert product != null : "Product Id " + orderProductElement.getProductId() + "  doesn't correspond to a proper product";
+            assert product.isActive() : "Product for Id " + orderProductElement.getProductId() + " isn't active";
+            assert productService.getMaxOrderableProductQuantity(product) < orderProductElement.getQuantity() : "Available product quantity for Product Id " + orderProductElement.getProductId() + " is insufficient";
             OrderProduct orderProduct = new OrderProduct();
             orderProduct.setOrder(order);
             orderProduct.setProduct(product);
-            orderProduct.setQuantity(orderedProductElement.getQuantity());
+            orderProduct.setQuantity(orderProductElement.getQuantity());
             orderProducts.add(orderProduct);
         }
 

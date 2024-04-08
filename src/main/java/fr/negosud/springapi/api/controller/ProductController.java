@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -82,11 +83,11 @@ public class ProductController {
                     content = @Content(schema = @Schema(implementation = String.class)))
     })
     public ResponseEntity<?> createProduct(
-            @RequestBody
+            @Valid @RequestBody
             CreateProductRequest createProductRequest,
             @RequestParam
             Long actionUserId) {
-        this.actionUserContextHolder.setActionUserId(actionUserId);
+        actionUserContextHolder.setActionUserId(actionUserId);
         try {
             Product product = productService.createProductFromRequest(createProductRequest);
             return new ResponseEntity<>(productService.getResponseFromProduct(product), HttpStatus.CREATED);
@@ -113,14 +114,14 @@ public class ProductController {
     public ResponseEntity<?> updateProduct(
             @PathVariable
             long id,
-            @RequestBody
+            @Valid @RequestBody
             UpdateProductRequest updateProductRequest,
             @RequestParam
             Long actionUserId) {
         Product product = productService.getProductById(id).orElse(null);
         if (product == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        this.actionUserContextHolder.setActionUserId(actionUserId);
+        actionUserContextHolder.setActionUserId(actionUserId);
         try {
             product = productService.updateProductFromRequest(updateProductRequest, product);
             return new ResponseEntity<>(productService.getResponseFromProduct(product), HttpStatus.OK);

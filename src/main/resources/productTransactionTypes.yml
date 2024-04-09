@@ -13,6 +13,17 @@ productTransactionTypes:
   - name: Vente
     description: Il s'agit d'une vente.
 
+  - name: Achat fournisseur
+    description: Achat auprès d'un fournisseur de Negosud.
+    isEntry:
+
+  - name: Transfert nouveau produit
+    description: Il s'agit de la sortie d'un ancien produit vers un nouveau produit (modification de nom ou de prix).
+
+  - name: Transfert ancien produit
+    description: Il s'agit de l'entrée d'un nouveau produit depuis un ancien produit (modification de nom ou de prix).
+    isEntry:
+
   - name: Péremption
     description: Atteinte de la date de péremption du vin.
 
@@ -21,10 +32,6 @@ productTransactionTypes:
 
   - name: Casse d'origine externe
     description: Casse quelconque.
-
-  - name: Achat fournisseur
-    description: Achat auprès d'un fournisseur de Negosud.
-    isEntry:
 
   - name: Don de l'entrepôt Bichard
     description: Don du stock de l'entrepôt Bichard le 16 janvier 2024.

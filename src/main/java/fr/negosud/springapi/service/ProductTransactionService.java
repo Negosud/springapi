@@ -64,7 +64,7 @@ public class ProductTransactionService {
     public void makeProductTransactionFromArrivalProduct(ArrivalProduct arrivalProduct) {
         Product product = productService.getNewestProduct(arrivalProduct.getProduct());
         ProductTransaction productTransaction = new ProductTransaction(product, arrivalProduct.getQuantity(), productTransactionTypeService.getProductTransactionTypeByCode("ACHAT_FOURNISSEUR")
-                .orElseThrow(() -> new RuntimeException("ProductTransaction ACHAT_FOURNISSEUR not found")));
+                .orElseThrow(() -> new RuntimeException("ProductTransactionType ACHAT_FOURNISSEUR not found")));
 
     }
 

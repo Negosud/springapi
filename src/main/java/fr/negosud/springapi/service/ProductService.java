@@ -132,14 +132,14 @@ public class ProductService {
 
         String name = updateProductRequest.getName();
         String description = updateProductRequest.getDescription();
-        Integer quantity = updateProductRequest.getQuantity();
+        Integer quantity = 0;
         Date expirationDate = updateProductRequest.getExpirationDate();
         String productFamilyCode = updateProductRequest.getProductFamilyCode();
         ProductFamily productFamily = productFamilyCode != null ? productFamilyService.getProductFamilyByCode(productFamilyCode).orElse(null) : null;
         BigDecimal unitPrice = updateProductRequest.getUnitPrice();
         Boolean active = updateProductRequest.isActive();
 
-        if (name == null &&description == null && quantity == null && expirationDate == null && productFamilyCode == null && unitPrice == null && active == null)
+        if (name == null &&description == null && expirationDate == null && productFamilyCode == null && unitPrice == null && active == null)
             throw new IllegalArgumentException("Product can't be updated with empty body");
 
         if (name != null && !Objects.equals(name, oldProduct.getName())) {
@@ -159,11 +159,11 @@ public class ProductService {
         else
             newProduct.setExpirationDate(oldProduct.getExpirationDate());
 
-        if (productFamily != null && !Objects.equals(productFamily, oldProduct.getProductFamily())) {
+        if (productFamily != null && !Objects.equals(productFamily, oldProduct.getProductFamily()))
             newProduct.setProductFamily(productFamily);
-        } else {
+        else
             newProduct.setProductFamily(oldProduct.getProductFamily());
-        }
+
 
         if (unitPrice != null && !Objects.equals(unitPrice, oldProduct.getUnitPrice())) {
             newProduct.setUnitPrice(unitPrice);

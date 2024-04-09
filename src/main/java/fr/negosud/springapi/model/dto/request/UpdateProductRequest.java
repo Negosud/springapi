@@ -19,8 +19,6 @@ public class UpdateProductRequest {
 
     private BigDecimal unitPrice;
 
-    private Integer quantity;
-
     private Boolean active;
 
     public UpdateProductRequest() { }
@@ -39,14 +37,6 @@ public class UpdateProductRequest {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
     }
 
     public Date getExpirationDate() {

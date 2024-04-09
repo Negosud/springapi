@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/user/auth")
-@Tag(name = "User Auth", description = "Endpoints related to User auth actions.")
+@Tag(name = "User")
 public class UserAuthController {
 
     private final UserService userService;

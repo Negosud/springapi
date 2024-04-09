@@ -1,6 +1,6 @@
 package fr.negosud.springapi.service;
 
-import fr.negosud.springapi.model.dto.response.element.ProductTransactionInProductElement;
+import fr.negosud.springapi.model.dto.response.element.ProductTransactionInProductResponseElement;
 import fr.negosud.springapi.model.entity.ArrivalProduct;
 import fr.negosud.springapi.model.entity.Product;
 import fr.negosud.springapi.model.entity.ProductTransaction;
@@ -16,11 +16,13 @@ public class ProductTransactionService {
 
     private final ProductTransactionRepository productTransactionRepository;
     private final ProductTransactionTypeService productTransactionTypeService;
+    private final ProductService productService;
 
     @Autowired
-    public ProductTransactionService(ProductTransactionRepository productTransactionRepository, ProductTransactionTypeService productTransactionTypeService) {
+    public ProductTransactionService(ProductTransactionRepository productTransactionRepository, ProductTransactionTypeService productTransactionTypeService, ProductService productService) {
         this.productTransactionRepository = productTransactionRepository;
         this.productTransactionTypeService = productTransactionTypeService;
+        this.productService = productService;
     }
 
     public List<ProductTransaction> getAllProductTransaction() {
@@ -56,12 +58,18 @@ public class ProductTransactionService {
         return productTransaction;
     }
 
+    /**
+     * @throws RuntimeException ProductTransaction ACHAT_FOURNISSEUR not found
+     */
     public void makeProductTransactionFromArrivalProduct(ArrivalProduct arrivalProduct) {
+        Product product = productService.getNewestProduct(arrivalProduct.getProduct());
+        ProductTransaction productTransaction = new ProductTransaction(product, arrivalProduct.getQuantity(), productTransactionTypeService.getProductTransactionTypeByCode("ACHAT_FOURNISSEUR")
+                .orElseThrow(() -> new RuntimeException("ProductTransaction ACHAT_FOURNISSEUR not found")));
 
     }
 
-    public ProductTransactionInProductElement setElementFromProductTransaction(ProductTransaction productTransaction) {
-        return (ProductTransactionInProductElement) new ProductTransactionInProductElement()
+    public ProductTransactionInProductResponseElement setElementFromProductTransaction(ProductTransaction productTransaction) {
+        return (ProductTransactionInProductResponseElement) new ProductTransactionInProductResponseElement()
                 .setId(productTransaction.getId())
                 .setQuantity(productTransaction.getQuantity())
                 .setCreatedAt(productTransaction.getCreatedAt())

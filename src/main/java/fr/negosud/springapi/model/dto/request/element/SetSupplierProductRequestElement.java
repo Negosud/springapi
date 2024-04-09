@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
 
-public class SetSupplierProductElement {
+public class SetSupplierProductRequestElement {
 
     @NotBlank
     private int quantity;
@@ -15,7 +15,7 @@ public class SetSupplierProductElement {
     @NotBlank
     private long productId;
 
-    public SetSupplierProductElement() { }
+    public SetSupplierProductRequestElement() { }
 
     public int getQuantity() {
         return quantity;

@@ -1,9 +1,9 @@
 package fr.negosud.springapi.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import fr.negosud.springapi.model.dto.response.element.ArrivalProductInProductElement;
-import fr.negosud.springapi.model.dto.response.element.OrderProductInProductElement;
-import fr.negosud.springapi.model.dto.response.element.SupplierProductInProductElement;
+import fr.negosud.springapi.model.dto.response.element.ArrivalProductInProductResponseElement;
+import fr.negosud.springapi.model.dto.response.element.OrderProductInProductResponseElement;
+import fr.negosud.springapi.model.dto.response.element.SupplierProductInProductResponseElement;
 import fr.negosud.springapi.model.entity.Product;
 import fr.negosud.springapi.model.entity.ProductFamily;
 import jakarta.validation.constraints.NotBlank;
@@ -55,11 +55,11 @@ public class ProductResponse {
     @JsonIdentityReference(alwaysAsId = true)
     private Product newProduct;
 
-    private List<SupplierProductInProductElement> supplierList;
+    private List<SupplierProductInProductResponseElement> supplierList;
 
-    private List<ArrivalProductInProductElement> arrivalList;
+    private List<ArrivalProductInProductResponseElement> arrivalList;
 
-    private List<OrderProductInProductElement> orderList;
+    private List<OrderProductInProductResponseElement> orderList;
 
     public ProductResponse() { }
 
@@ -171,29 +171,29 @@ public class ProductResponse {
         return this;
     }
 
-    public List<SupplierProductInProductElement> getSupplierList() {
+    public List<SupplierProductInProductResponseElement> getSupplierList() {
         return supplierList;
     }
 
-    public ProductResponse setSupplierList(List<SupplierProductInProductElement> supplierList) {
+    public ProductResponse setSupplierList(List<SupplierProductInProductResponseElement> supplierList) {
         this.supplierList = supplierList;
         return this;
     }
 
-    public List<ArrivalProductInProductElement> getArrivalList() {
+    public List<ArrivalProductInProductResponseElement> getArrivalList() {
         return arrivalList;
     }
 
-    public ProductResponse setArrivalList(List<ArrivalProductInProductElement> arrivalList) {
+    public ProductResponse setArrivalList(List<ArrivalProductInProductResponseElement> arrivalList) {
         this.arrivalList = arrivalList;
         return this;
     }
 
-    public List<OrderProductInProductElement> getOrderList() {
+    public List<OrderProductInProductResponseElement> getOrderList() {
         return orderList;
     }
 
-    public ProductResponse setOrderList(List<OrderProductInProductElement> orderList) {
+    public ProductResponse setOrderList(List<OrderProductInProductResponseElement> orderList) {
         this.orderList = orderList;
         return this;
     }

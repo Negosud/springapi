@@ -3,7 +3,7 @@ package fr.negosud.springapi.model.dto.response;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import fr.negosud.springapi.model.OrderStatus;
 import fr.negosud.springapi.model.dto.response.audit.FullAuditedResponse;
-import fr.negosud.springapi.model.dto.response.element.OrderProductInOrderElement;
+import fr.negosud.springapi.model.dto.response.element.OrderProductInOrderResponseElement;
 import fr.negosud.springapi.model.entity.Invoice;
 import fr.negosud.springapi.model.entity.User;
 import jakarta.validation.constraints.NotBlank;
@@ -33,7 +33,7 @@ public class OrderResponse extends FullAuditedResponse {
     @JsonIdentityReference(alwaysAsId = true)
     private Invoice invoice;
 
-    private List<OrderProductInOrderElement> productList;
+    private List<OrderProductInOrderResponseElement> productList;
 
     public OrderResponse() { }
 
@@ -91,11 +91,11 @@ public class OrderResponse extends FullAuditedResponse {
         return this;
     }
 
-    public List<OrderProductInOrderElement> getProductList() {
+    public List<OrderProductInOrderResponseElement> getProductList() {
         return productList;
     }
 
-    public OrderResponse setProductList(List<OrderProductInOrderElement> productList) {
+    public OrderResponse setProductList(List<OrderProductInOrderResponseElement> productList) {
         this.productList = productList;
         return this;
     }

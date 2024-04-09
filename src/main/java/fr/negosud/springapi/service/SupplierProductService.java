@@ -1,6 +1,6 @@
 package fr.negosud.springapi.service;
 
-import fr.negosud.springapi.model.dto.request.element.SetSupplierProductElement;
+import fr.negosud.springapi.model.dto.request.element.SetSupplierProductRequestElement;
 import fr.negosud.springapi.model.entity.Product;
 import fr.negosud.springapi.model.entity.SupplierProduct;
 import fr.negosud.springapi.model.entity.User;
@@ -55,14 +55,14 @@ public class SupplierProductService {
         supplierProductRepository.delete(supplierProduct);
     }
 
-    public List<SupplierProduct> setUsersSuppliedProductListFromRequest(User supplier, List<SetSupplierProductElement> setSupplierProductElementList) {
+    public List<SupplierProduct> setSupplierProductsFromRequest(User supplier, List<SetSupplierProductRequestElement> setSupplierProductElementList) {
         List<SupplierProduct> supplierProducts = supplier.getSuppliedProductList();
         if (supplierProducts == null)
             supplierProducts = new ArrayList<>();
 
-        for (SetSupplierProductElement setSupplierProductElement : setSupplierProductElementList) {
+        for (SetSupplierProductRequestElement setSupplierProductElement : setSupplierProductElementList) {
             SupplierProduct supplierProduct = supplier.getId() != 0 ? getSupplierProductBySupplierAndProductId(supplier, setSupplierProductElement.getProductId()).orElse(null) : null;
-            supplierProducts.add(setUsersSuppliedProductFromRequest(supplier, setSupplierProductElement, supplierProduct));
+            supplierProducts.add(setSupplierProductFromRequestElement(supplier, setSupplierProductElement, supplierProduct));
         }
         return supplierProducts;
     }
@@ -70,7 +70,7 @@ public class SupplierProductService {
     /**
      * @throws IllegalArgumentException Can't find a product with user's supplied product id
      */
-    private SupplierProduct setUsersSuppliedProductFromRequest(User supplier, SetSupplierProductElement setSupplierProductElement, SupplierProduct supplierProduct) {
+    private SupplierProduct setSupplierProductFromRequestElement(User supplier, SetSupplierProductRequestElement setSupplierProductElement, SupplierProduct supplierProduct) {
         if (supplierProduct == null)
             supplierProduct = new SupplierProduct();
 

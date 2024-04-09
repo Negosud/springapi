@@ -22,7 +22,7 @@ productTransactionTypes:
   - name: Casse d'origine externe
     description: Casse quelconque.
 
-  - name: Achat auprès d'un fournisseur
+  - name: Achat fournisseur
     description: Achat auprès d'un fournisseur de Negosud.
     isEntry:
 

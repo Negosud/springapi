@@ -1,6 +1,6 @@
 package fr.negosud.springapi.model.dto.request;
 
-import fr.negosud.springapi.model.dto.request.element.SetArrivalProductElement;
+import fr.negosud.springapi.model.dto.request.element.SetArrivalProductRequestElement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +12,7 @@ public class PlaceArrivalRequest {
 
     @NotNull
     @Valid
-    private List<SetArrivalProductElement> arrivalProductElements;
+    private List<SetArrivalProductRequestElement> arrivalProducts;
 
     @NotBlank
     private Long supplierId;
@@ -22,12 +22,12 @@ public class PlaceArrivalRequest {
 
     public PlaceArrivalRequest() { }
 
-    public List<SetArrivalProductElement> getArrivalProductElements() {
-        return arrivalProductElements;
+    public List<SetArrivalProductRequestElement> getArrivalProducts() {
+        return arrivalProducts;
     }
 
-    public void setArrivalProductElements(List<SetArrivalProductElement> arrivalProductElements) {
-        this.arrivalProductElements = arrivalProductElements;
+    public void setArrivalProducts(List<SetArrivalProductRequestElement> arrivalProducts) {
+        this.arrivalProducts = arrivalProducts;
     }
 
     public Long getSupplierId() {

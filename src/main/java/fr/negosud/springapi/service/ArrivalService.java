@@ -2,9 +2,9 @@ package fr.negosud.springapi.service;
 
 import fr.negosud.springapi.model.ArrivalStatus;
 import fr.negosud.springapi.model.dto.request.PlaceArrivalRequest;
-import fr.negosud.springapi.model.dto.request.element.SetArrivalProductElement;
+import fr.negosud.springapi.model.dto.request.element.SetArrivalProductRequestElement;
 import fr.negosud.springapi.model.dto.response.ArrivalResponse;
-import fr.negosud.springapi.model.dto.response.element.ArrivalProductInArrivalElement;
+import fr.negosud.springapi.model.dto.response.element.ArrivalProductInArrivalResponseElement;
 import fr.negosud.springapi.model.entity.*;
 import fr.negosud.springapi.repository.ArrivalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +65,7 @@ public class ArrivalService {
 
         Arrival arrival = new Arrival();
         List<ArrivalProduct> arrivalProducts = new ArrayList<>();
-        for (SetArrivalProductElement arrivalProductElement : placeArrivalRequest.getArrivalProductElements()) {
+        for (SetArrivalProductRequestElement arrivalProductElement : placeArrivalRequest.getArrivalProducts()) {
             Product product = productService.getProductById(arrivalProductElement.getProductId()).orElse(null);
             assert product != null : "Product Id " + arrivalProductElement.getProductId() + "  doesn't correspond to a proper product";
             assert product.isActive() : "Product for Id " + arrivalProductElement.getProductId() + " isn't active";
@@ -83,9 +83,13 @@ public class ArrivalService {
         return arrival;
     }
 
+    /**
+     * @throws RuntimeException ProductTransaction ACHAT_FOURNISSEUR not found
+     */
     public void completeArrival(Arrival arrival) {
         for (ArrivalProduct arrivalProduct : arrival.getProductList()) {
             productTransactionService.makeProductTransactionFromArrivalProduct(arrivalProduct);
+
         }
     }
 
@@ -102,10 +106,10 @@ public class ArrivalService {
                 .setModifiedBy(arrival.getModifiedBy());
     }
 
-    private List<ArrivalProductInArrivalElement> getArrivalProductElements(List<ArrivalProduct> arrivalProducts) {
-        List<ArrivalProductInArrivalElement> arrivalProductElements = new ArrayList<>();
+    private List<ArrivalProductInArrivalResponseElement> getArrivalProductElements(List<ArrivalProduct> arrivalProducts) {
+        List<ArrivalProductInArrivalResponseElement> arrivalProductElements = new ArrayList<>();
         for (ArrivalProduct arrivalProduct : arrivalProducts) {
-            ArrivalProductInArrivalElement arrivalProductElement = new ArrivalProductInArrivalElement();
+            ArrivalProductInArrivalResponseElement arrivalProductElement = new ArrivalProductInArrivalResponseElement();
             arrivalProductElement.setId(arrivalProduct.getId())
                     .setProduct(arrivalProduct.getProduct())
                     .setQuantity(arrivalProduct.getQuantity())

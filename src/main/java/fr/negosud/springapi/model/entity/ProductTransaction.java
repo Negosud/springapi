@@ -31,10 +31,16 @@ public class ProductTransaction extends FullAuditableEntity {
     @JsonIdentityReference(alwaysAsId = true)
     private ProductTransactionType produtTransactionType;
 
+    @OneToOne(mappedBy = "productTransaction")
+    private ArrivalProduct arrivalProduct;
+
+    @OneToOne(mappedBy = "productTransaction")
+    private OrderProduct orderProduct;
+
     public ProductTransaction() { }
 
     /**
-     * Constructor used by handleProductQuantityDefinition method
+     * Constructor used by handleProductQuantityDefinition and makeProductTransactionFromArrivalProduct methods
      */
     public ProductTransaction(Product product, int quantity, ProductTransactionType productTransactionType) {
         this.product = product;
@@ -72,5 +78,21 @@ public class ProductTransaction extends FullAuditableEntity {
 
     public void setProdutTransactionType(ProductTransactionType produtTransactionType) {
         this.produtTransactionType = produtTransactionType;
+    }
+
+    public ArrivalProduct getArrivalProduct() {
+        return arrivalProduct;
+    }
+
+    public void setArrivalProduct(ArrivalProduct arrivalProduct) {
+        this.arrivalProduct = arrivalProduct;
+    }
+
+    public OrderProduct getOrderProduct() {
+        return orderProduct;
+    }
+
+    public void setOrderProduct(OrderProduct orderProduct) {
+        this.orderProduct = orderProduct;
     }
 }

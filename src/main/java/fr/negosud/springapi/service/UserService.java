@@ -3,7 +3,7 @@ package fr.negosud.springapi.service;
 import fr.negosud.springapi.component.UserPasswordEncoder;
 import fr.negosud.springapi.model.dto.request.SetUserRequest;
 import fr.negosud.springapi.model.dto.response.UserResponse;
-import fr.negosud.springapi.model.dto.response.element.SupplierProductInUserElement;
+import fr.negosud.springapi.model.dto.response.element.SupplierProductInUserResponseElement;
 import fr.negosud.springapi.model.entity.SupplierProduct;
 import fr.negosud.springapi.model.entity.User;
 import fr.negosud.springapi.repository.UserRepository;
@@ -97,7 +97,7 @@ public class UserService {
         user.setPermissionNodeList(permissionNodeService.getPermissionNodeListByFullName(setUserRequest.getPermissionList()).orElse(null));
         user.setMailingAddress(addressService.getAddressById(setUserRequest.getMailingAddress()).orElse(null));
         user.setBillingAddress(addressService.getAddressById(setUserRequest.getBillingAddress()).orElse(null));
-        user.setSuppliedProductList(supplierProductService.setUsersSuppliedProductListFromRequest(user, setUserRequest.getSupplierProducts()));
+        user.setSuppliedProductList(supplierProductService.setSupplierProductsFromRequest(user, setUserRequest.getSupplierProducts()));
 
         UserPasswordEncoder userPasswordEncoder = new UserPasswordEncoder();
         String userPassword = user.getPassword();
@@ -123,17 +123,17 @@ public class UserService {
                 .setSuppliedProductList(getSupplierProductElements(user.getSuppliedProductList()));
     }
 
-    private List<SupplierProductInUserElement> getSupplierProductElements(List<SupplierProduct> supplierProductList) {
-        List<SupplierProductInUserElement> supplierProductInUserElements = new ArrayList<>();
+    private List<SupplierProductInUserResponseElement> getSupplierProductElements(List<SupplierProduct> supplierProductList) {
+        List<SupplierProductInUserResponseElement> supplierProductInUserResponseElements = new ArrayList<>();
         for (SupplierProduct supplierProduct : supplierProductList) {
-            SupplierProductInUserElement supplierProductInUserElement = new SupplierProductInUserElement();
-            supplierProductInUserElement.setId(supplierProduct.getId())
+            SupplierProductInUserResponseElement supplierProductInUserResponseElement = new SupplierProductInUserResponseElement();
+            supplierProductInUserResponseElement.setId(supplierProduct.getId())
                     .setQuantity(supplierProduct.getQuantity())
                     .setUnitPrice(supplierProduct.getUnitPrice())
                     .setProduct(supplierProduct.getProduct());
-            supplierProductInUserElements.add(supplierProductInUserElement);
+            supplierProductInUserResponseElements.add(supplierProductInUserResponseElement);
         }
-        return supplierProductInUserElements;
+        return supplierProductInUserResponseElements;
     }
 
     public boolean initUsers() {

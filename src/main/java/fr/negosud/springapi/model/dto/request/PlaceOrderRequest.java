@@ -1,6 +1,6 @@
 package fr.negosud.springapi.model.dto.request;
 
-import fr.negosud.springapi.model.dto.request.element.SetOrderProductElement;
+import fr.negosud.springapi.model.dto.request.element.SetOrderProductRequestElement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -10,15 +10,15 @@ public class PlaceOrderRequest {
 
     @NotNull
     @Valid
-    private List<SetOrderProductElement> orderProducts;
+    private List<SetOrderProductRequestElement> orderProducts;
 
     public PlaceOrderRequest() { }
 
-    public List<SetOrderProductElement> getOrderProducts() {
+    public List<SetOrderProductRequestElement> getOrderProducts() {
         return orderProducts;
     }
 
-    public void setOrderProducts(List<SetOrderProductElement> orderProducts) {
+    public void setOrderProducts(List<SetOrderProductRequestElement> orderProducts) {
         this.orderProducts = orderProducts;
     }
 }

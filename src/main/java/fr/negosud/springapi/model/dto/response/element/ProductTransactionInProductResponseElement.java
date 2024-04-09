@@ -3,7 +3,7 @@ package fr.negosud.springapi.model.dto.response.element;
 import fr.negosud.springapi.model.dto.response.audit.FullAuditedResponse;
 import jakarta.validation.constraints.NotBlank;
 
-public class ProductTransactionInProductElement extends FullAuditedResponse {
+public class ProductTransactionInProductResponseElement extends FullAuditedResponse {
 
     @NotBlank
     private long id;
@@ -11,13 +11,13 @@ public class ProductTransactionInProductElement extends FullAuditedResponse {
     @NotBlank
     private int quantity;
 
-    public ProductTransactionInProductElement() { }
+    public ProductTransactionInProductResponseElement() { }
 
     public long getId() {
         return id;
     }
 
-    public ProductTransactionInProductElement setId(long id) {
+    public ProductTransactionInProductResponseElement setId(long id) {
         this.id = id;
         return this;
     }
@@ -26,7 +26,7 @@ public class ProductTransactionInProductElement extends FullAuditedResponse {
         return quantity;
     }
 
-    public ProductTransactionInProductElement setQuantity(int quantity) {
+    public ProductTransactionInProductResponseElement setQuantity(int quantity) {
         this.quantity = quantity;
         return this;
     }

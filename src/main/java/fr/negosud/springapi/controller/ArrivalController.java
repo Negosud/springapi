@@ -213,8 +213,10 @@ public class ArrivalController {
             arrival.setComment(comment);
             arrivalService.saveArrival(arrival);
             return new ResponseEntity<>(arrivalService.getResponseFromArrival(arrival), HttpStatus.OK);
-        } catch (AssertionError error) {
-            return new ResponseEntity<>(error.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (AssertionError e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

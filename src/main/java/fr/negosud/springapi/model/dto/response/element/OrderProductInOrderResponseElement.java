@@ -1,13 +1,13 @@
 package fr.negosud.springapi.model.dto.response.element;
 
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import fr.negosud.springapi.model.entity.Order;
+import fr.negosud.springapi.model.entity.Product;
 import fr.negosud.springapi.model.entity.User;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.Date;
 
-public class OrderProductInProductElement {
+public class OrderProductInOrderResponseElement {
 
     @NotBlank
     private long id;
@@ -22,17 +22,17 @@ public class OrderProductInProductElement {
 
     @NotBlank
     @JsonIdentityReference(alwaysAsId = true)
-    private Order order;
+    private Product product;
 
-    private ProductTransactionInProductElement productTransaction;
+    private ProductTransactionInProductResponseElement productTransaction;
 
-    public OrderProductInProductElement() { }
+    public OrderProductInOrderResponseElement() { }
 
     public long getId() {
         return id;
     }
 
-    public OrderProductInProductElement setId(long id) {
+    public OrderProductInOrderResponseElement setId(long id) {
         this.id = id;
         return this;
     }
@@ -41,7 +41,7 @@ public class OrderProductInProductElement {
         return quantity;
     }
 
-    public OrderProductInProductElement setQuantity(int quantity) {
+    public OrderProductInOrderResponseElement setQuantity(int quantity) {
         this.quantity = quantity;
         return this;
     }
@@ -50,7 +50,7 @@ public class OrderProductInProductElement {
         return preparedAt;
     }
 
-    public OrderProductInProductElement setPreparedAt(Date preparedAt) {
+    public OrderProductInOrderResponseElement setPreparedAt(Date preparedAt) {
         this.preparedAt = preparedAt;
         return this;
     }
@@ -59,25 +59,25 @@ public class OrderProductInProductElement {
         return preparedBy;
     }
 
-    public OrderProductInProductElement setPreparedBy(User preparedBy) {
+    public OrderProductInOrderResponseElement setPreparedBy(User preparedBy) {
         this.preparedBy = preparedBy;
         return this;
     }
 
-    public Order getOrder() {
-        return order;
+    public Product getProduct() {
+        return product;
     }
 
-    public OrderProductInProductElement setOrder(Order order) {
-        this.order = order;
+    public OrderProductInOrderResponseElement setProduct(Product product) {
+        this.product = product;
         return this;
     }
 
-    public ProductTransactionInProductElement getProductTransaction() {
+    public ProductTransactionInProductResponseElement getProductTransaction() {
         return productTransaction;
     }
 
-    public OrderProductInProductElement setProductTransaction(ProductTransactionInProductElement productTransaction) {
+    public OrderProductInOrderResponseElement setProductTransaction(ProductTransactionInProductResponseElement productTransaction) {
         this.productTransaction = productTransaction;
         return this;
     }

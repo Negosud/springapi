@@ -1,12 +1,12 @@
 package fr.negosud.springapi.model.dto.response.element;
 
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import fr.negosud.springapi.model.entity.User;
+import fr.negosud.springapi.model.entity.Product;
 import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
 
-public class SupplierProductInProductElement {
+public class SupplierProductInUserResponseElement {
 
     @NotBlank
     private long id;
@@ -19,15 +19,15 @@ public class SupplierProductInProductElement {
 
     @NotBlank
     @JsonIdentityReference(alwaysAsId = true)
-    private User supplier;
+    private Product product;
 
-    public SupplierProductInProductElement() { }
+    public SupplierProductInUserResponseElement() { }
 
     public long getId() {
         return id;
     }
 
-    public SupplierProductInProductElement setId(long id) {
+    public SupplierProductInUserResponseElement setId(long id) {
         this.id = id;
         return this;
     }
@@ -36,7 +36,7 @@ public class SupplierProductInProductElement {
         return quantity;
     }
 
-    public SupplierProductInProductElement setQuantity(int quantity) {
+    public SupplierProductInUserResponseElement setQuantity(int quantity) {
         this.quantity = quantity;
         return this;
     }
@@ -45,17 +45,17 @@ public class SupplierProductInProductElement {
         return unitPrice;
     }
 
-    public SupplierProductInProductElement setUnitPrice(BigDecimal unitPrice) {
+    public SupplierProductInUserResponseElement setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
         return this;
     }
 
-    public User getSupplier() {
-        return supplier;
+    public Product getProduct() {
+        return product;
     }
 
-    public SupplierProductInProductElement setSupplier(User supplier) {
-        this.supplier = supplier;
+    public SupplierProductInUserResponseElement setProduct(Product product) {
+        this.product = product;
         return this;
     }
 }

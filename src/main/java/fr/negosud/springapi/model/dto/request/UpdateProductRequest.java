@@ -15,8 +15,6 @@ public class UpdateProductRequest {
 
     private Date expirationDate;
 
-    private Integer vintage;
-
     private String productFamilyCode;
 
     private BigDecimal unitPrice;
@@ -57,14 +55,6 @@ public class UpdateProductRequest {
 
     public void setExpirationDate(Date expirationDate) {
         this.expirationDate = expirationDate;
-    }
-
-    public Integer getVintage() {
-        return vintage;
-    }
-
-    public void setVintage(Integer vintage) {
-        this.vintage = vintage;
     }
 
     public String getProductFamilyCode() {

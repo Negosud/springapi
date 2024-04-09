@@ -1,7 +1,7 @@
 package fr.negosud.springapi.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import fr.negosud.springapi.model.dto.response.element.SupplierProductInUserElement;
+import fr.negosud.springapi.model.dto.response.element.SupplierProductInUserResponseElement;
 import fr.negosud.springapi.model.entity.Address;
 import fr.negosud.springapi.model.entity.PermissionNode;
 import fr.negosud.springapi.model.entity.UserGroup;
@@ -50,7 +50,7 @@ public class UserResponse {
     @JsonIdentityReference(alwaysAsId = true)
     private Address billingAddress;
 
-    private List<SupplierProductInUserElement> suppliedProductList;
+    private List<SupplierProductInUserResponseElement> suppliedProductList;
 
     public UserResponse() { }
 
@@ -153,11 +153,11 @@ public class UserResponse {
         return this;
     }
 
-    public List<SupplierProductInUserElement> getSuppliedProductList() {
+    public List<SupplierProductInUserResponseElement> getSuppliedProductList() {
         return suppliedProductList;
     }
 
-    public UserResponse setSuppliedProductList(List<SupplierProductInUserElement> suppliedProductList) {
+    public UserResponse setSuppliedProductList(List<SupplierProductInUserResponseElement> suppliedProductList) {
         this.suppliedProductList = suppliedProductList;
         return this;
     }

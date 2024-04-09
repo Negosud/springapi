@@ -2,9 +2,9 @@ package fr.negosud.springapi.service;
 
 import fr.negosud.springapi.model.OrderStatus;
 import fr.negosud.springapi.model.dto.request.PlaceOrderRequest;
-import fr.negosud.springapi.model.dto.request.element.SetOrderProductElement;
+import fr.negosud.springapi.model.dto.request.element.SetOrderProductRequestElement;
 import fr.negosud.springapi.model.dto.response.OrderResponse;
-import fr.negosud.springapi.model.dto.response.element.OrderProductInOrderElement;
+import fr.negosud.springapi.model.dto.response.element.OrderProductInOrderResponseElement;
 import fr.negosud.springapi.model.entity.Order;
 import fr.negosud.springapi.model.entity.OrderProduct;
 import fr.negosud.springapi.model.entity.Product;
@@ -55,7 +55,7 @@ public class OrderService {
         Order order = new Order();
 
         List<OrderProduct> orderProducts = new ArrayList<>();
-        for (SetOrderProductElement orderProductElement : placeOrderRequest.getOrderProducts()) {
+        for (SetOrderProductRequestElement orderProductElement : placeOrderRequest.getOrderProducts()) {
             Product product = productService.getProductById(orderProductElement.getProductId()).orElse(null);
             assert product != null : "Product Id " + orderProductElement.getProductId() + "  doesn't correspond to a proper product";
             assert product.isActive() : "Product for Id " + orderProductElement.getProductId() + " isn't active";
@@ -116,18 +116,18 @@ public class OrderService {
                 .setProductList(getOrderProductElements(order.getProductList()));
     }
 
-    private List<OrderProductInOrderElement> getOrderProductElements(List<OrderProduct> orderProducts) {
-        List<OrderProductInOrderElement> orderProductInOrderElements = new ArrayList<>();
+    private List<OrderProductInOrderResponseElement> getOrderProductElements(List<OrderProduct> orderProducts) {
+        List<OrderProductInOrderResponseElement> orderProductInOrderResponseElements = new ArrayList<>();
         for (OrderProduct orderProduct : orderProducts) {
-            OrderProductInOrderElement orderProductInOrderElement = new OrderProductInOrderElement();
-            orderProductInOrderElement.setId(orderProduct.getId())
+            OrderProductInOrderResponseElement orderProductInOrderResponseElement = new OrderProductInOrderResponseElement();
+            orderProductInOrderResponseElement.setId(orderProduct.getId())
                     .setQuantity(orderProduct.getQuantity())
                     .setPreparedAt(orderProduct.getPreparedAt())
                     .setPreparedBy(orderProduct.getPreparedBy())
                     .setProduct(orderProduct.getProduct())
                     .setProductTransaction(productTransactionService.setElementFromProductTransaction(orderProduct.getProductTransaction()));
-            orderProductInOrderElements.add(orderProductInOrderElement);
+            orderProductInOrderResponseElements.add(orderProductInOrderResponseElement);
         }
-        return orderProductInOrderElements;
+        return orderProductInOrderResponseElements;
     }
 }

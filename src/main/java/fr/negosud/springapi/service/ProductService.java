@@ -3,9 +3,9 @@ package fr.negosud.springapi.service;
 import fr.negosud.springapi.model.dto.request.CreateProductRequest;
 import fr.negosud.springapi.model.dto.request.UpdateProductRequest;
 import fr.negosud.springapi.model.dto.response.ProductResponse;
-import fr.negosud.springapi.model.dto.response.element.ArrivalProductInProductElement;
-import fr.negosud.springapi.model.dto.response.element.OrderProductInProductElement;
-import fr.negosud.springapi.model.dto.response.element.SupplierProductInProductElement;
+import fr.negosud.springapi.model.dto.response.element.ArrivalProductInProductResponseElement;
+import fr.negosud.springapi.model.dto.response.element.OrderProductInProductResponseElement;
+import fr.negosud.springapi.model.dto.response.element.SupplierProductInProductResponseElement;
 import fr.negosud.springapi.model.entity.*;
 import fr.negosud.springapi.repository.ProductRepository;
 import fr.negosud.springapi.util.Strings;
@@ -29,7 +29,7 @@ public class ProductService {
     private final ProductTransactionService productTransactionService;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, @Lazy ProductFamilyService productFamilyService, ProductTransactionService productTransactionService) {
+    public ProductService(ProductRepository productRepository, @Lazy ProductFamilyService productFamilyService, @Lazy ProductTransactionService productTransactionService) {
         this.productRepository = productRepository;
         this.productFamilyService = productFamilyService;
         this.productTransactionService = productTransactionService;
@@ -134,13 +134,12 @@ public class ProductService {
         String description = updateProductRequest.getDescription();
         Integer quantity = updateProductRequest.getQuantity();
         Date expirationDate = updateProductRequest.getExpirationDate();
-        Year vintage = updateProductRequest.getVintage() != null ? Year.of(updateProductRequest.getVintage()) : null;
         String productFamilyCode = updateProductRequest.getProductFamilyCode();
         ProductFamily productFamily = productFamilyCode != null ? productFamilyService.getProductFamilyByCode(productFamilyCode).orElse(null) : null;
         BigDecimal unitPrice = updateProductRequest.getUnitPrice();
         Boolean active = updateProductRequest.isActive();
 
-        if (name == null && description == null && quantity == null && expirationDate == null && vintage == null && productFamilyCode == null && unitPrice == null && active == null)
+        if (name == null &&description == null && quantity == null && expirationDate == null && productFamilyCode == null && unitPrice == null && active == null)
             throw new IllegalArgumentException("Product can't be updated with empty body");
 
         if (name != null && !Objects.equals(name, oldProduct.getName())) {
@@ -160,17 +159,8 @@ public class ProductService {
         else
             newProduct.setExpirationDate(oldProduct.getExpirationDate());
 
-
-        if (vintage != null && !Objects.equals(vintage, oldProduct.getVintage())) {
-            newProduct.setVintage(Year.of(updateProductRequest.getVintage()));
-            isNewProductNeeded = true;
-        } else {
-            newProduct.setVintage(vintage);
-        }
-
         if (productFamily != null && !Objects.equals(productFamily, oldProduct.getProductFamily())) {
             newProduct.setProductFamily(productFamily);
-            isNewProductNeeded = true;
         } else {
             newProduct.setProductFamily(oldProduct.getProductFamily());
         }
@@ -194,12 +184,12 @@ public class ProductService {
         else
             newProduct.setActive(oldProduct.isActive());
 
+        newProduct.setVintage(oldProduct.getVintage());
         if (isNewProductNeeded) {
             oldProduct.setActive(false);
             oldProduct.setQuantity(0);
             saveProduct(oldProduct);
             newProduct.setOldProduct(oldProduct);
-            saveProduct(newProduct);
         } else {
             newProduct.setId(oldProduct.getId());
         }
@@ -230,43 +220,43 @@ public class ProductService {
                 .setOrderList(getOrderProductElements(product.getOrderList()));
     }
 
-    private List<SupplierProductInProductElement> getSupplierProductElements(List<SupplierProduct> supplierProducts) {
-        List<SupplierProductInProductElement> supplierProductElements = new ArrayList<>();
+    private List<SupplierProductInProductResponseElement> getSupplierProductElements(List<SupplierProduct> supplierProducts) {
+        List<SupplierProductInProductResponseElement> supplierProductElements = new ArrayList<>();
         for (SupplierProduct supplierProduct : supplierProducts) {
-            SupplierProductInProductElement supplierProductInProductElement = new SupplierProductInProductElement();
-            supplierProductInProductElement.setId(supplierProduct.getId())
+            SupplierProductInProductResponseElement supplierProductInProductResponseElement = new SupplierProductInProductResponseElement();
+            supplierProductInProductResponseElement.setId(supplierProduct.getId())
                     .setQuantity(supplierProduct.getQuantity())
                     .setUnitPrice(supplierProduct.getUnitPrice())
                     .setSupplier(supplierProduct.getSupplier());
-            supplierProductElements.add(supplierProductInProductElement);
+            supplierProductElements.add(supplierProductInProductResponseElement);
         }
         return supplierProductElements;
     }
 
-    private List<ArrivalProductInProductElement> getArrivalProductElements(List<ArrivalProduct> arrivalProducts) {
-        List<ArrivalProductInProductElement> arrivalProductElements = new ArrayList<>();
+    private List<ArrivalProductInProductResponseElement> getArrivalProductElements(List<ArrivalProduct> arrivalProducts) {
+        List<ArrivalProductInProductResponseElement> arrivalProductElements = new ArrayList<>();
         for (ArrivalProduct arrivalProduct : arrivalProducts) {
-            ArrivalProductInProductElement arrivalProductInProductElement = new ArrivalProductInProductElement();
-            arrivalProductInProductElement.setId(arrivalProduct.getId())
+            ArrivalProductInProductResponseElement arrivalProductInProductResponseElement = new ArrivalProductInProductResponseElement();
+            arrivalProductInProductResponseElement.setId(arrivalProduct.getId())
                     .setQuantity(arrivalProduct.getQuantity())
                     .setArrival(arrivalProduct.getArrival())
                     .setProductTransaction(productTransactionService.setElementFromProductTransaction(arrivalProduct.getProductTransaction()));
-            arrivalProductElements.add(arrivalProductInProductElement);
+            arrivalProductElements.add(arrivalProductInProductResponseElement);
         }
         return arrivalProductElements;
     }
 
-    private List<OrderProductInProductElement> getOrderProductElements(List<OrderProduct> orderProducts) {
-        List<OrderProductInProductElement> orderProductElements = new ArrayList<>();
+    private List<OrderProductInProductResponseElement> getOrderProductElements(List<OrderProduct> orderProducts) {
+        List<OrderProductInProductResponseElement> orderProductElements = new ArrayList<>();
         for (OrderProduct orderProduct : orderProducts) {
-            OrderProductInProductElement orderProductInProductElement = new OrderProductInProductElement();
-            orderProductInProductElement.setId(orderProduct.getId())
+            OrderProductInProductResponseElement orderProductInProductResponseElement = new OrderProductInProductResponseElement();
+            orderProductInProductResponseElement.setId(orderProduct.getId())
                     .setQuantity(orderProduct.getQuantity())
                     .setPreparedAt(orderProduct.getPreparedAt())
                     .setPreparedBy(orderProduct.getPreparedBy())
                     .setOrder(orderProduct.getOrder())
                     .setProductTransaction(productTransactionService.setElementFromProductTransaction(orderProduct.getProductTransaction()));
-            orderProductElements.add(orderProductInProductElement);
+            orderProductElements.add(orderProductInProductResponseElement);
         }
         return orderProductElements;
     }

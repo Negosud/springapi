@@ -1,6 +1,6 @@
 package fr.negosud.springapi.model.dto.request;
 
-import fr.negosud.springapi.model.dto.request.element.SetSupplierProductElement;
+import fr.negosud.springapi.model.dto.request.element.SetSupplierProductRequestElement;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -40,7 +40,7 @@ public class SetUserRequest {
 
     private long billingAddress;
 
-    private List<SetSupplierProductElement> supplierProducts;
+    private List<SetSupplierProductRequestElement> supplierProducts;
 
     public SetUserRequest() {
         this.active = true;
@@ -134,11 +134,11 @@ public class SetUserRequest {
         this.billingAddress = billingAddress;
     }
 
-    public List<SetSupplierProductElement> getSupplierProducts() {
+    public List<SetSupplierProductRequestElement> getSupplierProducts() {
         return supplierProducts;
     }
 
-    public void setSupplierProducts(List<SetSupplierProductElement> supplierProducts) {
+    public void setSupplierProducts(List<SetSupplierProductRequestElement> supplierProducts) {
         this.supplierProducts = supplierProducts;
     }
 }

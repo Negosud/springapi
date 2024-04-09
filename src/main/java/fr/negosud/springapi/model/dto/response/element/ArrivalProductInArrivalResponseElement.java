@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import fr.negosud.springapi.model.entity.Product;
 import jakarta.validation.constraints.NotBlank;
 
-public class ArrivalProductInArrivalElement {
+public class ArrivalProductInArrivalResponseElement {
 
     @NotBlank
     private long id;
@@ -16,15 +16,15 @@ public class ArrivalProductInArrivalElement {
     @JsonIdentityReference(alwaysAsId = true)
     private Product product;
 
-    private ProductTransactionInProductElement productTransaction;
+    private ProductTransactionInProductResponseElement productTransaction;
 
-    public ArrivalProductInArrivalElement() { }
+    public ArrivalProductInArrivalResponseElement() { }
 
     public long getId() {
         return id;
     }
 
-    public ArrivalProductInArrivalElement setId(long id) {
+    public ArrivalProductInArrivalResponseElement setId(long id) {
         this.id = id;
         return this;
     }
@@ -33,7 +33,7 @@ public class ArrivalProductInArrivalElement {
         return quantity;
     }
 
-    public ArrivalProductInArrivalElement setQuantity(int quantity) {
+    public ArrivalProductInArrivalResponseElement setQuantity(int quantity) {
         this.quantity = quantity;
         return this;
     }
@@ -42,16 +42,16 @@ public class ArrivalProductInArrivalElement {
         return product;
     }
 
-    public ArrivalProductInArrivalElement setProduct(Product product) {
+    public ArrivalProductInArrivalResponseElement setProduct(Product product) {
         this.product = product;
         return this;
     }
 
-    public ProductTransactionInProductElement getProductTransaction() {
+    public ProductTransactionInProductResponseElement getProductTransaction() {
         return productTransaction;
     }
 
-    public ArrivalProductInArrivalElement setProductTransaction(ProductTransactionInProductElement productTransaction) {
+    public ArrivalProductInArrivalResponseElement setProductTransaction(ProductTransactionInProductResponseElement productTransaction) {
         this.productTransaction = productTransaction;
         return this;
     }

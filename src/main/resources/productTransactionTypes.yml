@@ -10,7 +10,7 @@ productTransactionTypes:
     description: Il s'agit de notre stock existant à la première utilisation de la suite d'outils informatique Negosud.
     isEntry:
 
-  - name: Vente
+  - name: Vente client
     description: Il s'agit d'une vente.
 
   - name: Achat fournisseur
@@ -27,15 +27,8 @@ productTransactionTypes:
   - name: Péremption
     description: Atteinte de la date de péremption du vin.
 
-  - name: Casse par un employé
+  - name: Casse par employé
     description: Casse survenue lors de la manipulation des produits par un employé de Negosud.
 
-  - name: Casse d'origine externe
+  - name: Casse externe
     description: Casse quelconque.
-
-  - name: Don de l'entrepôt Bichard
-    description: Don du stock de l'entrepôt Bichard le 16 janvier 2024.
-    isEntry:
-
-  - name: Don à la mairie
-    description: Don à la mairie de la commune, aussi appelé pot de vin.

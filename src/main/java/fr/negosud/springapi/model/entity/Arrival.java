@@ -40,7 +40,7 @@ public class Arrival extends FullAuditableEntity implements ReferencedEntityCons
     private String comment;
 
     @OneToMany(mappedBy = "arrival")
-    private List<ArrivalProduct> productList;
+    private List<ArrivalProduct> arrivalProducts;
 
     public Arrival() { }
 
@@ -84,11 +84,11 @@ public class Arrival extends FullAuditableEntity implements ReferencedEntityCons
         this.comment = comment;
     }
 
-    public List<ArrivalProduct> getProductList() {
-        return productList;
+    public List<ArrivalProduct> getArrivalProducts() {
+        return arrivalProducts;
     }
 
-    public void setProductList(List<ArrivalProduct> productList) {
-        this.productList = productList;
+    public void setArrivalProducts(List<ArrivalProduct> productList) {
+        this.arrivalProducts = productList;
     }
 }

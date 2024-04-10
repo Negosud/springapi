@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fr.negosud.springapi.model.entity.listener.AuditListener;
 import fr.negosud.springapi.model.entity.audit.FullAuditableEntity;
+import fr.negosud.springapi.model.entity.listener.ProductTransactionListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@EntityListeners(AuditListener.class)
+@EntityListeners({AuditListener.class, ProductTransactionListener.class})
 @Table(name = "\"product_transaction\"")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ProductTransaction extends FullAuditableEntity {

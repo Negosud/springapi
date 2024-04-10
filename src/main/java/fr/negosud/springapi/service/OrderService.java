@@ -106,7 +106,7 @@ public class OrderService {
     }
 
     public OrderResponse getResponseFromOrder(Order order) {
-        return new OrderResponse()
+        return order == null ? null : new OrderResponse()
                 .setId(order.getId())
                 .setReference(order.getReference())
                 .setStatus(order.getStatus())

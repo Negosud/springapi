@@ -73,7 +73,9 @@ public class ArrivalService {
                     .orElseThrow(() -> new IllegalArgumentException("Supplier doesn't provide product with id " + arrivalProductElement.getProductId()));
             assert supplierProduct.getQuantity() >= arrivalProductElement.getQuantity() : "Supplier can't provide " + arrivalProductElement.getQuantity() + " of product " + arrivalProductElement.getProductId();
             ArrivalProduct arrivalProduct = new ArrivalProduct(arrivalProductElement.getQuantity(), product);
-            arrival.getProductList().add(arrivalProduct);
+            List<ArrivalProduct> products = arrival.getArrivalProducts();
+            products.add(arrivalProduct);
+            arrival.setArrivalProducts(products);
         }
         arrival.setComment(placeArrivalRequest.getComment());
         arrival.setSuppliedBy(supplier);
@@ -87,19 +89,19 @@ public class ArrivalService {
      * @throws RuntimeException ProductTransaction ACHAT_FOURNISSEUR not found
      */
     public void completeArrival(Arrival arrival) {
-        for (ArrivalProduct arrivalProduct : arrival.getProductList()) {
+        for (ArrivalProduct arrivalProduct : arrival.getArrivalProducts()) {
             productTransactionService.makeProductTransactionFromArrivalProduct(arrivalProduct);
 
         }
     }
 
     public ArrivalResponse getResponseFromArrival(Arrival arrival) {
-        return (ArrivalResponse) new ArrivalResponse().setId(arrival.getId())
+        return arrival == null ? null : (ArrivalResponse) new ArrivalResponse().setId(arrival.getId())
                 .setReference(arrival.getReference())
                 .setStatus(arrival.getStatus())
                 .setSuppliedBy(arrival.getSuppliedBy())
                 .setComment(arrival.getComment())
-                .setProductList(getArrivalProductElements(arrival.getProductList()))
+                .setProductList(getArrivalProductElements(arrival.getArrivalProducts()))
                 .setCreatedAt(arrival.getCreatedAt())
                 .setCreatedBy(arrival.getCreatedBy())
                 .setModifiedAt(arrival.getModifiedAt())

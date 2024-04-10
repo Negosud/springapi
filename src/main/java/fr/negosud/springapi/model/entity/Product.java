@@ -3,17 +3,19 @@ package fr.negosud.springapi.model.entity;
 import com.fasterxml.jackson.annotation.*;
 import fr.negosud.springapi.model.entity.listener.AuditListener;
 import fr.negosud.springapi.model.entity.audit.FullAuditableEntity;
+import fr.negosud.springapi.model.entity.listener.ProductListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.time.Year;
 import java.util.List;
 
 @Entity
-@EntityListeners(AuditListener.class)
+@EntityListeners({AuditListener.class, ProductListener.class})
 @Table(name="\"product\"")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Product extends FullAuditableEntity {
@@ -61,17 +63,21 @@ public class Product extends FullAuditableEntity {
     private Product newProduct;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SupplierProduct> supplierList;
+    private List<SupplierProduct> suppliers;
 
     @OneToMany(mappedBy = "product")
-    private List<ArrivalProduct> arrivalList;
+    private List<ArrivalProduct> arrivals;
 
     @OneToMany(mappedBy = "product")
-    private List<OrderProduct> orderList;
+    private List<OrderProduct> orders;
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductTransaction> productTransactions;
 
     public Product() {
         this.active = true;
         this.quantity = 0;
+        this.productTransactions = new ArrayList<>();
     }
 
     public Product (String name, String description, int quantity, Date expirationDate, Year vintage, ProductFamily productFamily, BigDecimal unitPrice, boolean active) {
@@ -84,6 +90,7 @@ public class Product extends FullAuditableEntity {
         this.unitPrice = unitPrice;
         this.unitPriceVAT = unitPrice.multiply(new BigDecimal("1.20"));
         this.active = active;
+        this.productTransactions = new ArrayList<>();
     }
 
     public long getId() {
@@ -182,27 +189,35 @@ public class Product extends FullAuditableEntity {
         this.newProduct = newProduct;
     }
 
-    public List<SupplierProduct> getSupplierList() {
-        return supplierList;
+    public List<SupplierProduct> getSuppliers() {
+        return suppliers;
     }
 
-    public void setSupplierList(List<SupplierProduct> supplierList) {
-        this.supplierList = supplierList;
+    public void setSuppliers(List<SupplierProduct> supplierList) {
+        this.suppliers = supplierList;
     }
 
-    public List<ArrivalProduct> getArrivalList() {
-        return arrivalList;
+    public List<ArrivalProduct> getArrivals() {
+        return arrivals;
     }
 
-    public void setArrivalList(List<ArrivalProduct> arrivalList) {
-        this.arrivalList = arrivalList;
+    public void setArrivals(List<ArrivalProduct> arrivalList) {
+        this.arrivals = arrivalList;
     }
 
-    public List<OrderProduct> getOrderList() {
-        return orderList;
+    public List<OrderProduct> getOrders() {
+        return orders;
     }
 
-    public void setOrderList(List<OrderProduct> orderList) {
-        this.orderList = orderList;
+    public void setOrders(List<OrderProduct> orderList) {
+        this.orders = orderList;
+    }
+
+    public List<ProductTransaction> getProductTransactions() {
+        return productTransactions;
+    }
+
+    public void setProductTransactions(List<ProductTransaction> productTransactionList) {
+        this.productTransactions = productTransactionList;
     }
 }

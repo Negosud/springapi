@@ -18,9 +18,6 @@ public class ReferenceListener<T> {
 
     private static EntityManager entityManager;
 
-    /**
-     * @see "https://github.com/spring-projects/spring-boot/issues/27892"
-     */
     @Autowired
     public void setEntityManagerFactory(@Lazy EntityManagerFactory entityManagerFactory) {
         entityManager = entityManagerFactory.createEntityManager();

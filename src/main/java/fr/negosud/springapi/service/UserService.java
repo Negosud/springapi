@@ -109,7 +109,7 @@ public class UserService {
     }
 
     public UserResponse getResponseFromUser(User user) {
-        return new UserResponse().setId(user.getId())
+        return user == null ? null : new UserResponse().setId(user.getId())
                 .setLogin(user.getLogin())
                 .setEmail(user.getEmail())
                 .setFirstName(user.getFirstName())

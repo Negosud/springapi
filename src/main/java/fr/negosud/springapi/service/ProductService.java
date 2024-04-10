@@ -63,7 +63,7 @@ public class ProductService {
         int incoming = getIncomingProductQuantity(product);
         int supplierStock = 0;
 
-        for (SupplierProduct supplierProduct : product.getSupplierList()) {
+        for (SupplierProduct supplierProduct : product.getSuppliers()) {
             // Buying price shouldn't be higher than our selling price
             if (supplierProduct.getUnitPrice().compareTo(product.getUnitPriceVAT()) < 1)
                 supplierStock += supplierProduct.getQuantity();
@@ -74,14 +74,14 @@ public class ProductService {
 
     public int getIncomingProductQuantity(Product product) {
         int incoming = 0;
-        for (ArrivalProduct arrivalProduct : product.getArrivalList())
+        for (ArrivalProduct arrivalProduct : product.getArrivals())
             incoming += arrivalProduct.getQuantity();
         return product.getOldProduct() != null ? incoming+getIncomingProductQuantity(product.getOldProduct()) : incoming;
     }
 
     public int getOutgoingProductQuantity(Product product) {
         int outgoing = 0;
-        for (OrderProduct orderProduct : product.getOrderList())
+        for (OrderProduct orderProduct : product.getOrders())
             outgoing += orderProduct.getQuantity();
         return product.getOldProduct() != null ? outgoing+getOutgoingProductQuantity(product.getOldProduct()) : outgoing;
     }
@@ -98,6 +98,7 @@ public class ProductService {
 
     /**
      * @throws IllegalArgumentException Product quantity can't be negative
+     * @throws AssertionError Product quantity should be greater than zero
      */
     public Product createProductFromRequest(CreateProductRequest createProductRequest) {
             Product product = new Product();
@@ -111,20 +112,15 @@ public class ProductService {
             product.setUnitPrice(createProductRequest.getUnitPrice());
             product.setUnitPriceVAT(createProductRequest.getUnitPrice().multiply(new BigDecimal("1.20")));
             product.setActive(createProductRequest.isActive());
-
-            product.setQuantity(0);
-            ProductTransaction productTransaction = productTransactionService.handleProductQuantityDefinition(product, createProductRequest.getQuantity());
+            product.setQuantity(createProductRequest.getQuantity());
 
             saveProduct(product);
-            if (productTransaction != null)
-                productTransactionService.saveProductTransaction(productTransaction);
-
             return product;
     }
 
     /**
-     * @throws IllegalArgumentException Product quantity can't be negative
      * @throws IllegalArgumentException Product can't be updated with empty body
+     * @throws AssertionError Product quantity should be greater than zero
      */
     public Product updateProductFromRequest(UpdateProductRequest updateProductRequest, Product oldProduct) throws IllegalArgumentException {
         Product newProduct = new Product();
@@ -132,7 +128,6 @@ public class ProductService {
 
         String name = updateProductRequest.getName();
         String description = updateProductRequest.getDescription();
-        Integer quantity = 0;
         Date expirationDate = updateProductRequest.getExpirationDate();
         String productFamilyCode = updateProductRequest.getProductFamilyCode();
         ProductFamily productFamily = productFamilyCode != null ? productFamilyService.getProductFamilyByCode(productFamilyCode).orElse(null) : null;
@@ -164,7 +159,6 @@ public class ProductService {
         else
             newProduct.setProductFamily(oldProduct.getProductFamily());
 
-
         if (unitPrice != null && !Objects.equals(unitPrice, oldProduct.getUnitPrice())) {
             newProduct.setUnitPrice(unitPrice);
             newProduct.setUnitPriceVAT(unitPrice.multiply(new BigDecimal("1.20")));
@@ -174,35 +168,17 @@ public class ProductService {
             newProduct.setUnitPriceVAT(oldProduct.getUnitPriceVAT());
         }
 
-        newProduct.setQuantity(oldProduct.getQuantity());
-        ProductTransaction productTransaction = null;
-        if (quantity != null && !Objects.equals(quantity, oldProduct.getQuantity()))
-            productTransaction = productTransactionService.handleProductQuantityDefinition(newProduct, quantity);
-
-        if (active != null && !Objects.equals(active, oldProduct.isActive()))
-            newProduct.setActive(active);
-        else
-            newProduct.setActive(oldProduct.isActive());
-
-        newProduct.setVintage(oldProduct.getVintage());
-        if (isNewProductNeeded) {
-            oldProduct.setActive(false);
-            oldProduct.setQuantity(0);
-            saveProduct(oldProduct);
+        if (isNewProductNeeded)
             newProduct.setOldProduct(oldProduct);
-        } else {
+        else
             newProduct.setId(oldProduct.getId());
-        }
 
         saveProduct(newProduct);
-        if (productTransaction != null)
-            productTransactionService.saveProductTransaction(productTransaction);
-
         return newProduct;
     }
 
     public ProductResponse getResponseFromProduct(Product product) {
-        return new ProductResponse()
+        return product == null ? null : new ProductResponse()
                 .setId(product.getId())
                 .setName(product.getName())
                 .setDescription(product.getDescription())
@@ -215,9 +191,9 @@ public class ProductService {
                 .setActive(product.isActive())
                 .setOldProduct(product.getOldProduct())
                 .setNewProduct(product.getNewProduct())
-                .setSupplierList(getSupplierProductElements(product.getSupplierList()))
-                .setArrivalList(getArrivalProductElements(product.getArrivalList()))
-                .setOrderList(getOrderProductElements(product.getOrderList()));
+                .setSupplierList(getSupplierProductElements(product.getSuppliers()))
+                .setArrivalList(getArrivalProductElements(product.getArrivals()))
+                .setOrderList(getOrderProductElements(product.getOrders()));
     }
 
     private List<SupplierProductInProductResponseElement> getSupplierProductElements(List<SupplierProduct> supplierProducts) {
@@ -276,7 +252,6 @@ public class ProductService {
             e.printStackTrace();
             return false;
         }
-
         return true;
     }
 

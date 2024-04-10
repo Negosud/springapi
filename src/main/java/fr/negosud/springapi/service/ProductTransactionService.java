@@ -33,6 +33,9 @@ public class ProductTransactionService {
         return productTransactionRepository.findById(productTransactionId);
     }
 
+    /**
+     * @throws AssertionError Product quantity should be greater than zero
+     */
     public void saveProductTransaction(ProductTransaction productTransaction) {
         productTransactionRepository.save(productTransaction);
     }
@@ -69,7 +72,7 @@ public class ProductTransactionService {
     }
 
     public ProductTransactionInProductResponseElement setElementFromProductTransaction(ProductTransaction productTransaction) {
-        return (ProductTransactionInProductResponseElement) new ProductTransactionInProductResponseElement()
+        return productTransaction == null ? null : (ProductTransactionInProductResponseElement) new ProductTransactionInProductResponseElement()
                 .setId(productTransaction.getId())
                 .setQuantity(productTransaction.getQuantity())
                 .setCreatedAt(productTransaction.getCreatedAt())

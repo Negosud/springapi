@@ -8,6 +8,7 @@ import fr.negosud.springapi.model.entity.audit.FullAuditableEntity;
 import fr.negosud.springapi.util.Strings;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.List;
 
@@ -35,11 +36,17 @@ public class ProductTransactionType extends FullAuditableEntity {
     @NotBlank
     private boolean isEntry;
 
+    @NotBlank
+    @ColumnDefault(value = "true")
+    private boolean isRemovable;
+
     @JsonIgnore
     @OneToMany(mappedBy = "produtTransactionType")
     List<ProductTransaction> productTransactionList;
 
-    public ProductTransactionType() { }
+    public ProductTransactionType() {
+        this.isRemovable = true;
+    }
 
     /**
      * Constructor used by ProductTransactionType init method
@@ -49,6 +56,7 @@ public class ProductTransactionType extends FullAuditableEntity {
         this.description = description;
         this.isEntry = isEntry;
         this.code = Strings.getCodeFromName(name);
+        this.isRemovable = false;
     }
 
     public long getId() {
@@ -89,6 +97,14 @@ public class ProductTransactionType extends FullAuditableEntity {
 
     public void setEntry(boolean entry) {
         isEntry = entry;
+    }
+
+    public boolean isRemovable() {
+        return isRemovable;
+    }
+
+    public void setRemovable(boolean removable) {
+        isRemovable = removable;
     }
 
     public List<ProductTransaction> getProductTransactionList() {

@@ -58,7 +58,7 @@ public class ProductTransactionTypeController {
             @PathVariable
             String code) {
         return productTransactionTypeService.getProductTransactionTypeByCode(code)
-                .map(product -> new ResponseEntity<>(product, HttpStatus.OK))
+                .map(productTransactionType -> new ResponseEntity<>(productTransactionType, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
@@ -145,12 +145,14 @@ public class ProductTransactionTypeController {
         ProductTransactionType productTransactionType = productTransactionTypeService.getProductTransactionTypeByCode(code).orElse(null);
         if (productTransactionType == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (!productTransactionType.isRemovable())
+            return new ResponseEntity<>("ProductTransactionType can't be removed (used by the system)", HttpStatus.FORBIDDEN);
         if (productTransactionType.getProductTransactionList().isEmpty()) {
             productTransactionTypeService.deleteProductTransactionType(productTransactionType);
         } else {
             actionUserContextHolder.setActionUserId(actionUserId);
             if (replacedByProductTransactionTypeCode.isBlank())
-                return new ResponseEntity<>("replacedByProductTransactionTypeCode is needed as a valid Code", HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>("replacedByProductTransactionTypeCode is needed as a valid code", HttpStatus.FORBIDDEN);
             ProductTransactionType replacingProductTransactionType = productTransactionTypeService.getProductTransactionTypeByCode(replacedByProductTransactionTypeCode).orElse(null);
             if (replacingProductTransactionType == null)
                 return new ResponseEntity<>("replacedByProductTransactionTypeCode doesn't correspond to a proper ProductTransactionType", HttpStatus.FORBIDDEN);

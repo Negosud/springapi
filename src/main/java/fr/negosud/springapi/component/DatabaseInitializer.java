@@ -4,6 +4,7 @@ import fr.negosud.springapi.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,12 +19,12 @@ public class DatabaseInitializer implements ApplicationRunner {
 
     @Autowired
     public DatabaseInitializer(
-            PermissionNodeService permissionNodeService,
-            UserGroupService userGroupService,
-            UserService userService,
-            ProductFamilyService productFamilyService,
-            ProductTransactionTypeService productTransactionTypeService,
-            ProductService productService) {
+            @Lazy PermissionNodeService permissionNodeService,
+            @Lazy UserGroupService userGroupService,
+            @Lazy UserService userService,
+            @Lazy ProductFamilyService productFamilyService,
+            @Lazy ProductTransactionTypeService productTransactionTypeService,
+            @Lazy ProductService productService) {
         this.permissionNodeService = permissionNodeService;
         this.userGroupService = userGroupService;
         this.userService = userService;

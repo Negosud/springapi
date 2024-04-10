@@ -158,7 +158,10 @@ public class OrderController {
                     content = @Content(schema = @Schema(implementation = String.class))),
             @ApiResponse(description = "Order not found",
                     responseCode = "404",
-                    content = @Content)
+                    content = @Content),
+            @ApiResponse(description = "Internal Server Error",
+                    responseCode = "500",
+                    content = @Content(schema = @Schema(implementation = String.class)))
     })
     public ResponseEntity<?> completeOrder(
             @PathVariable
@@ -171,8 +174,11 @@ public class OrderController {
         actionUserContextHolder.setActionUserId(actionUserId);
         try {
             orderService.completeOrder(order);
+            orderService.saveOrder(order);
         } catch (AssertionError e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(orderService.getResponseFromOrder(order), HttpStatus.OK);
     }

@@ -147,7 +147,7 @@ public class ProductTransactionTypeController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         if (!productTransactionType.isRemovable())
             return new ResponseEntity<>("ProductTransactionType can't be removed (used by the system)", HttpStatus.FORBIDDEN);
-        if (productTransactionType.getProductTransactionList().isEmpty()) {
+        if (productTransactionType.getProductTransactions().isEmpty()) {
             productTransactionTypeService.deleteProductTransactionType(productTransactionType);
         } else {
             actionUserContextHolder.setActionUserId(actionUserId);

@@ -41,7 +41,7 @@ public class ProductTransaction extends FullAuditableEntity {
     public ProductTransaction() { }
 
     /**
-     * Constructor used by handleProductQuantityDefinition and makeProductTransactionFromArrivalProduct methods
+     * Constructor used for ProductTransaction creation methods
      */
     public ProductTransaction(Product product, int quantity, ProductTransactionType productTransactionType) {
         this.product = product;

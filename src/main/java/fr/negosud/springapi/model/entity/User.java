@@ -55,13 +55,13 @@ public class User extends FullAuditableEntity {
     @NotBlank
     private UserGroup userGroup;
 
-    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToOne
     private Address mailingAddress;
 
-    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToOne
     private Address billingAddress;
 
-    @OneToMany(mappedBy = "supplier", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "supplier")
     private List<SupplierProduct> suppliedProductList;
 
     public User() {

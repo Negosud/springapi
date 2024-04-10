@@ -8,6 +8,7 @@ import fr.negosud.springapi.model.dto.response.element.OrderProductInOrderRespon
 import fr.negosud.springapi.model.entity.Order;
 import fr.negosud.springapi.model.entity.OrderProduct;
 import fr.negosud.springapi.model.entity.Product;
+import fr.negosud.springapi.model.entity.ProductTransaction;
 import fr.negosud.springapi.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,13 +24,15 @@ public class OrderService {
     private final ProductService productService;
     private final OrderProductService orderProductService;
     private final ProductTransactionService productTransactionService;
+    private final ProductTransactionTypeService productTransactionTypeService;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, ProductService productService, OrderProductService orderProductService, ProductTransactionService productTransactionService) {
+    public OrderService(OrderRepository orderRepository, ProductService productService, OrderProductService orderProductService, ProductTransactionService productTransactionService, ProductTransactionTypeService productTransactionTypeService) {
         this.orderRepository = orderRepository;
         this.productService = productService;
         this.orderProductService = orderProductService;
         this.productTransactionService = productTransactionService;
+        this.productTransactionTypeService = productTransactionTypeService;
     }
 
     public List<Order> getAllOrders(OrderStatus orderStatus) {
@@ -68,14 +71,14 @@ public class OrderService {
         }
 
         order.setStatus(OrderStatus.PENDING);
-        order.setProductList(orderProducts);
+        order.setProducts(orderProducts);
         saveOrder(order);
 
         return order;
     }
 
     public void markAsReady(Order order) {
-        for (OrderProduct orderProduct : order.getProductList()) {
+        for (OrderProduct orderProduct : order.getProducts()) {
             try {
                 orderProductService.markAsReady(orderProduct);
             } catch (AssertionError ignored) { }
@@ -96,13 +99,20 @@ public class OrderService {
 
     /**
      * @throws AssertionError Order can't be completed
+     * @throws RuntimeException ProductTransactionType VENTE not found
      */
     public void completeOrder(Order order) {
-        assert order.getStatus() != OrderStatus.COMPLETED : "Order is already completed";
-        assert order.getStatus() != OrderStatus.CANCELLED : "Order is cancelled";
+        assert order.getStatus() == OrderStatus.READY : "Order isn't ready to be completed";
+        assert order.getCreatedBy().getBillingAddress() != null : "Client billing address isn't set";
         order.setStatus(OrderStatus.COMPLETED);
-        // TODO: THIS NEED TO MAKE PRODUCT FRICKIN TRANSACTION BRO
-        saveOrder(order);
+        for (OrderProduct orderProduct : order.getProducts()) {
+            Product product = productService.getNewestProduct(orderProduct.getProduct());
+            assert product.getQuantity() >= orderProduct.getQuantity() : "In stock quantity for product " + product.getName() + " is insufficient";
+            ProductTransaction productTransaction = new ProductTransaction(product, orderProduct.getQuantity(), productTransactionTypeService.getProductTransactionTypeByCode("VENTE_CLIENT")
+                    .orElseThrow(() -> new RuntimeException("ProductTransactionType VENTE_CLIENT not found")));
+            productTransaction.setOrderProduct(orderProduct);
+            productTransactionService.saveProductTransaction(productTransaction);
+        }
     }
 
     public OrderResponse getResponseFromOrder(Order order) {
@@ -113,7 +123,7 @@ public class OrderService {
                 .setPreparedBy(order.getPreparedBy())
                 .setPreparedAt(order.getPreparedAt())
                 .setInvoice(order.getInvoice())
-                .setProductList(getOrderProductElements(order.getProductList()));
+                .setProductList(getOrderProductElements(order.getProducts()));
     }
 
     private List<OrderProductInOrderResponseElement> getOrderProductElements(List<OrderProduct> orderProducts) {

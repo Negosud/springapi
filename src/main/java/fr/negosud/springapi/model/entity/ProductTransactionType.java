@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -42,10 +43,11 @@ public class ProductTransactionType extends FullAuditableEntity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "produtTransactionType")
-    List<ProductTransaction> productTransactionList;
+    List<ProductTransaction> productTransactions;
 
     public ProductTransactionType() {
         this.isRemovable = true;
+        productTransactions = new ArrayList<>();
     }
 
     /**
@@ -57,6 +59,7 @@ public class ProductTransactionType extends FullAuditableEntity {
         this.isEntry = isEntry;
         this.code = Strings.getCodeFromName(name);
         this.isRemovable = false;
+        productTransactions = new ArrayList<>();
     }
 
     public long getId() {
@@ -107,11 +110,11 @@ public class ProductTransactionType extends FullAuditableEntity {
         isRemovable = removable;
     }
 
-    public List<ProductTransaction> getProductTransactionList() {
-        return productTransactionList;
+    public List<ProductTransaction> getProductTransactions() {
+        return productTransactions;
     }
 
-    public void setProductTransactionList(List<ProductTransaction> productTransactionList) {
-        this.productTransactionList = productTransactionList;
+    public void setProductTransactions(List<ProductTransaction> productTransactionList) {
+        this.productTransactions = productTransactionList;
     }
 }

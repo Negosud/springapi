@@ -1,7 +1,6 @@
 package fr.negosud.springapi.service;
 
 import fr.negosud.springapi.model.dto.response.element.ProductTransactionInProductResponseElement;
-import fr.negosud.springapi.model.entity.ArrivalProduct;
 import fr.negosud.springapi.model.entity.Product;
 import fr.negosud.springapi.model.entity.ProductTransaction;
 import fr.negosud.springapi.repository.ProductTransactionRepository;
@@ -16,13 +15,11 @@ public class ProductTransactionService {
 
     private final ProductTransactionRepository productTransactionRepository;
     private final ProductTransactionTypeService productTransactionTypeService;
-    private final ProductService productService;
 
     @Autowired
-    public ProductTransactionService(ProductTransactionRepository productTransactionRepository, ProductTransactionTypeService productTransactionTypeService, ProductService productService) {
+    public ProductTransactionService(ProductTransactionRepository productTransactionRepository, ProductTransactionTypeService productTransactionTypeService) {
         this.productTransactionRepository = productTransactionRepository;
         this.productTransactionTypeService = productTransactionTypeService;
-        this.productService = productService;
     }
 
     public List<ProductTransaction> getAllProductTransaction() {
@@ -59,16 +56,6 @@ public class ProductTransactionService {
         }
         product.setQuantity(newQuantity);
         return productTransaction;
-    }
-
-    /**
-     * @throws RuntimeException ProductTransaction ACHAT_FOURNISSEUR not found
-     */
-    public void makeProductTransactionFromArrivalProduct(ArrivalProduct arrivalProduct) {
-        Product product = productService.getNewestProduct(arrivalProduct.getProduct());
-        ProductTransaction productTransaction = new ProductTransaction(product, arrivalProduct.getQuantity(), productTransactionTypeService.getProductTransactionTypeByCode("ACHAT_FOURNISSEUR")
-                .orElseThrow(() -> new RuntimeException("ProductTransactionType ACHAT_FOURNISSEUR not found")));
-
     }
 
     public ProductTransactionInProductResponseElement setElementFromProductTransaction(ProductTransaction productTransaction) {

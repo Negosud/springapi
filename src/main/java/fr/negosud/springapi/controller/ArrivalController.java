@@ -194,7 +194,10 @@ public class ArrivalController {
                     content = @Content(schema = @Schema(implementation = String.class))),
             @ApiResponse(description = "Arrival not found",
                     responseCode = "404",
-                    content = @Content)
+                    content = @Content),
+            @ApiResponse(description = "Internal Server Error",
+                    responseCode = "500",
+                    content = @Content(schema = @Schema(implementation = String.class)))
     })
     public ResponseEntity<?> completeArrival(
             @PathVariable

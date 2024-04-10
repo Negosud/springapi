@@ -3,9 +3,6 @@ package fr.negosud.springapi.model.entity;
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
-import java.util.List;
 
 @Entity
 @Table(name = "\"permission_node\"")
@@ -14,7 +11,6 @@ public class PermissionNode {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private long id;
 
     @NotBlank
@@ -24,18 +20,6 @@ public class PermissionNode {
     @ManyToOne
     @JoinColumn(name = "parent_permission_node_id")
     private PermissionNode parentPermissionNode;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "parentPermissionNode", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<PermissionNode> childPermissionNodeList;
-
-    @JsonIgnore
-    @ManyToMany(mappedBy = "permissionNodeList", cascade = CascadeType.REMOVE)
-    private List<UserGroup> userGroupList;
-
-    @JsonIgnore
-    @ManyToMany(mappedBy = "permissionNodeList", cascade = CascadeType.REMOVE)
-    private List<User> userList;
 
     public PermissionNode() { }
 

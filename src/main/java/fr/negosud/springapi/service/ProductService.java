@@ -27,12 +27,14 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductFamilyService productFamilyService;
     private final ProductTransactionService productTransactionService;
+    private final ProductTransactionTypeService productTransactionTypeService;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, @Lazy ProductFamilyService productFamilyService, @Lazy ProductTransactionService productTransactionService) {
+    public ProductService(ProductRepository productRepository, @Lazy ProductFamilyService productFamilyService, @Lazy ProductTransactionService productTransactionService, ProductTransactionTypeService productTransactionTypeService) {
         this.productRepository = productRepository;
         this.productFamilyService = productFamilyService;
         this.productTransactionService = productTransactionService;
+        this.productTransactionTypeService = productTransactionTypeService;
     }
 
     public List<Product> getAllProducts(Optional<Boolean> active, String productFamilyName) {
@@ -50,7 +52,23 @@ public class ProductService {
     }
 
     public void saveProduct(Product product) {
-        productRepository.save(product);
+        if (product.getId() == 0) {
+            int quantity = product.getQuantity();
+            product.setQuantity(0);
+            productRepository.save(product);
+            makeFirstStockTransaction(product, quantity);
+        } else {
+            productRepository.save(product);
+        }
+    }
+
+    private void makeFirstStockTransaction(Product product, int quantity) {
+        if (quantity > 0) {
+            ProductTransactionType productTransactionType = productTransactionTypeService.getProductTransactionTypeByCode("TRANSFERT_ANCIEN_PRODUIT")
+                    .orElseThrow(() -> new RuntimeException("ProductTransactionType TRANSFERT_ANCIEN_PRODUIT not found"));
+            ProductTransaction existingStockTransaction = new ProductTransaction(product, quantity, productTransactionType);
+            productTransactionService.saveProductTransaction(existingStockTransaction);
+        }
     }
 
     public void deleteProduct(long productId) {

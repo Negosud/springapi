@@ -6,7 +6,6 @@ import fr.negosud.springapi.model.entity.audit.FullAuditableEntity;
 import fr.negosud.springapi.model.entity.listener.ProductListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -22,7 +21,6 @@ public class Product extends FullAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private long id;
 
     @NotBlank
@@ -62,7 +60,7 @@ public class Product extends FullAuditableEntity {
     @OneToOne(mappedBy = "oldProduct")
     private Product newProduct;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product")
     private List<SupplierProduct> suppliers;
 
     @OneToMany(mappedBy = "product")
@@ -91,6 +89,10 @@ public class Product extends FullAuditableEntity {
         this.unitPriceVAT = unitPrice.multiply(new BigDecimal("1.20"));
         this.active = active;
         this.productTransactions = new ArrayList<>();
+    }
+
+    public String toString() {
+        return "Product [id=" + id + ", name=" + name + ", description=" + description + ", quantity=" + quantity + ", expirationDate=" + expirationDate.toString() + ", vintage=" + vintage.toString() + ", productFamily=" + productFamily.toString() + ", unitPrice=" + unitPrice.toString() + ", unitPriceVAT=" + unitPriceVAT.toString() + ", active=" + active + "]";
     }
 
     public long getId() {

@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.System.out;
-
 @Component
 public class ProductListener {
 
@@ -29,52 +27,18 @@ public class ProductListener {
     }
 
     @PostPersist
-    public void postPersist(Product product) {
-        out.println("PostPersist " + product + " ID : " + product.getId());
-        updateOldProductAndMakeNewProductTransaction(product);
-        makeFirstStockTransaction(product);
-    }
-
-    private void updateOldProductAndMakeNewProductTransaction(Product product) {
+    public void updateOldProductAndMakeNewProductTransaction(Product product) {
         Product oldProduct = product.getOldProduct();
         if (oldProduct != null) {
             int baseQuantity = oldProduct.getQuantity();
             oldProduct.setActive(false);
             productService.saveProduct(oldProduct);
-            out.println("Recherche ProductTransactionType");
             ProductTransactionType productTransactionType = productTransactionTypeService.getProductTransactionTypeByCode("TRANSFERT_ANCIEN_PRODUIT")
-                    .orElse(null);
-            out.println("FIN Recherche ProductTransactionType");
-            if (productTransactionType == null) {
-                out.println("ERREUR Recherche ProductTransactionType");
-                throw new RuntimeException("ProductTransactionType TRANSFERT_ANCIEN_PRODUIT not found");
-            }
-            out.println(productTransactionType + " " + productTransactionType.getId());
+                    .orElseThrow(() -> new RuntimeException("ProductTransactionType TRANSFERT_ANCIEN_PRODUIT not found"));
             ProductTransaction newProductTransaction = new ProductTransaction(product, baseQuantity, productTransactionType);
             List<ProductTransaction> productTransactions = new ArrayList<>();
             productTransactions.add(newProductTransaction);
             product.setProductTransactions(productTransactions);
-        }
-    }
-
-    private void makeFirstStockTransaction(Product product) {
-        int quantity = product.getQuantity();
-        if (quantity > 0) {
-            product.setQuantity(0);
-            out.println("Recherche ProductTransactionType");
-            ProductTransactionType productTransactionType = productTransactionTypeService.getProductTransactionTypeByCode("TRANSFERT_ANCIEN_PRODUIT")
-                    .orElse(null);
-            out.println("FIN Recherche ProductTransactionType");
-            if (productTransactionType == null) {
-                out.println("ERREUR Recherche ProductTransactionType");
-                throw new RuntimeException("ProductTransactionType TRANSFERT_ANCIEN_PRODUIT not found");
-            }
-            out.println(productTransactionType + " " + productTransactionType.getId());
-            ProductTransaction existingStockTransaction = new ProductTransaction(product, quantity, productTransactionType);
-            List<ProductTransaction> productTransactions = new ArrayList<>();
-            productTransactions.add(existingStockTransaction);
-            product.setProductTransactions(productTransactions);
-            productService.saveProduct(product);
         }
     }
 

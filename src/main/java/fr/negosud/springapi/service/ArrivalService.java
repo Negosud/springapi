@@ -22,14 +22,16 @@ public class ArrivalService {
     private final ProductService productService;
     private final SupplierProductService supplierProductService;
     private final ProductTransactionService productTransactionService;
+    private final ProductTransactionTypeService productTransactionTypeService;
 
     @Autowired
-    public ArrivalService(ArrivalRepository arrivalRepository, UserService userService, ProductService productService, SupplierProductService supplierProductService, ProductTransactionService productTransactionService) {
+    public ArrivalService(ArrivalRepository arrivalRepository, UserService userService, ProductService productService, SupplierProductService supplierProductService, ProductTransactionService productTransactionService, ProductTransactionTypeService productTransactionTypeService) {
         this.arrivalRepository = arrivalRepository;
         this.userService = userService;
         this.productService = productService;
         this.supplierProductService = supplierProductService;
         this.productTransactionService = productTransactionService;
+        this.productTransactionTypeService = productTransactionTypeService;
     }
 
     /**
@@ -38,7 +40,7 @@ public class ArrivalService {
     public List<Arrival> getAllArrivals(ArrivalStatus status, Long suppliedById) {
         if (suppliedById != null) {
             return userService.getUserById(suppliedById)
-                    .map(user-> status != null ?
+                    .map(user -> status != null ?
                             arrivalRepository.findAllByStatusAndSuppliedBy(status, user) :
                             arrivalRepository.findAllBySuppliedBy(user))
                     .orElseThrow(() -> new IllegalArgumentException("SuppliedById doesn't correspond to a proper user"));
@@ -66,6 +68,7 @@ public class ArrivalService {
         Arrival arrival = new Arrival();
         List<ArrivalProduct> arrivalProducts = new ArrayList<>();
         for (SetArrivalProductRequestElement arrivalProductElement : placeArrivalRequest.getArrivalProducts()) {
+            assert arrivalProductElement.getQuantity() > 0 : "Quantity should be greater than zero";
             Product product = productService.getProductById(arrivalProductElement.getProductId()).orElse(null);
             assert product != null : "Product Id " + arrivalProductElement.getProductId() + "  doesn't correspond to a proper product";
             assert product.isActive() : "Product for Id " + arrivalProductElement.getProductId() + " isn't active";
@@ -89,9 +92,14 @@ public class ArrivalService {
      * @throws RuntimeException ProductTransaction ACHAT_FOURNISSEUR not found
      */
     public void completeArrival(Arrival arrival) {
+        assert arrival.getStatus() == ArrivalStatus.INCOMING : "Arrival isn't ready to be completed";
+        arrival.setStatus(ArrivalStatus.COMPLETED);
         for (ArrivalProduct arrivalProduct : arrival.getArrivalProducts()) {
-            productTransactionService.makeProductTransactionFromArrivalProduct(arrivalProduct);
-
+            Product product = productService.getNewestProduct(arrivalProduct.getProduct());
+            ProductTransaction productTransaction = new ProductTransaction(product, arrivalProduct.getQuantity(), productTransactionTypeService.getProductTransactionTypeByCode("ACHAT_FOURNISSEUR")
+                    .orElseThrow(() -> new RuntimeException("ProductTransactionType ACHAT_FOURNISSEUR not found")));
+            productTransaction.setArrivalProduct(arrivalProduct);
+            productTransactionService.saveProductTransaction(productTransaction);
         }
     }
 

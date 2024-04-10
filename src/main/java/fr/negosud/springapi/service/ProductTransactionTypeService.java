@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.System.out;
+
 @Service
 public class ProductTransactionTypeService {
 
@@ -38,6 +40,7 @@ public class ProductTransactionTypeService {
     }
 
     public Optional<ProductTransactionType> getProductTransactionTypeByCode(String code) {
+        out.println("findProductTransactionTypeByCode with code " + code);
         return productTransactionTypeRepository.findByCode(code);
     }
 
@@ -55,7 +58,7 @@ public class ProductTransactionTypeService {
     }
 
     public void safeDeleteProductTransactionType(ProductTransactionType productTransactionType, ProductTransactionType replacingProductTransactionType) {
-        for (ProductTransaction productTransaction : productTransactionType.getProductTransactionList()) {
+        for (ProductTransaction productTransaction : productTransactionType.getProductTransactions()) {
             productTransaction.setProdutTransactionType(replacingProductTransactionType);
         }
         productTransactionTypeRepository.delete(productTransactionType);
@@ -69,7 +72,7 @@ public class ProductTransactionTypeService {
         if (create) {
             productTransactionType = new ProductTransactionType();
             productTransactionType.setEntry(setProductTransactionTypeRequest.isEntry());
-        } else if (productTransactionType.isEntry() != setProductTransactionTypeRequest.isEntry() && !productTransactionType.getProductTransactionList().isEmpty()) {
+        } else if (productTransactionType.isEntry() != setProductTransactionTypeRequest.isEntry() && !productTransactionType.getProductTransactions().isEmpty()) {
             throw new IllegalArgumentException("ProductTransactionType isEntry field cannot be changed");
         }
 

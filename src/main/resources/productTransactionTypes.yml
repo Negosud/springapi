@@ -32,3 +32,6 @@ productTransactionTypes:
 
   - name: Casse externe
     description: Casse quelconque.
+
+  - name: Dégustation
+    description: Dégustation proposée aux clients de Negosud.

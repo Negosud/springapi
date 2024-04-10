@@ -10,7 +10,6 @@ import fr.negosud.springapi.model.entity.constraint.ReferencedEntityConstraint;
 import fr.negosud.springapi.model.entity.listener.ReferenceListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 @EntityListeners({AuditListener.class, ReferenceListener.class})
@@ -21,7 +20,6 @@ public class Invoice extends CreationAuditableEntity implements ReferencedEntity
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private long id;
 
     @NotBlank

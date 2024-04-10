@@ -34,7 +34,7 @@ public class ProductFamily extends FullAuditableEntity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "productFamily")
-    List<Product> productList;
+    List<Product> products;
 
     public ProductFamily() { }
 
@@ -45,6 +45,10 @@ public class ProductFamily extends FullAuditableEntity {
         this.name = name;
         this.description = description;
         this.code = Strings.getCodeFromName(name);
+    }
+
+    public String toString() {
+        return "ProductFamily [id=" + id + ", code=" + code + ", name=" + name + "]";
     }
 
     public long getId() {
@@ -79,11 +83,11 @@ public class ProductFamily extends FullAuditableEntity {
         this.description = description;
     }
 
-    public List<Product> getProductList() {
-        return productList;
+    public List<Product> getProducts() {
+        return products;
     }
 
-    public void setProductList(List<Product> productList) {
-        this.productList = productList;
+    public void setProducts(List<Product> productList) {
+        this.products = productList;
     }
 }

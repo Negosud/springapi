@@ -34,7 +34,7 @@ public class Order extends FullAuditableEntity implements ReferencedEntityConstr
     @Enumerated(value = EnumType.STRING)
     private OrderStatus status;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User preparedBy;
 
     private Date preparedAt;
@@ -42,8 +42,8 @@ public class Order extends FullAuditableEntity implements ReferencedEntityConstr
     @OneToOne(mappedBy = "order")
     private Invoice invoice;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderProduct> productList;
+    @OneToMany(mappedBy = "order")
+    private List<OrderProduct> products;
 
     public Order() { }
 
@@ -95,11 +95,11 @@ public class Order extends FullAuditableEntity implements ReferencedEntityConstr
         this.invoice = invoice;
     }
 
-    public List<OrderProduct> getProductList() {
-        return productList;
+    public List<OrderProduct> getProducts() {
+        return products;
     }
 
-    public void setProductList(List<OrderProduct> productList) {
-        this.productList = productList;
+    public void setProducts(List<OrderProduct> productList) {
+        this.products = productList;
     }
 }

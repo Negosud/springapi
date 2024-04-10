@@ -135,7 +135,7 @@ public class ProductFamilyController {
         ProductFamily productFamily = productFamilyService.getProductFamilyByCode(code).orElse(null);
         if (productFamily == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        if (productFamily.getProductList().isEmpty()) {
+        if (productFamily.getProducts().isEmpty()) {
             productFamilyService.deleteProductFamily(productFamily);
         } else {
             actionUserContextHolder.setActionUserId(actionUserId);

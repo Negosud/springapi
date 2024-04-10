@@ -56,7 +56,7 @@ public class ProductFamilyService {
     }
 
     public void safeDeleteProductFamily(ProductFamily productFamily, ProductFamily replacingProductFamily) {
-        for (Product product : productFamily.getProductList()) {
+        for (Product product : productFamily.getProducts()) {
             product.setProductFamily(replacingProductFamily);
             productService.saveProduct(product);
         }

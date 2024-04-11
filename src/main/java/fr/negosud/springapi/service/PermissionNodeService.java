@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 public class PermissionNodeService {
 
-    final private PermissionNodeRepository permissionNodeRepository;
+    private final PermissionNodeRepository permissionNodeRepository;
 
     @Autowired
     public PermissionNodeService(PermissionNodeRepository permissionNodeRepository) {

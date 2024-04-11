@@ -3,16 +3,16 @@ package fr.negosud.springapi.component;
 import fr.negosud.springapi.model.entity.User;
 import fr.negosud.springapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ActionUserContextHolder {
     private static final ThreadLocal<User> userIdHolder = new ThreadLocal<>();
-
-    final private UserService userService;
+    private final UserService userService;
 
     @Autowired
-    public ActionUserContextHolder(UserService userService) {
+    public ActionUserContextHolder(@Lazy UserService userService) {
         this.userService = userService;
     }
 

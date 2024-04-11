@@ -9,6 +9,7 @@ import fr.negosud.springapi.model.entity.User;
 import fr.negosud.springapi.repository.UserRepository;
 import fr.negosud.springapi.util.PermissionNodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
@@ -33,7 +34,7 @@ public class UserService {
     private final UserPasswordEncoder userPasswordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, PermissionNodeService permissionNodeService, UserGroupService userGroupService, AddressService addressService, SupplierProductService supplierProductService, UserPasswordEncoder userPasswordEncoder) {
+    public UserService(UserRepository userRepository, @Lazy PermissionNodeService permissionNodeService, @Lazy UserGroupService userGroupService, @Lazy AddressService addressService, @Lazy SupplierProductService supplierProductService, @Lazy UserPasswordEncoder userPasswordEncoder) {
         this.userRepository = userRepository;
         this.permissionNodeService = permissionNodeService;
         this.userGroupService = userGroupService;
@@ -126,8 +127,7 @@ public class UserService {
         List<SupplierProductInUserResponseElement> supplierProductInUserResponseElements = new ArrayList<>();
         for (SupplierProduct supplierProduct : supplierProductList) {
             SupplierProductInUserResponseElement supplierProductInUserResponseElement = new SupplierProductInUserResponseElement();
-            supplierProductInUserResponseElement.setId(supplierProduct.getId())
-                    .setQuantity(supplierProduct.getQuantity())
+            supplierProductInUserResponseElement.setQuantity(supplierProduct.getQuantity())
                     .setUnitPrice(supplierProduct.getUnitPrice())
                     .setProduct(supplierProduct.getProduct());
             supplierProductInUserResponseElements.add(supplierProductInUserResponseElement);

@@ -30,7 +30,7 @@ public class ProductService {
     private final ProductTransactionTypeService productTransactionTypeService;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, @Lazy ProductFamilyService productFamilyService, @Lazy ProductTransactionService productTransactionService, ProductTransactionTypeService productTransactionTypeService) {
+    public ProductService(@Lazy ProductRepository productRepository, @Lazy ProductFamilyService productFamilyService, @Lazy ProductTransactionService productTransactionService, @Lazy ProductTransactionTypeService productTransactionTypeService) {
         this.productRepository = productRepository;
         this.productFamilyService = productFamilyService;
         this.productTransactionService = productTransactionService;
@@ -218,8 +218,7 @@ public class ProductService {
         List<SupplierProductInProductResponseElement> supplierProductElements = new ArrayList<>();
         for (SupplierProduct supplierProduct : supplierProducts) {
             SupplierProductInProductResponseElement supplierProductInProductResponseElement = new SupplierProductInProductResponseElement();
-            supplierProductInProductResponseElement.setId(supplierProduct.getId())
-                    .setQuantity(supplierProduct.getQuantity())
+            supplierProductInProductResponseElement.setQuantity(supplierProduct.getQuantity())
                     .setUnitPrice(supplierProduct.getUnitPrice())
                     .setSupplier(supplierProduct.getSupplier());
             supplierProductElements.add(supplierProductInProductResponseElement);

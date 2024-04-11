@@ -5,6 +5,7 @@ import fr.negosud.springapi.model.entity.Product;
 import fr.negosud.springapi.model.entity.ProductTransaction;
 import fr.negosud.springapi.repository.ProductTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class ProductTransactionService {
     private final ProductTransactionTypeService productTransactionTypeService;
 
     @Autowired
-    public ProductTransactionService(ProductTransactionRepository productTransactionRepository, ProductTransactionTypeService productTransactionTypeService) {
+    public ProductTransactionService(ProductTransactionRepository productTransactionRepository, @Lazy ProductTransactionTypeService productTransactionTypeService) {
         this.productTransactionRepository = productTransactionRepository;
         this.productTransactionTypeService = productTransactionTypeService;
     }

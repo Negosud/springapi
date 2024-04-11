@@ -4,8 +4,10 @@ import fr.negosud.springapi.model.dto.request.element.SetSupplierProductRequestE
 import fr.negosud.springapi.model.entity.Product;
 import fr.negosud.springapi.model.entity.SupplierProduct;
 import fr.negosud.springapi.model.entity.User;
+import fr.negosud.springapi.model.entity.composite.SupplierProductKey;
 import fr.negosud.springapi.repository.SupplierProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,13 +18,15 @@ import java.util.Stack;
 @Service
 public class SupplierProductService {
 
-    final private SupplierProductRepository supplierProductRepository;
-    final private ProductService productService;
+    private final SupplierProductRepository supplierProductRepository;
+    private final ProductService productService;
+    private final UserService userService;
 
     @Autowired
-    public SupplierProductService(SupplierProductRepository supplierProductRepository, ProductService productService) {
+    public SupplierProductService(SupplierProductRepository supplierProductRepository, @Lazy ProductService productService, @Lazy UserService userService) {
         this.supplierProductRepository = supplierProductRepository;
         this.productService = productService;
+        this.userService = userService;
     }
 
     public List<SupplierProduct> getAllSupplierProducts(Optional<User> supplier, Optional<Product> product) {
@@ -35,12 +39,26 @@ public class SupplierProductService {
                         supplierProductRepository.findAll();
     }
 
+    public List<SupplierProduct> getAllSupplierProducts(Long supplierId, Long productId) {
+        Optional<User> supplier = Optional.empty();
+        Optional<Product> product = Optional.empty();
+        if (supplierId != null) {
+            supplier = userService.getUserById(supplierId);
+            assert supplier.isPresent() : "Supplier not found";
+        }
+        if (productId != null) {
+            product = productService.getProductById(productId);
+            assert product.isPresent() : "Product not found";
+        }
+        return getAllSupplierProducts(supplier, product);
+    }
+
     public Stack<SupplierProduct> getAllSupplierProductsForProductOrderedByPrice(Product product) {
         return supplierProductRepository.findAllByProductOrderByUnitPriceAsc(product);
     }
 
-    public Optional<SupplierProduct> getSupplierProductById(long supplierProductId) {
-        return supplierProductRepository.findById(supplierProductId);
+    public Optional<SupplierProduct> getSupplierProductById(SupplierProductKey supplierProductKey) {
+        return supplierProductRepository.findById(supplierProductKey);
     }
 
     public Optional<SupplierProduct> getSupplierProductBySupplierAndProductId(User supplier, long productId) {

@@ -89,6 +89,15 @@ public class ArrivalService {
     }
 
     /**
+     * @throws AssertionError Arrival can't be cancelled
+     */
+    public void cancelArrival(Arrival arrival) {
+        assert arrival.getStatus() != ArrivalStatus.CANCELLED : "Arrival is already cancelled";
+        assert arrival.getStatus() != ArrivalStatus.COMPLETED : "Arrival is completed";
+        arrival.setStatus(ArrivalStatus.CANCELLED);
+    }
+
+    /**
      * @throws RuntimeException ProductTransaction ACHAT_FOURNISSEUR not found
      */
     public void completeArrival(Arrival arrival) {

@@ -91,7 +91,7 @@ public class OrderService {
      * @throws AssertionError Order can't be cancelled
      */
     public void cancelOrder(Order order) {
-        assert order.getStatus() != OrderStatus.CANCELLED : "Order is already canceled";
+        assert order.getStatus() != OrderStatus.CANCELLED : "Order is already cancelled";
         assert order.getStatus() != OrderStatus.COMPLETED : "Order is completed";
         order.setStatus(OrderStatus.CANCELLED);
         saveOrder(order);

@@ -4,6 +4,7 @@ import fr.negosud.springapi.component.ActionUserContextHolder;
 import fr.negosud.springapi.model.ArrivalStatus;
 import fr.negosud.springapi.model.dto.request.PlaceArrivalRequest;
 import fr.negosud.springapi.model.dto.response.ArrivalResponse;
+import fr.negosud.springapi.model.dto.response.OrderResponse;
 import fr.negosud.springapi.model.entity.Arrival;
 import fr.negosud.springapi.service.ArrivalService;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -182,6 +183,40 @@ public class ArrivalController {
         }
     }
 
+    @PatchMapping("/{reference}/cancel")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    description = "Arrival has been canceled",
+                    responseCode = "200",
+                    content = @Content(schema = @Schema(implementation = OrderResponse.class))),
+            @ApiResponse(
+                    description = "Arrival can't be canceled",
+                    responseCode = "403",
+                    content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(description = "Arrival not found",
+                    responseCode = "404",
+                    content = @Content)
+    })
+    public ResponseEntity<?> cancelArrival(
+            @PathVariable
+            String reference,
+            @RequestBody @Valid @NotBlank @Size(max = 1000)
+            String comment,
+            @RequestParam Long actionUserId) {
+        Arrival arrival = arrivalService.getArrivalByReference(reference).orElse(null);
+        if (arrival == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        actionUserContextHolder.setActionUserId(actionUserId);
+        try {
+            arrivalService.cancelArrival(arrival);
+            arrival.setComment(comment);
+            arrivalService.saveArrival(arrival);
+        } catch (AssertionError e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(arrivalService.getResponseFromArrival(arrival), HttpStatus.OK);
+    }
+
     @PatchMapping("/{reference}/complete")
     @ApiResponses(value = {
             @ApiResponse(
@@ -222,4 +257,6 @@ public class ArrivalController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 }

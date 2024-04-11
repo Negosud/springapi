@@ -69,8 +69,6 @@ public class UserService {
             user.setSuppliedProductList(null);
             userRepository.save(user);
             user.setSuppliedProductList(supplierProductList);
-            out.println("SupplierProduct List :");
-            out.println(supplierProductList);
             for (SupplierProduct supplierProduct : supplierProductList) {
                 if (supplierProduct != null)
                     supplierProductService.saveSupplierProduct(supplierProduct);

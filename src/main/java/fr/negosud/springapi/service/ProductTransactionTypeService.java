@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.lang.System.out;
-
 @Service
 public class ProductTransactionTypeService {
 
@@ -40,7 +38,6 @@ public class ProductTransactionTypeService {
     }
 
     public Optional<ProductTransactionType> getProductTransactionTypeByCode(String code) {
-        out.println("findProductTransactionTypeByCode with code " + code);
         return productTransactionTypeRepository.findByCode(code);
     }
 

@@ -9,7 +9,7 @@ userGroups:
   - name: EMPLOYEE
     inherit: CUSTOMER
     permissions:
-      - desktop.connect
+      - desktop.login
       - desktop.profile
       - desktop.arrival.view
       - desktop.arrival.list

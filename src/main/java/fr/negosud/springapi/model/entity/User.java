@@ -3,11 +3,13 @@ package fr.negosud.springapi.model.entity;
 import com.fasterxml.jackson.annotation.*;
 import fr.negosud.springapi.model.entity.listener.AuditListener;
 import fr.negosud.springapi.model.entity.audit.FullAuditableEntity;
+import fr.negosud.springapi.util.PermissionNodes;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -49,7 +51,7 @@ public class User extends FullAuditableEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_node_id")
     )
-    private List<PermissionNode> permissionNodeList;
+    private List<PermissionNode> permissionNodes;
 
     @ManyToOne
     @NotBlank
@@ -62,7 +64,7 @@ public class User extends FullAuditableEntity {
     private Address billingAddress;
 
     @OneToMany(mappedBy = "supplier")
-    private List<SupplierProduct> suppliedProductList;
+    private List<SupplierProduct> suppliedProducts;
 
     public User() {
         this.active = true;
@@ -71,7 +73,7 @@ public class User extends FullAuditableEntity {
     /**
      * Constructor used by User init method
      */
-    public User(String login, String password, String email, String firstName, String lastName, String phoneNumber, UserGroup userGroup, List<PermissionNode> permissionNodeList) {
+    public User(String login, String password, String email, String firstName, String lastName, String phoneNumber, UserGroup userGroup, List<PermissionNode> permissionNodes) {
         this.login = login;
         this.password = password;
         this.email = email;
@@ -79,16 +81,16 @@ public class User extends FullAuditableEntity {
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.userGroup = userGroup;
-        this.permissionNodeList = permissionNodeList;
+        this.permissionNodes = permissionNodes;
         this.active = true;
     }
 
     public void addPermissionNodeList(List<PermissionNode> permissionNodeList) {
         if (permissionNodeList != null) {
-            if (this.permissionNodeList == null) {
-                this.setPermissionNodeList(permissionNodeList);
+            if (this.permissionNodes == null) {
+                this.setPermissionNodes(permissionNodeList);
             } else {
-                this.permissionNodeList.addAll(permissionNodeList);
+                this.permissionNodes.addAll(permissionNodeList);
             }
         }
     }
@@ -154,12 +156,12 @@ public class User extends FullAuditableEntity {
         this.phoneNumber = phoneNumber;
     }
 
-    public List<PermissionNode> getPermissionNodeList() {
-        return permissionNodeList;
+    public List<PermissionNode> getPermissionNodes() {
+        return permissionNodes;
     }
 
-    public void setPermissionNodeList(List<PermissionNode> permissionNodeList) {
-        this.permissionNodeList = permissionNodeList;
+    public void setPermissionNodes(List<PermissionNode> permissionNodeList) {
+        this.permissionNodes = permissionNodeList;
     }
 
     public UserGroup getUserGroup() {
@@ -194,11 +196,32 @@ public class User extends FullAuditableEntity {
         this.active = active;
     }
 
-    public List<SupplierProduct> getSuppliedProductList() {
-        return suppliedProductList;
+    public List<SupplierProduct> getSuppliedProducts() {
+        return suppliedProducts;
     }
 
-    public void setSuppliedProductList(List<SupplierProduct> suppliedProductList) {
-        this.suppliedProductList = suppliedProductList;
+    public void setSuppliedProducts(List<SupplierProduct> suppliedProductList) {
+        this.suppliedProducts = suppliedProductList;
+    }
+
+    public List<PermissionNode> getCleanedPermissionNodes() {
+        List<PermissionNode> cleanedPermissionNodes = new ArrayList<>(permissionNodes);
+        List<PermissionNode> groupPermissionNodes = userGroup.getCleanedPermissionNodes();
+        if (!groupPermissionNodes.isEmpty())
+            cleanedPermissionNodes.addAll(groupPermissionNodes);
+        return PermissionNodes.cleanPermissionNodeList(cleanedPermissionNodes);
+    }
+
+    @JsonIgnore
+    public boolean can(String permissionName) {
+        for (PermissionNode permissionNode : getCleanedPermissionNodes()) {
+            List<String> subPermissions = PermissionNodes.getSubPermissions(permissionNode);
+            for (String subPermission : subPermissions) {
+                if (permissionNode.toString().equals(permissionName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

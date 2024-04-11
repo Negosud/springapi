@@ -24,4 +24,8 @@ public class ActionUserContextHolder {
         if (userId != 0)
             this.userService.getUserById(userId).ifPresent(userIdHolder::set);
     }
+
+    public static boolean can(String permission) {
+        return userIdHolder.get() != null && userIdHolder.get().can(permission);
+    }
 }

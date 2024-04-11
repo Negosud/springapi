@@ -1,6 +1,7 @@
 package fr.negosud.springapi.model.entity;
 
 import com.fasterxml.jackson.annotation.*;
+import fr.negosud.springapi.util.PermissionNodes;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -33,25 +34,25 @@ public class UserGroup {
             inverseJoinColumns = @JoinColumn(name = "permission_node_id")
     )
     @JsonIgnore
-    private List<PermissionNode> permissionNodeList;
+    private List<PermissionNode> permissionNodes;
 
     public UserGroup() { }
 
     /**
      * Constructor used by User Group init method
      */
-    public UserGroup(String name, UserGroup childUserGroup, List<PermissionNode> permissionNodeList) {
+    public UserGroup(String name, UserGroup childUserGroup, List<PermissionNode> permissionNodes) {
         this.name = name;
         this.childUserGroup = childUserGroup;
-        this.permissionNodeList = permissionNodeList;
+        this.permissionNodes = permissionNodes;
     }
 
     public void addPermissionNodeList(List<PermissionNode> permissionNodeList) {
         if (permissionNodeList != null) {
-            if (this.permissionNodeList == null) {
-                this.setPermissionNodeList(permissionNodeList);
+            if (this.permissionNodes == null) {
+                this.setPermissionNodes(permissionNodeList);
             } else {
-                this.permissionNodeList.addAll(permissionNodeList);
+                this.permissionNodes.addAll(permissionNodeList);
             }
         }
     }
@@ -85,40 +86,20 @@ public class UserGroup {
         this.childUserGroup = childUserGroup;
     }
 
-    public List<PermissionNode> getPermissionNodeList() {
-        return permissionNodeList;
+    public List<PermissionNode> getPermissionNodes() {
+        return permissionNodes;
     }
 
-    public void setPermissionNodeList(List<PermissionNode> permissionNodeList) {
-        this.permissionNodeList = permissionNodeList;
+    public void setPermissionNodes(List<PermissionNode> permissionNodeList) {
+        this.permissionNodes = permissionNodeList;
     }
 
     @JsonIdentityReference(alwaysAsId = true)
-    @JsonGetter("permissionList")
-    public List<PermissionNode> getFullPermissionNodeList() {
-        List<PermissionNode> fullPermissionNodeList = new ArrayList<>(this.permissionNodeList);
+    @JsonGetter("permissions")
+    public List<PermissionNode> getCleanedPermissionNodes() {
+        List<PermissionNode> cleanedPermissionNodes = new ArrayList<>(this.permissionNodes);
         if (this.childUserGroup != null)
-            fullPermissionNodeList.addAll(this.childUserGroup.getFullPermissionNodeList());
-        return this.cleanPermissionNodeList(fullPermissionNodeList);
-    }
-
-    /**
-     * Don't look at this method : it's just a piece of french engineering right here
-     * It does the job still...
-     */
-    private List<PermissionNode> cleanPermissionNodeList(List<PermissionNode> permissionNodeList) {
-        List<PermissionNode> cleanPermissionNodeList = new ArrayList<>(permissionNodeList);
-        for (PermissionNode cleanedPermissionNode : permissionNodeList) {
-            PermissionNode checkedPermissionNode = cleanedPermissionNode;
-            while (checkedPermissionNode.getParentPermissionNode() != null) {
-                if (permissionNodeList.contains(checkedPermissionNode.getParentPermissionNode())) {
-                    cleanPermissionNodeList.remove(cleanedPermissionNode);
-                    break;
-                } else {
-                    checkedPermissionNode = checkedPermissionNode.getParentPermissionNode();
-                }
-            }
-        }
-        return cleanPermissionNodeList;
+            cleanedPermissionNodes.addAll(this.childUserGroup.getCleanedPermissionNodes());
+        return PermissionNodes.cleanPermissionNodeList(cleanedPermissionNodes);
     }
 }

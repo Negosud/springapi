@@ -23,7 +23,7 @@ permissions:
 
   - name: desktop
     children:
-      - name: connect
+      - name: login
       - name: profile
         children:
           - name: view

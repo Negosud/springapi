@@ -4,6 +4,7 @@ import fr.negosud.springapi.model.dto.request.LoginRequest;
 import fr.negosud.springapi.model.dto.response.UserResponse;
 import fr.negosud.springapi.model.entity.User;
 import fr.negosud.springapi.service.UserService;
+import fr.negosud.springapi.util.AuthContextHolder;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -52,6 +53,8 @@ public class UserAuthController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         if (!user.isActive())
             return new ResponseEntity<>("User isn't active", HttpStatus.FORBIDDEN);
+        if (AuthContextHolder.getCallingApplicationRole().equals("DESKTOP") && !user.can("desktop.login"))
+            return new ResponseEntity<>("Missing permission desktop.login", HttpStatus.FORBIDDEN);
         if (userService.matchUserPassword(user, loginRequest.getPassword()))
             return new ResponseEntity<>(userService.getResponseFromUser(user), HttpStatus.OK);
         return new ResponseEntity<>("Password isn't matching", HttpStatus.FORBIDDEN);

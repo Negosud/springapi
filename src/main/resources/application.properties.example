@@ -9,5 +9,7 @@ springdoc.swagger-ui.tagsSorter=alpha
 springdoc.swagger-ui.default-model-expand-depth=10
 
 # Security Configuration
-security.admin.username=springapi
-security.admin.password=springapi
+security.desktop.username=desktop
+security.desktop.password=D35kt0P123soleil:)
+security.web.username=web
+security.web.password=W38456ceuillirdesSO6

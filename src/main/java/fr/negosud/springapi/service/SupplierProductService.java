@@ -56,7 +56,7 @@ public class SupplierProductService {
     }
 
     public List<SupplierProduct> setSupplierProductsFromRequest(User supplier, List<SetSupplierProductRequestElement> setSupplierProductElementList) {
-        List<SupplierProduct> supplierProducts = supplier.getSuppliedProductList();
+        List<SupplierProduct> supplierProducts = supplier.getSuppliedProducts();
         if (supplierProducts == null)
             supplierProducts = new ArrayList<>();
 

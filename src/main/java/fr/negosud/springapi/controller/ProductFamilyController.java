@@ -35,7 +35,7 @@ public class ProductFamilyController {
 
     @GetMapping
     @ApiResponse(
-            description = "List of all productFamilies",
+            description = "List of all ProductFamilies",
             responseCode = "200")
     public ResponseEntity<List<ProductFamily>> getAllProductFamilies() {
         List<ProductFamily> productFamilies = productFamilyService.getAllProductFamilies();

@@ -41,13 +41,13 @@ public class ArrivalController {
     @GetMapping
     @ApiResponses(value = {
             @ApiResponse(
-                    description = "List of all arrivals",
+                    description = "List of all Arrivals",
                     responseCode = "200",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = ArrivalResponse.class)))),
             @ApiResponse(
                     description = "Entity not found from request parameter",
                     responseCode = "404",
-                    content = @Content(schema = @Schema(implementation = String.class))),
+                    content = @Content(schema = @Schema(implementation = String.class)))
     })
     public ResponseEntity<?> getAllArrivals(
             @RequestParam(required = false)
@@ -202,7 +202,8 @@ public class ArrivalController {
             String reference,
             @RequestBody @Valid @NotBlank @Size(max = 1000)
             String comment,
-            @RequestParam Long actionUserId) {
+            @RequestParam
+            Long actionUserId) {
         Arrival arrival = arrivalService.getArrivalByReference(reference).orElse(null);
         if (arrival == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

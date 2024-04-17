@@ -11,6 +11,7 @@ import fr.negosud.springapi.model.entity.Product;
 import fr.negosud.springapi.model.entity.ProductTransaction;
 import fr.negosud.springapi.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class OrderService {
     private final ProductTransactionTypeService productTransactionTypeService;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, ProductService productService, OrderProductService orderProductService, ProductTransactionService productTransactionService, ProductTransactionTypeService productTransactionTypeService) {
+    public OrderService(OrderRepository orderRepository, @Lazy ProductService productService, @Lazy OrderProductService orderProductService, @Lazy ProductTransactionService productTransactionService, @Lazy ProductTransactionTypeService productTransactionTypeService) {
         this.orderRepository = orderRepository;
         this.productService = productService;
         this.orderProductService = orderProductService;

@@ -4,6 +4,7 @@ import fr.negosud.springapi.model.entity.PermissionNode;
 import fr.negosud.springapi.model.entity.UserGroup;
 import fr.negosud.springapi.repository.UserGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
@@ -21,7 +22,7 @@ public class UserGroupService {
     private final PermissionNodeService permissionNodeService;
 
     @Autowired
-    public UserGroupService(UserGroupRepository userGroupRepository, PermissionNodeService permissionNodeService) {
+    public UserGroupService(UserGroupRepository userGroupRepository, @Lazy PermissionNodeService permissionNodeService) {
         this.userGroupRepository = userGroupRepository;
         this.permissionNodeService = permissionNodeService;
     }

@@ -24,8 +24,8 @@ import java.util.Optional;
 @Tag(name = "ProductTransactionType", description = "Endpoints related to ProductTransactionType crud and actions.")
 public class ProductTransactionTypeController {
 
-    final private ProductTransactionTypeService productTransactionTypeService;
-    final private ActionUserContextHolder actionUserContextHolder;
+    private final ProductTransactionTypeService productTransactionTypeService;
+    private final ActionUserContextHolder actionUserContextHolder;
 
     @Autowired
     public ProductTransactionTypeController(ProductTransactionTypeService productTransactionTypeService, ActionUserContextHolder actionUserContextHolder) {

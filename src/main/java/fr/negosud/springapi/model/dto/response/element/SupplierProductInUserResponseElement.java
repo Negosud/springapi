@@ -9,9 +9,6 @@ import java.math.BigDecimal;
 public class SupplierProductInUserResponseElement {
 
     @NotBlank
-    private long id;
-
-    @NotBlank
     private int quantity;
 
     @NotBlank
@@ -22,15 +19,6 @@ public class SupplierProductInUserResponseElement {
     private Product product;
 
     public SupplierProductInUserResponseElement() { }
-
-    public long getId() {
-        return id;
-    }
-
-    public SupplierProductInUserResponseElement setId(long id) {
-        this.id = id;
-        return this;
-    }
 
     public int getQuantity() {
         return quantity;

@@ -7,7 +7,9 @@ import fr.negosud.springapi.model.dto.response.element.SupplierProductInUserResp
 import fr.negosud.springapi.model.entity.SupplierProduct;
 import fr.negosud.springapi.model.entity.User;
 import fr.negosud.springapi.repository.UserRepository;
+import fr.negosud.springapi.util.PermissionNodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
@@ -32,7 +34,7 @@ public class UserService {
     private final UserPasswordEncoder userPasswordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, PermissionNodeService permissionNodeService, UserGroupService userGroupService, AddressService addressService, SupplierProductService supplierProductService, UserPasswordEncoder userPasswordEncoder) {
+    public UserService(UserRepository userRepository, @Lazy PermissionNodeService permissionNodeService, @Lazy UserGroupService userGroupService, @Lazy AddressService addressService, @Lazy SupplierProductService supplierProductService, @Lazy UserPasswordEncoder userPasswordEncoder) {
         this.userRepository = userRepository;
         this.permissionNodeService = permissionNodeService;
         this.userGroupService = userGroupService;
@@ -64,11 +66,11 @@ public class UserService {
     }
 
     public void saveUser(User user) {
-        if (user.getUserGroup() != null && user.getUserGroup().getName().equals("SUPPLIER") && user.getSuppliedProductList() != null && !user.getSuppliedProductList().isEmpty()) {
-            List<SupplierProduct> supplierProductList = new ArrayList<>(user.getSuppliedProductList());
-            user.setSuppliedProductList(null);
+        if (user.getUserGroup() != null && user.getUserGroup().getName().equals("SUPPLIER") && user.getSuppliedProducts() != null && !user.getSuppliedProducts().isEmpty()) {
+            List<SupplierProduct> supplierProductList = new ArrayList<>(user.getSuppliedProducts());
+            user.setSuppliedProducts(null);
             userRepository.save(user);
-            user.setSuppliedProductList(supplierProductList);
+            user.setSuppliedProducts(supplierProductList);
             for (SupplierProduct supplierProduct : supplierProductList) {
                 if (supplierProduct != null)
                     supplierProductService.saveSupplierProduct(supplierProduct);
@@ -92,10 +94,10 @@ public class UserService {
         user.setActive(setUserRequest.isActive());
         user.setLogin(setUserRequest.getLogin());
         user.setPhoneNumber(setUserRequest.getPhoneNumber());
-        user.setPermissionNodeList(permissionNodeService.getPermissionNodeListByFullName(setUserRequest.getPermissionList()).orElse(null));
+        user.setPermissionNodes(permissionNodeService.getPermissionNodeListByFullName(setUserRequest.getPermissionList()).orElse(null));
         user.setMailingAddress(addressService.getAddressById(setUserRequest.getMailingAddress()).orElse(null));
         user.setBillingAddress(addressService.getAddressById(setUserRequest.getBillingAddress()).orElse(null));
-        user.setSuppliedProductList(supplierProductService.setSupplierProductsFromRequest(user, setUserRequest.getSupplierProducts()));
+        user.setSuppliedProducts(supplierProductService.setSupplierProductsFromRequest(user, setUserRequest.getSupplierProducts()));
 
         UserPasswordEncoder userPasswordEncoder = new UserPasswordEncoder();
         String userPassword = user.getPassword();
@@ -114,19 +116,18 @@ public class UserService {
                 .setLastName(user.getLastName())
                 .setPhoneNumber(user.getPhoneNumber())
                 .setActive(user.isActive())
-                .setPermissionNodeList(user.getPermissionNodeList())
                 .setUserGroup(user.getUserGroup())
                 .setMailingAddress(user.getMailingAddress())
                 .setBillingAddress(user.getBillingAddress())
-                .setSuppliedProductList(getSupplierProductElements(user.getSuppliedProductList()));
+                .setSuppliedProductList(getSupplierProductElements(user.getSuppliedProducts()))
+                .setPermissions(PermissionNodes.asStrings(user.getCleanedPermissionNodes()));
     }
 
     private List<SupplierProductInUserResponseElement> getSupplierProductElements(List<SupplierProduct> supplierProductList) {
         List<SupplierProductInUserResponseElement> supplierProductInUserResponseElements = new ArrayList<>();
         for (SupplierProduct supplierProduct : supplierProductList) {
             SupplierProductInUserResponseElement supplierProductInUserResponseElement = new SupplierProductInUserResponseElement();
-            supplierProductInUserResponseElement.setId(supplierProduct.getId())
-                    .setQuantity(supplierProduct.getQuantity())
+            supplierProductInUserResponseElement.setQuantity(supplierProduct.getQuantity())
                     .setUnitPrice(supplierProduct.getUnitPrice())
                     .setProduct(supplierProduct.getProduct());
             supplierProductInUserResponseElements.add(supplierProductInUserResponseElement);

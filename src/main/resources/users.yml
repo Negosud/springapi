@@ -12,6 +12,8 @@ users:
     lastname: SUPPLIER
     phonenumber: 0123456789
     usergroup: SUPPLIER
+    permissions:
+      - desktop.login
 
   - pseudouniquekey: employee@negosud.fr
     password: employee

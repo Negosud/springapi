@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class DatabaseInitializer implements ApplicationRunner {
 
-    final private PermissionNodeService permissionNodeService;
-    final private UserGroupService userGroupService;
-    final private UserService userService;
-    final private ProductFamilyService productFamilyService;
-    final private ProductTransactionTypeService productTransactionTypeService;
-    final private ProductService productService;
+    private final PermissionNodeService permissionNodeService;
+    private final UserGroupService userGroupService;
+    private final UserService userService;
+    private final ProductFamilyService productFamilyService;
+    private final ProductTransactionTypeService productTransactionTypeService;
+    private final ProductService productService;
 
     @Autowired
     public DatabaseInitializer(

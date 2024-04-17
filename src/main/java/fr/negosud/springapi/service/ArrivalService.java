@@ -8,6 +8,7 @@ import fr.negosud.springapi.model.dto.response.element.ArrivalProductInArrivalRe
 import fr.negosud.springapi.model.entity.*;
 import fr.negosud.springapi.repository.ArrivalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class ArrivalService {
     private final ProductTransactionTypeService productTransactionTypeService;
 
     @Autowired
-    public ArrivalService(ArrivalRepository arrivalRepository, UserService userService, ProductService productService, SupplierProductService supplierProductService, ProductTransactionService productTransactionService, ProductTransactionTypeService productTransactionTypeService) {
+    public ArrivalService(ArrivalRepository arrivalRepository, @Lazy UserService userService, @Lazy ProductService productService, @Lazy SupplierProductService supplierProductService, @Lazy ProductTransactionService productTransactionService, @Lazy ProductTransactionTypeService productTransactionTypeService) {
         this.arrivalRepository = arrivalRepository;
         this.userService = userService;
         this.productService = productService;

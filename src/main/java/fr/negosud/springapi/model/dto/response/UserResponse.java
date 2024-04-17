@@ -3,7 +3,6 @@ package fr.negosud.springapi.model.dto.response;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import fr.negosud.springapi.model.dto.response.element.SupplierProductInUserResponseElement;
 import fr.negosud.springapi.model.entity.Address;
-import fr.negosud.springapi.model.entity.PermissionNode;
 import fr.negosud.springapi.model.entity.UserGroup;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -38,7 +37,7 @@ public class UserResponse {
     private boolean active;
 
     @JsonIdentityReference(alwaysAsId = true)
-    private List<PermissionNode> permissionNodeList;
+    private List<String> permissions;
 
     @NotBlank
     @JsonIdentityReference(alwaysAsId = true)
@@ -117,15 +116,6 @@ public class UserResponse {
         return this;
     }
 
-    public List<PermissionNode> getPermissionNodeList() {
-        return permissionNodeList;
-    }
-
-    public UserResponse setPermissionNodeList(List<PermissionNode> permissionNodeList) {
-        this.permissionNodeList = permissionNodeList;
-        return this;
-    }
-
     public UserGroup getUserGroup() {
         return userGroup;
     }
@@ -159,6 +149,15 @@ public class UserResponse {
 
     public UserResponse setSuppliedProductList(List<SupplierProductInUserResponseElement> suppliedProductList) {
         this.suppliedProductList = suppliedProductList;
+        return this;
+    }
+
+    public List<String> getPermissions() {
+        return permissions;
+    }
+
+    public UserResponse setPermissions(List<String> permissions) {
+        this.permissions = permissions;
         return this;
     }
 }

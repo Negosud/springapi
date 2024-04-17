@@ -6,6 +6,7 @@ import fr.negosud.springapi.model.entity.ProductFamily;
 import fr.negosud.springapi.repository.ProductFamilyRepository;
 import fr.negosud.springapi.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class ProductFamilyService {
     private final ProductService productService;
 
     @Autowired
-    public ProductFamilyService(ProductFamilyRepository productFamilyRepository, ProductService productService) {
+    public ProductFamilyService(ProductFamilyRepository productFamilyRepository, @Lazy ProductService productService) {
         this.productFamilyRepository = productFamilyRepository;
         this.productService = productService;
     }

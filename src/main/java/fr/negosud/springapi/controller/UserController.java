@@ -36,7 +36,7 @@ public class UserController {
 
     @GetMapping
     @ApiResponse(
-            description = "List of all users",
+            description = "List of all Users",
             responseCode = "200")
     public ResponseEntity<List<UserResponse>> getAllUsers(
             @RequestParam(required = false)

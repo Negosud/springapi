@@ -37,7 +37,7 @@ public class ProductController {
 
     @GetMapping
     @ApiResponse(
-            description = "List of all products",
+            description = "List of all Products",
             responseCode = "200")
     public ResponseEntity<List<ProductResponse>> getAllProducts(
             @RequestParam(required = false)

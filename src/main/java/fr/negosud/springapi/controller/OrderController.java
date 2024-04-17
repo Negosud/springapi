@@ -36,7 +36,7 @@ public class OrderController {
 
     @GetMapping
     @ApiResponse(
-            description = "List of all orders",
+            description = "List of all Orders",
             responseCode = "200")
     public ResponseEntity<List<OrderResponse>> getAllOrders(
             @Valid @RequestParam(required = false)

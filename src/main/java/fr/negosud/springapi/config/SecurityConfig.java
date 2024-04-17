@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,13 +15,20 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @SuppressWarnings("ALL")
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${security.admin.username}")
-    private String adminUsername;
+    @Value("${security.desktop.username}")
+    private String desktopUsername;
 
-    @Value("${security.admin.password}")
-    private String adminPassword;
+    @Value("${security.desktop.password}")
+    private String desktopPassword;
+
+    @Value("${security.web.username}")
+    private String webUsername;
+
+    @Value("${security.web.password}")
+    private String webPassword;
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
@@ -31,17 +38,24 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated()).httpBasic(Customizer.withDefaults());
-        return http.build();
+        SecurityFilterChain securityFilterChain = http.build();
+        return securityFilterChain;
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails admin = User.builder()
-                .username(adminUsername)
-                .password(passwordEncoder().encode(adminPassword))
-                .roles("ADMIN")
-                .build();
+        InMemoryUserDetailsManager userManager = new InMemoryUserDetailsManager();
+        userManager.createUser(User.builder()
+                .username(webUsername)
+                .password(passwordEncoder().encode(webPassword))
+                .roles("WEB")
+                .build());
+        userManager.createUser(User.builder()
+                .username(desktopUsername)
+                .password(passwordEncoder().encode(desktopPassword))
+                .roles("DESKTOP")
+                .build());
 
-        return new InMemoryUserDetailsManager(admin);
+        return userManager;
     }
 }

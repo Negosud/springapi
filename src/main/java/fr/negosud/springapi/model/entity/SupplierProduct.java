@@ -4,6 +4,7 @@ package fr.negosud.springapi.model.entity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import fr.negosud.springapi.model.entity.composite.SupplierProductKey;
 import fr.negosud.springapi.model.entity.listener.AuditListener;
 import fr.negosud.springapi.model.entity.audit.FullAuditableEntity;
 import jakarta.persistence.*;
@@ -17,9 +18,8 @@ import java.math.BigDecimal;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class SupplierProduct extends FullAuditableEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @EmbeddedId
+    private SupplierProductKey id;
 
     @NotBlank
     private int quantity;
@@ -29,22 +29,24 @@ public class SupplierProduct extends FullAuditableEntity {
     private BigDecimal unitPrice;
 
     @ManyToOne
+    @JoinColumn(insertable=false, updatable=false)
     @NotBlank
     @JsonIdentityReference(alwaysAsId = true)
     private User supplier;
 
     @ManyToOne
+    @JoinColumn(insertable=false, updatable=false)
     @NotBlank
     @JsonIdentityReference(alwaysAsId = true)
     private Product product;
 
     public SupplierProduct() { }
 
-    public long getId() {
+    public SupplierProductKey getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(SupplierProductKey id) {
         this.id = id;
     }
 

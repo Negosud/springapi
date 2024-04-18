@@ -11,6 +11,7 @@ import fr.negosud.springapi.model.entity.listener.ReferenceListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -42,7 +43,9 @@ public class Arrival extends FullAuditableEntity implements ReferencedEntityCons
     @OneToMany(mappedBy = "arrival")
     private List<ArrivalProduct> arrivalProducts;
 
-    public Arrival() { }
+    public Arrival() {
+        this.arrivalProducts = new ArrayList<>();
+    }
 
     public long getId() {
         return id;

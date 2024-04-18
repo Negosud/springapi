@@ -144,6 +144,8 @@ public class ArrivalController {
             return new ResponseEntity<>(arrivalService.getResponseFromArrival(arrival), HttpStatus.OK);
         } catch (AssertionError e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

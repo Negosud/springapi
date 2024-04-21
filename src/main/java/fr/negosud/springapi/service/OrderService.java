@@ -128,6 +128,8 @@ public class OrderService {
     }
 
     private List<OrderProductInOrderResponseElement> getOrderProductElements(List<OrderProduct> orderProducts) {
+        if (orderProducts == null || orderProducts.isEmpty())
+            return null;
         List<OrderProductInOrderResponseElement> orderProductInOrderResponseElements = new ArrayList<>();
         for (OrderProduct orderProduct : orderProducts) {
             OrderProductInOrderResponseElement orderProductInOrderResponseElement = new OrderProductInOrderResponseElement();

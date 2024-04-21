@@ -215,6 +215,8 @@ public class ProductService {
     }
 
     private List<SupplierProductInProductResponseElement> getSupplierProductElements(List<SupplierProduct> supplierProducts) {
+        if (supplierProducts == null || supplierProducts.isEmpty())
+            return null;
         List<SupplierProductInProductResponseElement> supplierProductElements = new ArrayList<>();
         for (SupplierProduct supplierProduct : supplierProducts) {
             SupplierProductInProductResponseElement supplierProductInProductResponseElement = new SupplierProductInProductResponseElement();
@@ -227,6 +229,8 @@ public class ProductService {
     }
 
     private List<ArrivalProductInProductResponseElement> getArrivalProductElements(List<ArrivalProduct> arrivalProducts) {
+        if (arrivalProducts == null || arrivalProducts.isEmpty())
+            return null;
         List<ArrivalProductInProductResponseElement> arrivalProductElements = new ArrayList<>();
         for (ArrivalProduct arrivalProduct : arrivalProducts) {
             ArrivalProductInProductResponseElement arrivalProductInProductResponseElement = new ArrivalProductInProductResponseElement();
@@ -240,6 +244,8 @@ public class ProductService {
     }
 
     private List<OrderProductInProductResponseElement> getOrderProductElements(List<OrderProduct> orderProducts) {
+        if (orderProducts == null || orderProducts.isEmpty())
+            return null;
         List<OrderProductInProductResponseElement> orderProductElements = new ArrayList<>();
         for (OrderProduct orderProduct : orderProducts) {
             OrderProductInProductResponseElement orderProductInProductResponseElement = new OrderProductInProductResponseElement();

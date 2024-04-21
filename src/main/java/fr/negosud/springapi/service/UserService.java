@@ -124,6 +124,8 @@ public class UserService {
     }
 
     private List<SupplierProductInUserResponseElement> getSupplierProductElements(List<SupplierProduct> supplierProductList) {
+        if (supplierProductList == null || supplierProductList.isEmpty())
+            return null;
         List<SupplierProductInUserResponseElement> supplierProductInUserResponseElements = new ArrayList<>();
         for (SupplierProduct supplierProduct : supplierProductList) {
             SupplierProductInUserResponseElement supplierProductInUserResponseElement = new SupplierProductInUserResponseElement();

@@ -214,12 +214,16 @@ public class User extends FullAuditableEntity {
 
     @JsonIgnore
     public boolean can(String permissionName) {
-        for (PermissionNode permissionNode : getCleanedPermissionNodes()) {
-            List<String> subPermissions = PermissionNodes.getSubPermissions(permissionNode);
-            for (String subPermission : subPermissions) {
-                if (permissionNode.toString().equals(permissionName)) {
+        List<PermissionNode> permissionNodes = getCleanedPermissionNodes();
+        if (permissionNodes.isEmpty())
+            return false;
+        String[] permissionNameParts = permissionName.split("\\.");
+        StringBuilder checkedPermissionName = new StringBuilder();
+        for (String permissionNamePart : permissionNameParts) {
+            checkedPermissionName.append(permissionNamePart);
+            for (PermissionNode permissionNode : permissionNodes) {
+                if (permissionNode.getName().contentEquals(checkedPermissionName))
                     return true;
-                }
             }
         }
         return false;

@@ -12,6 +12,8 @@ import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.System.out;
+
 @Entity
 @EntityListeners(AuditListener.class)
 @Table(name="\"user\"")
@@ -218,13 +220,16 @@ public class User extends FullAuditableEntity {
         if (permissionNodes.isEmpty())
             return false;
         String[] permissionNameParts = permissionName.split("\\.");
-        StringBuilder checkedPermissionName = new StringBuilder();
+        String checkedPermissionName = "";
         for (String permissionNamePart : permissionNameParts) {
-            checkedPermissionName.append(permissionNamePart);
+            checkedPermissionName += permissionNamePart;
+            out.println("Checking permission: " + checkedPermissionName);
             for (PermissionNode permissionNode : permissionNodes) {
-                if (permissionNode.getName().contentEquals(checkedPermissionName))
+                out.println("Comparing permission: " + permissionNode + " to " + checkedPermissionName);
+                if (permissionNode.toString().contentEquals(checkedPermissionName))
                     return true;
             }
+            checkedPermissionName += ".";
         }
         return false;
     }

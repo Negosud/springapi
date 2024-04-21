@@ -92,7 +92,16 @@ public class Product extends FullAuditableEntity {
     }
 
     public String toString() {
-        return "Product [id=" + id + ", name=" + name + ", description=" + description + ", quantity=" + quantity + ", expirationDate=" + expirationDate.toString() + ", vintage=" + vintage.toString() + ", productFamily=" + productFamily.toString() + ", unitPrice=" + unitPrice.toString() + ", unitPriceVAT=" + unitPriceVAT.toString() + ", active=" + active + "]";
+        return "Product [id=" + id +
+                ", name=" + name +
+                ", description=" + description +
+                ", quantity=" + quantity +
+                ", expirationDate=" + (expirationDate != null ? expirationDate.toString() : "") +
+                ", vintage=" + (vintage != null ? vintage.toString() : "") +
+                ", productFamily=" + (productFamily != null ? productFamily.toString() : "") +
+                ", unitPrice=" + (unitPrice != null ? unitPrice.toString() : "") +
+                ", unitPriceVAT=" + (unitPriceVAT != null ? unitPriceVAT.toString() : "") +
+                ", active=" + active + "]";
     }
 
     public long getId() {

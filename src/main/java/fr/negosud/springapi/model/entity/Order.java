@@ -42,7 +42,7 @@ public class Order extends FullAuditableEntity implements ReferencedEntityConstr
     @OneToOne(mappedBy = "order")
     private Invoice invoice;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderProduct> products;
 
     public Order() { }

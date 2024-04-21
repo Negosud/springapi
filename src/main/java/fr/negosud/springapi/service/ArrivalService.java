@@ -60,6 +60,9 @@ public class ArrivalService {
         arrivalRepository.save(arrival);
     }
 
+    /**
+     * @throws IllegalArgumentException PlaceArrivalRequest contains an error
+     */
     public Arrival placeArrivalFromRequest(PlaceArrivalRequest placeArrivalRequest) {
         User supplier = userService.getUserById(placeArrivalRequest.getSupplierId())
                 .orElseThrow(() -> new IllegalArgumentException("Supplier doesn't exist"));

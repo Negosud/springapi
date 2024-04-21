@@ -128,6 +128,9 @@ public class ArrivalController {
                     description = "Arrival placed",
                     responseCode = "201",
                     content = @Content(schema = @Schema(implementation = ArrivalResponse.class))),
+            @ApiResponse(description = "PlaceArrivalRequest contains an error",
+                    responseCode = "400",
+                    content = @Content(schema = @Schema(implementation = String.class))),
             @ApiResponse(
                     description = "Arrival can't be placed",
                     responseCode = "403",

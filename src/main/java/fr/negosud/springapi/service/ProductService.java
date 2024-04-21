@@ -126,7 +126,7 @@ public class ProductService {
             product.setExpirationDate(createProductRequest.getExpirationDate());
             Integer vintage = createProductRequest.getVintage();
             product.setVintage(vintage != null ? Year.of(vintage) : null);
-            product.setProductFamily(productFamilyService.getProductFamilyByCode(createProductRequest.getProductFamilyCode()).orElse(null));
+            product.setProductFamily(productFamilyService.getProductFamilyByCode(createProductRequest.getProductFamilyCode()).orElseThrow(() -> new IllegalArgumentException("ProductFamily not found for productFamilyCode")));
             product.setUnitPrice(createProductRequest.getUnitPrice());
             product.setUnitPriceVAT(createProductRequest.getUnitPrice().multiply(new BigDecimal("1.20")));
             product.setActive(createProductRequest.isActive());

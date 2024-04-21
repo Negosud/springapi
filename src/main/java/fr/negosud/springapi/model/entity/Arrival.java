@@ -40,7 +40,7 @@ public class Arrival extends FullAuditableEntity implements ReferencedEntityCons
     @Column(length = 1000)
     private String comment;
 
-    @OneToMany(mappedBy = "arrival")
+    @OneToMany(mappedBy = "arrival", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ArrivalProduct> arrivalProducts;
 
     public Arrival() {

@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 @SuppressWarnings("ALL")
@@ -44,20 +42,15 @@ public class OrderProductListener {
                 Arrival arrival = new Arrival();
                 arrival.setStatus(ArrivalStatus.ORDERING);
                 arrival.setSuppliedBy(supplierProduct.getSupplier());
-                arrival.setArrivalProducts(new ArrayList<ArrivalProduct>());
                 if (supplierProduct.getQuantity() <= diff) {
                     ArrivalProduct arrivalProduct = new ArrivalProduct(supplierProduct.getQuantity(), product);
-                    List<ArrivalProduct> arrivalProducts = new ArrayList<>();
-                    arrivalProducts.add(arrivalProduct);
-                    arrival.setArrivalProducts(arrivalProducts);
+                    arrival.addArrivalProduct(arrivalProduct);
                     arrival.setComment(arrivalProduct.getQuantity() + " " + product.getName() + " doivent être commandés auprès du fournisseur.\nIls sont nécessaires pour préparer la commande " + orderProduct.getOrder().getReference() + ".");
                     diff -= supplierProduct.getQuantity();
                     supplierProductService.deleteSupplierProduct(supplierProduct);
                 } else {
                     ArrivalProduct arrivalProduct = new ArrivalProduct(diff, product);
-                    List<ArrivalProduct> arrivalProducts = new ArrayList<>();
-                    arrivalProducts.add(arrivalProduct);
-                    arrival.setArrivalProducts(arrivalProducts);
+                    arrival.addArrivalProduct(arrivalProduct);
                     arrival.setComment(arrivalProduct.getQuantity() + " " + product.getName() + " doivent être commandés auprès du fournisseur.\nIls sont nécessaires pour préparer la commande " + orderProduct.getOrder().getReference() + ".");
                     supplierProduct.setQuantity(supplierProduct.getQuantity() - diff);
                     supplierProductService.saveSupplierProduct(supplierProduct);

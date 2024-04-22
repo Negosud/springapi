@@ -70,7 +70,6 @@ public class ArrivalService {
             throw new IllegalArgumentException("User doesn't have the SUPPLIER user group");
 
         Arrival arrival = new Arrival();
-        List<ArrivalProduct> arrivalProducts = new ArrayList<>();
         for (SetArrivalProductRequestElement arrivalProductElement : placeArrivalRequest.getArrivalProducts()) {
             assert arrivalProductElement.getQuantity() > 0 : "Quantity should be greater than zero";
             Product product = productService.getProductById(arrivalProductElement.getProductId()).orElse(null);
@@ -80,9 +79,7 @@ public class ArrivalService {
                     .orElseThrow(() -> new IllegalArgumentException("Supplier doesn't provide product with id " + arrivalProductElement.getProductId()));
             assert supplierProduct.getQuantity() >= arrivalProductElement.getQuantity() : "Supplier can't provide " + arrivalProductElement.getQuantity() + " of product " + arrivalProductElement.getProductId();
             ArrivalProduct arrivalProduct = new ArrivalProduct(arrivalProductElement.getQuantity(), product);
-            List<ArrivalProduct> products = arrival.getArrivalProducts();
-            products.add(arrivalProduct);
-            arrival.setArrivalProducts(products);
+            arrival.addArrivalProduct(arrivalProduct);
         }
         arrival.setComment(placeArrivalRequest.getComment());
         arrival.setSuppliedBy(supplier);

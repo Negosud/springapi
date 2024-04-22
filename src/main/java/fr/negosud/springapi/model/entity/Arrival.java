@@ -1,6 +1,7 @@
 package fr.negosud.springapi.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fr.negosud.springapi.model.entity.listener.AuditListener;
 import fr.negosud.springapi.model.entity.audit.FullAuditableEntity;
@@ -93,5 +94,11 @@ public class Arrival extends FullAuditableEntity implements ReferencedEntityCons
 
     public void setArrivalProducts(List<ArrivalProduct> productList) {
         this.arrivalProducts = productList;
+    }
+
+    @JsonIgnore
+    public void addArrivalProduct(ArrivalProduct arrivalProduct) {
+        arrivalProduct.setArrival(this);
+        this.arrivalProducts.add(arrivalProduct);
     }
 }

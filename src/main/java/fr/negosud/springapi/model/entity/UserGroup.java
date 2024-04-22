@@ -97,9 +97,9 @@ public class UserGroup {
     @JsonIdentityReference(alwaysAsId = true)
     @JsonGetter("permissions")
     public List<PermissionNode> getCleanedPermissionNodes() {
-        List<PermissionNode> cleanedPermissionNodes = new ArrayList<>(this.permissionNodes);
-        if (this.childUserGroup != null)
-            cleanedPermissionNodes.addAll(this.childUserGroup.getCleanedPermissionNodes());
+        List<PermissionNode> cleanedPermissionNodes = permissionNodes != null ? new ArrayList<>(permissionNodes) : new ArrayList<>();
+        if (childUserGroup != null)
+            cleanedPermissionNodes.addAll(childUserGroup.getCleanedPermissionNodes());
         return PermissionNodes.cleanPermissionNodeList(cleanedPermissionNodes);
     }
 }

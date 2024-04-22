@@ -207,7 +207,7 @@ public class User extends FullAuditableEntity {
     }
 
     public List<PermissionNode> getCleanedPermissionNodes() {
-        List<PermissionNode> cleanedPermissionNodes = new ArrayList<>(permissionNodes);
+        List<PermissionNode> cleanedPermissionNodes = permissionNodes != null ? new ArrayList<>(permissionNodes) : new ArrayList<>();
         List<PermissionNode> groupPermissionNodes = userGroup.getCleanedPermissionNodes();
         if (!groupPermissionNodes.isEmpty())
             cleanedPermissionNodes.addAll(groupPermissionNodes);

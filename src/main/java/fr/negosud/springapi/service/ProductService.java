@@ -186,6 +186,11 @@ public class ProductService {
             newProduct.setUnitPriceVAT(oldProduct.getUnitPriceVAT());
         }
 
+        if (active != null && !Objects.equals(active, oldProduct.isActive()))
+            newProduct.setActive(active);
+        else
+            newProduct.setActive(oldProduct.isActive());
+
         if (isNewProductNeeded)
             newProduct.setOldProduct(oldProduct);
         else

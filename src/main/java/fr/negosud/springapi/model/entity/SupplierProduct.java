@@ -46,39 +46,44 @@ public class SupplierProduct extends FullAuditableEntity {
         return id;
     }
 
-    public void setId(SupplierProductKey id) {
+    public SupplierProduct setId(SupplierProductKey id) {
         this.id = id;
+        return this;
     }
 
     public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public SupplierProduct setQuantity(int quantity) {
         this.quantity = quantity;
+        return this;
     }
 
     public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(BigDecimal unitPrice) {
+    public SupplierProduct setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+        return this;
     }
 
     public User getSupplier() {
         return supplier;
     }
 
-    public void setSupplier(User supplier) {
+    public SupplierProduct setSupplier(User supplier) {
         this.supplier = supplier;
+        return this;
     }
 
     public Product getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public SupplierProduct setProduct(Product product) {
         this.product = product;
+        return this;
     }
 }

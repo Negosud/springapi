@@ -39,6 +39,9 @@ permissions:
           - name: create
           - name: view
           - name: list
+      - name: supplier
+        children:
+          - name: set-product
       - name: scrud
         children:
           - name: scheme
@@ -47,3 +50,5 @@ permissions:
           - name: update
           - name: delete
           ## To be continued...
+
+  - name: supply

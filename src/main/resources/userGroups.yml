@@ -5,6 +5,8 @@ userGroups:
 
   - name: SUPPLIER
     inherit: CUSTOMER
+    permissions:
+      - supply
 
   - name: EMPLOYEE
     inherit: CUSTOMER
@@ -15,6 +17,7 @@ userGroups:
       - desktop.arrival.list
       - desktop.issue.view
       - desktop.issue.list
+      - desktop.supplier.set-product
 
   - name: MANAGER
     inherit: EMPLOYEE

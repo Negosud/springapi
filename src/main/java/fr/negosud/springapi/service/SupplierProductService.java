@@ -78,9 +78,11 @@ public class SupplierProductService {
         if (supplierProducts == null)
             supplierProducts = new ArrayList<>();
 
-        for (SetSupplierProductRequestElement setSupplierProductElement : setSupplierProductElementList) {
-            SupplierProduct supplierProduct = supplier.getId() != 0 ? getSupplierProductBySupplierAndProductId(supplier, setSupplierProductElement.getProductId()).orElse(null) : null;
-            supplierProducts.add(setSupplierProductFromRequestElement(supplier, setSupplierProductElement, supplierProduct));
+        if (setSupplierProductElementList != null && !setSupplierProductElementList.isEmpty()) {
+            for (SetSupplierProductRequestElement setSupplierProductElement : setSupplierProductElementList) {
+                SupplierProduct supplierProduct = supplier.getId() != 0 ? getSupplierProductBySupplierAndProductId(supplier, setSupplierProductElement.getProductId()).orElse(null) : null;
+                supplierProducts.add(setSupplierProductFromRequestElement(supplier, setSupplierProductElement, supplierProduct));
+            }
         }
         return supplierProducts;
     }

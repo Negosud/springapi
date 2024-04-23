@@ -191,6 +191,8 @@ public class ProductService {
         else
             newProduct.setActive(oldProduct.isActive());
 
+        newProduct.setVintage(oldProduct.getVintage());
+
         if (isNewProductNeeded)
             newProduct.setOldProduct(oldProduct);
         else

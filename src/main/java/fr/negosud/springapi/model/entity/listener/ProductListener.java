@@ -4,6 +4,7 @@ import fr.negosud.springapi.model.entity.Product;
 import fr.negosud.springapi.model.entity.ProductTransaction;
 import fr.negosud.springapi.model.entity.ProductTransactionType;
 import fr.negosud.springapi.service.ProductService;
+import fr.negosud.springapi.service.ProductTransactionService;
 import fr.negosud.springapi.service.ProductTransactionTypeService;
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.PostUpdate;
@@ -18,11 +19,13 @@ public class ProductListener {
 
     private final ProductTransactionTypeService productTransactionTypeService;
     private final ProductService productService;
+    private final ProductTransactionService productTransactionService;
 
     @Autowired
-    public ProductListener(@Lazy ProductTransactionTypeService productTransactionTypeService, @Lazy ProductService productService) {
+    public ProductListener(@Lazy ProductTransactionTypeService productTransactionTypeService, @Lazy ProductService productService, @Lazy ProductTransactionService productTransactionService) {
         this.productTransactionTypeService = productTransactionTypeService;
         this.productService = productService;
+        this.productTransactionService = productTransactionService;
     }
 
     @PostPersist
@@ -33,14 +36,11 @@ public class ProductListener {
             oldProduct.setActive(false);
             productService.saveProduct(oldProduct);
             if (baseQuantity > 0) {
-                out.println("baseQuantity > 0");
                 ProductTransactionType productTransactionType = productTransactionTypeService.getProductTransactionTypeByCode("TRANSFERT_ANCIEN_PRODUIT")
                         .orElseThrow(() -> new RuntimeException("ProductTransactionType TRANSFERT_ANCIEN_PRODUIT not found"));
-                out.println("AAAAA");
                 ProductTransaction newProductTransaction = new ProductTransaction(product, baseQuantity, productTransactionType);
-                out.println("cccc");
                 product.addProductTransaction(newProductTransaction);
-                out.println("bbbb");
+                productTransactionService.saveProductTransaction(newProductTransaction);
             }
         }
     }

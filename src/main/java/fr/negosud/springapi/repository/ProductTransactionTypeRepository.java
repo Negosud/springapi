@@ -4,11 +4,8 @@ import fr.negosud.springapi.model.entity.ProductTransactionType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface ProductTransactionTypeRepository extends JpaRepository <ProductTransactionType, Long> {
-
-    Optional<ProductTransactionType> findByCode(String code);
+public interface ProductTransactionTypeRepository extends JpaRepository <ProductTransactionType, String> {
 
     List<ProductTransactionType> findAllByisEntry(boolean isEntry);
 }

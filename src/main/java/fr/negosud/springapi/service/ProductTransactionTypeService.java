@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.System.out;
+
 @Service
 public class ProductTransactionTypeService {
 
@@ -33,20 +35,20 @@ public class ProductTransactionTypeService {
                 productTransactionTypeRepository.findAll();
     }
 
-    public Optional<ProductTransactionType> getProductTransactionTypeById(long productTransactionTypeId) {
-        return productTransactionTypeRepository.findById(productTransactionTypeId);
-    }
-
     public Optional<ProductTransactionType> getProductTransactionTypeByCode(String code) {
-        return productTransactionTypeRepository.findByCode(code);
+        out.println("getProductTransactionTypeByCode : " + code);
+        out.println(productTransactionTypeRepository.findById(code).map(ProductTransactionType::toString).orElse("Product transaction type not found"));
+        return productTransactionTypeRepository.findById(code);
     }
 
     /**
      * @throws DuplicateKeyException A productTransactionType with processed name as code already exist
      */
     public void saveProductTransactionType(ProductTransactionType productTransactionType) {
-        if (productTransactionType.getId() == 0 && getProductTransactionTypeByCode(productTransactionType.getCode()).isPresent())
+        if (productTransactionType.getCode() == null && getProductTransactionTypeByCode(Strings.getCodeFromName(productTransactionType.getName())).isPresent())
             throw new DuplicateKeyException("A productTransactionType with processed name as code already exist");
+        if (productTransactionType.getCode() == null)
+           productTransactionType.setCode(Strings.getCodeFromName(productTransactionType.getName()));
         productTransactionTypeRepository.save(productTransactionType);
     }
 
@@ -96,8 +98,9 @@ public class ProductTransactionTypeService {
                             (String) productTransactionTypeInfo.get("description"),
                             productTransactionTypeInfo.containsKey("isEntry")
                     );
-                    if (productTransactionTypeRepository.findByCode(productTransactionType.getCode()).isEmpty())
+                    try {
                         saveProductTransactionType(productTransactionType);
+                    } catch (DuplicateKeyException ignored) { }
                 }
             }
         } catch (IOException e) {

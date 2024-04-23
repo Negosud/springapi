@@ -63,7 +63,7 @@ public class ProductService {
     }
 
     private void makeFirstStockTransaction(Product product, int quantity) {
-        if (quantity > 0) {
+        if (quantity > 0 && product.getOldProduct() == null) {
             ProductTransactionType productTransactionType = productTransactionTypeService.getProductTransactionTypeByCode("TRANSFERT_ANCIEN_PRODUIT")
                     .orElseThrow(() -> new RuntimeException("ProductTransactionType TRANSFERT_ANCIEN_PRODUIT not found"));
             ProductTransaction existingStockTransaction = new ProductTransaction(product, quantity, productTransactionType);
@@ -152,7 +152,7 @@ public class ProductService {
         BigDecimal unitPrice = updateProductRequest.getUnitPrice();
         Boolean active = updateProductRequest.isActive();
 
-        if (name == null &&description == null && expirationDate == null && productFamilyCode == null && unitPrice == null && active == null)
+        if (name == null && description == null && expirationDate == null && productFamilyCode == null && unitPrice == null && active == null)
             throw new IllegalArgumentException("Product can't be updated with empty body");
 
         if (name != null && !Objects.equals(name, oldProduct.getName())) {

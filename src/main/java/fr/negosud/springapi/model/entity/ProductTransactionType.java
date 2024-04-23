@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fr.negosud.springapi.model.entity.listener.AuditListener;
 import fr.negosud.springapi.model.entity.audit.FullAuditableEntity;
-import fr.negosud.springapi.util.Strings;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.ColumnDefault;
@@ -20,9 +19,6 @@ import java.util.List;
 public class ProductTransactionType extends FullAuditableEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
     @NotBlank
     @Column(length = 100, unique = true)
     private String code;
@@ -42,7 +38,7 @@ public class ProductTransactionType extends FullAuditableEntity {
     private boolean isRemovable;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "produtTransactionType")
+    @OneToMany(mappedBy = "produtTransactionType", fetch = FetchType.LAZY)
     List<ProductTransaction> productTransactions;
 
     public ProductTransactionType() {
@@ -57,17 +53,12 @@ public class ProductTransactionType extends FullAuditableEntity {
         this.name = name;
         this.description = description;
         this.isEntry = isEntry;
-        this.code = Strings.getCodeFromName(name);
         this.isRemovable = false;
         productTransactions = new ArrayList<>();
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public String toString() {
+        return "ProductTransactionType [code=" + code + ", name=" + name + ", description=" + description + ", isEntry=" + isEntry + "]";
     }
 
     public String getCode() {

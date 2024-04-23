@@ -25,7 +25,7 @@ public class ProductTransactionListener {
      */
     @PrePersist
     public void updateProductQuantity(ProductTransaction productTransaction) {
-        out.println(productTransaction);
+        out.println("PrePersist updateProductQuantity on ProductTransaction " + productTransaction.getId());
         Product product = productTransaction.getProduct();
         if (product != null && product.getId() != 0) {
             int quantity = product.getQuantity();

@@ -101,7 +101,8 @@ public class Product extends FullAuditableEntity {
                 ", productFamily=" + (productFamily != null ? productFamily.toString() : "") +
                 ", unitPrice=" + (unitPrice != null ? unitPrice.toString() : "") +
                 ", unitPriceVAT=" + (unitPriceVAT != null ? unitPriceVAT.toString() : "") +
-                ", active=" + active + "]";
+                ", active=" + active +
+                ", oldProductId=" + (oldProduct != null ? oldProduct.getId() : "") + "]";
     }
 
     public long getId() {
@@ -230,5 +231,10 @@ public class Product extends FullAuditableEntity {
 
     public void setProductTransactions(List<ProductTransaction> productTransactionList) {
         this.productTransactions = productTransactionList;
+    }
+
+    public void addProductTransaction(ProductTransaction productTransaction) {
+        this.productTransactions.add(productTransaction);
+        productTransaction.setProduct(this);
     }
 }
